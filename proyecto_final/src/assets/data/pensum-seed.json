@@ -1,0 +1,724 @@
+{
+    "materias": [
+        {
+            "codigo": "PSS155",
+            "nombre": "Psicología Social",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 1
+        },
+        {
+            "codigo": "ILI155",
+            "nombre": "Introducción a la Informática",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 1
+        },
+        {
+            "codigo": "MEX155",
+            "nombre": "Métodos Experimentales",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 1
+        },
+        {
+            "codigo": "MAT155",
+            "nombre": "Matemática I",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 1
+        },
+        {
+            "codigo": "HSC155",
+            "nombre": "Historia Social y Económica de El Salvador y Centroamérica",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 2
+        },
+        {
+            "codigo": "PRN155",
+            "nombre": "Programación I",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 2
+        },
+        {
+            "codigo": "MAT255",
+            "nombre": "Matemática II",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 2
+        },
+        {
+            "codigo": "MSM155",
+            "nombre": "Manejo de Software para Microcomputadoras",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 2
+        },
+        {
+            "codigo": "FIS155",
+            "nombre": "Física I",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 3
+        },
+        {
+            "codigo": "FIS255",
+            "nombre": "Física II",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 4
+        },
+        {
+            "codigo": "PES155",
+            "nombre": "Probabilidad y Estadística",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 3
+        },
+        {
+            "codigo": "FDE155",
+            "nombre": "Fundamentos de Economía",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 3
+        },
+        {
+            "codigo": "PRN255",
+            "nombre": "Programación II",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 3
+        },
+        {
+            "codigo": "MAT355",
+            "nombre": "Matemática III",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 3
+        },
+        {
+            "codigo": "MAT455",
+            "nombre": "Matemática IV",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 4
+        },
+        {
+            "codigo": "FIS355",
+            "nombre": "Física III",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 5
+        },
+        {
+            "codigo": "MEP155",
+            "nombre": "Métodos Probabilísticos",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 4
+        },
+        {
+            "codigo": "ESD155",
+            "nombre": "Estructura de Datos",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 4
+        },
+        {
+            "codigo": "PRN355",
+            "nombre": "Programación III",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 4
+        },
+        {
+            "codigo": "HDP155",
+            "nombre": "Herramientas de Productividad",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 5
+        },
+        {
+            "codigo": "SYP155",
+            "nombre": "Sistemas y Procedimientos",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 5
+        },
+        {
+            "codigo": "SDU155",
+            "nombre": "Sistemas Digitales I",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 6
+        },
+        {
+            "codigo": "MOP155",
+            "nombre": "Métodos de Optimización",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 5
+        },
+        {
+            "codigo": "ANS155",
+            "nombre": "Análisis Numérico",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 5
+        },
+        {
+            "codigo": "TOO155",
+            "nombre": "Tecnología Orientada a Objetos",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 5
+        },
+        {
+            "codigo": "TPI155",
+            "nombre": "Técnicas de Programación Para Internet",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 6
+        },
+        {
+            "codigo": "ARC155",
+            "nombre": "Arquitecturas de Computadoras",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 7
+        },
+        {
+            "codigo": "TSI155",
+            "nombre": "Teoría de Sistemas",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 6
+        },
+        {
+            "codigo": "IEC155",
+            "nombre": "Ingeniería Económica",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 4
+        },
+        {
+            "codigo": "SIC155",
+            "nombre": "Sistemas Contables",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 6
+        },
+        {
+            "codigo": "ADC155",
+            "nombre": "Análisis de Costos Informáticos",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 1
+        },
+        {
+            "codigo": "DSI155",
+            "nombre": "Diseño de Sistemas I",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 7
+        },
+        {
+            "codigo": "AEC155",
+            "nombre": "Análisis Estadístico por Computadoras",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 1
+        },
+        {
+            "codigo": "POO155",
+            "nombre": "Programación Orientada a Objetos",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 1
+        },
+        {
+            "codigo": "TAD155",
+            "nombre": "Teoría Administrativa",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 7
+        },
+        {
+            "codigo": "AGR155",
+            "nombre": "Algoritmos Gráficos",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 7
+        },
+        {
+            "codigo": "MIP155",
+            "nombre": "Microprogramación",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 8
+        },
+        {
+            "codigo": "PDM155",
+            "nombre": "Programación para Dispositivos Móviles",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 6
+        },
+        {
+            "codigo": "TDS155",
+            "nombre": "Técnicas de Simulación",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 7
+        },
+        {
+            "codigo": "SGG155",
+            "nombre": "Sistemas de Información Geográfica",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 7
+        },
+        {
+            "codigo": "IGF155",
+            "nombre": "Ingeniería de Software",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 8
+        },
+        {
+            "codigo": "SIO155",
+            "nombre": "Sistemas Operativos",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 9
+        },
+        {
+            "codigo": "IPI155",
+            "nombre": "Introducción a la Programación en Internet",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 1
+        },
+        {
+            "codigo": "DSI255",
+            "nombre": "Diseño de Sistemas II",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 8
+        },
+        {
+            "codigo": "CET155",
+            "nombre": "Comercio Electrónico",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 8
+        },
+        {
+            "codigo": "TCD155",
+            "nombre": "Tecnología de la Comunicación de Datos",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 1
+        },
+        {
+            "codigo": "ANF155",
+            "nombre": "Análisis Financiero",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 8
+        },
+        {
+            "codigo": "COS155",
+            "nombre": "Comunicaciones I",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 9
+        },
+        {
+            "codigo": "PCO155",
+            "nombre": "Protocolos de Comunicaciones",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 10
+        },
+        {
+            "codigo": "SIF155",
+            "nombre": "Seguridad Informática",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 10
+        },
+        {
+            "codigo": "PDD155",
+            "nombre": "Programación 3D",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 1
+        },
+        {
+            "codigo": "RHU155",
+            "nombre": "Recursos Humanos",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 8
+        },
+        {
+            "codigo": "LPR155",
+            "nombre": "Legislación Profesional",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 1
+        },
+        {
+            "codigo": "BAD155",
+            "nombre": "Bases de Datos",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 10
+        },
+        {
+            "codigo": "SGI155",
+            "nombre": "Sistemas de Información Gerencial",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 9
+        },
+        {
+            "codigo": "API155",
+            "nombre": "Administración de Proyectos Informáticos",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 10
+        },
+        {
+            "codigo": "ACC155",
+            "nombre": "Administración de Centros de Cómputo",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 11
+        },
+        {
+            "codigo": "CPR155",
+            "nombre": "Consultoría Profesional",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 1
+        },
+        {
+            "codigo": "AUS155",
+            "nombre": "Auditoría de Sistemas",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 10
+        },
+        {
+            "codigo": "IBD155",
+            "nombre": "Implementación de Bases de Datos",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 11
+        },
+        {
+            "codigo": "COS255",
+            "nombre": "Comunicaciones II",
+            "uv": 4,
+            "tipo": "Electiva",
+            "ciclo": 10
+        },
+        {
+            "codigo": "QTR155",
+            "nombre": "Química Técnica",
+            "uv": 4,
+            "tipo": "Obligatoria",
+            "ciclo": 2
+        }
+    ],
+    "prerequisitos": [
+        {
+            "codigoMateria": "HSC155",
+            "codigoPrerequisito": "PSS155"
+        },
+        {
+            "codigoMateria": "PRN155",
+            "codigoPrerequisito": "ILI155"
+        },
+        {
+            "codigoMateria": "MAT255",
+            "codigoPrerequisito": "MAT155"
+        },
+        {
+            "codigoMateria": "MSM155",
+            "codigoPrerequisito": "ILI155"
+        },
+        {
+            "codigoMateria": "FIS155",
+            "codigoPrerequisito": "MAT155"
+        },
+        {
+            "codigoMateria": "FIS155",
+            "codigoPrerequisito": "MEX155"
+        },
+        {
+            "codigoMateria": "FIS155",
+            "codigoPrerequisito": "MAT255"
+        },
+        {
+            "codigoMateria": "FIS255",
+            "codigoPrerequisito": "FIS155"
+        },
+        {
+            "codigoMateria": "FIS255",
+            "codigoPrerequisito": "MAT255"
+        },
+        {
+            "codigoMateria": "PES155",
+            "codigoPrerequisito": "MAT255"
+        },
+        {
+            "codigoMateria": "FDE155",
+            "codigoPrerequisito": "HSC155"
+        },
+        {
+            "codigoMateria": "FDE155",
+            "codigoPrerequisito": "MAT255"
+        },
+        {
+            "codigoMateria": "PRN255",
+            "codigoPrerequisito": "PRN155"
+        },
+        {
+            "codigoMateria": "MAT355",
+            "codigoPrerequisito": "MAT255"
+        },
+        {
+            "codigoMateria": "MAT455",
+            "codigoPrerequisito": "MAT355"
+        },
+        {
+            "codigoMateria": "FIS355",
+            "codigoPrerequisito": "FIS255"
+        },
+        {
+            "codigoMateria": "MEP155",
+            "codigoPrerequisito": "PES155"
+        },
+        {
+            "codigoMateria": "ESD155",
+            "codigoPrerequisito": "PRN255"
+        },
+        {
+            "codigoMateria": "PRN355",
+            "codigoPrerequisito": "PRN255"
+        },
+        {
+            "codigoMateria": "HDP155",
+            "codigoPrerequisito": "ESD155"
+        },
+        {
+            "codigoMateria": "HDP155",
+            "codigoPrerequisito": "MSM155"
+        },
+        {
+            "codigoMateria": "SYP155",
+            "codigoPrerequisito": "PRN355"
+        },
+        {
+            "codigoMateria": "SDU155",
+            "codigoPrerequisito": "FIS355"
+        },
+        {
+            "codigoMateria": "SDU155",
+            "codigoPrerequisito": "PRN155"
+        },
+        {
+            "codigoMateria": "MOP155",
+            "codigoPrerequisito": "MEP155"
+        },
+        {
+            "codigoMateria": "ANS155",
+            "codigoPrerequisito": "MAT455"
+        },
+        {
+            "codigoMateria": "ANS155",
+            "codigoPrerequisito": "PRN155"
+        },
+        {
+            "codigoMateria": "TOO155",
+            "codigoPrerequisito": "PRN355"
+        },
+        {
+            "codigoMateria": "TPI155",
+            "codigoPrerequisito": "HDP155"
+        },
+        {
+            "codigoMateria": "TPI155",
+            "codigoPrerequisito": "PRN355"
+        },
+        {
+            "codigoMateria": "ARC155",
+            "codigoPrerequisito": "ANS155"
+        },
+        {
+            "codigoMateria": "ARC155",
+            "codigoPrerequisito": "SDU155"
+        },
+        {
+            "codigoMateria": "TSI155",
+            "codigoPrerequisito": "SYP155"
+        },
+        {
+            "codigoMateria": "IEC155",
+            "codigoPrerequisito": "PES155"
+        },
+        {
+            "codigoMateria": "SIC155",
+            "codigoPrerequisito": "HDP155"
+        },
+        {
+            "codigoMateria": "DSI155",
+            "codigoPrerequisito": "SIC155"
+        },
+        {
+            "codigoMateria": "DSI155",
+            "codigoPrerequisito": "TSI155"
+        },
+        {
+            "codigoMateria": "TAD155",
+            "codigoPrerequisito": "SIC155"
+        },
+        {
+            "codigoMateria": "AGR155",
+            "codigoPrerequisito": "TSI155"
+        },
+        {
+            "codigoMateria": "MIP155",
+            "codigoPrerequisito": "ARC155"
+        },
+        {
+            "codigoMateria": "PDM155",
+            "codigoPrerequisito": "HDP155"
+        },
+        {
+            "codigoMateria": "PDM155",
+            "codigoPrerequisito": "PRN355"
+        },
+        {
+            "codigoMateria": "TDS155",
+            "codigoPrerequisito": "MOP155"
+        },
+        {
+            "codigoMateria": "TDS155",
+            "codigoPrerequisito": "TSI155"
+        },
+        {
+            "codigoMateria": "SGG155",
+            "codigoPrerequisito": "MOP155"
+        },
+        {
+            "codigoMateria": "SGG155",
+            "codigoPrerequisito": "TSI155"
+        },
+        {
+            "codigoMateria": "IGF155",
+            "codigoPrerequisito": "DSI155"
+        },
+        {
+            "codigoMateria": "SIO155",
+            "codigoPrerequisito": "MIP155"
+        },
+        {
+            "codigoMateria": "DSI255",
+            "codigoPrerequisito": "DSI155"
+        },
+        {
+            "codigoMateria": "CET155",
+            "codigoPrerequisito": "DSI155"
+        },
+        {
+            "codigoMateria": "CET155",
+            "codigoPrerequisito": "TPI155"
+        },
+        {
+            "codigoMateria": "ANF155",
+            "codigoPrerequisito": "IEC155"
+        },
+        {
+            "codigoMateria": "ANF155",
+            "codigoPrerequisito": "TAD155"
+        },
+        {
+            "codigoMateria": "COS155",
+            "codigoPrerequisito": "MIP155"
+        },
+        {
+            "codigoMateria": "PCO155",
+            "codigoPrerequisito": "COS155"
+        },
+        {
+            "codigoMateria": "SIF155",
+            "codigoPrerequisito": "COS155"
+        },
+        {
+            "codigoMateria": "SIF155",
+            "codigoPrerequisito": "DSI255"
+        },
+        {
+            "codigoMateria": "SIF155",
+            "codigoPrerequisito": "SIO155"
+        },
+        {
+            "codigoMateria": "RHU155",
+            "codigoPrerequisito": "TAD155"
+        },
+        {
+            "codigoMateria": "BAD155",
+            "codigoPrerequisito": "DSI255"
+        },
+        {
+            "codigoMateria": "BAD155",
+            "codigoPrerequisito": "SIO155"
+        },
+        {
+            "codigoMateria": "SGI155",
+            "codigoPrerequisito": "DSI255"
+        },
+        {
+            "codigoMateria": "API155",
+            "codigoPrerequisito": "ANF155"
+        },
+        {
+            "codigoMateria": "API155",
+            "codigoPrerequisito": "SGI155"
+        },
+        {
+            "codigoMateria": "ACC155",
+            "codigoPrerequisito": "BAD155"
+        },
+        {
+            "codigoMateria": "ACC155",
+            "codigoPrerequisito": "RHU155"
+        },
+        {
+            "codigoMateria": "ACC155",
+            "codigoPrerequisito": "SGI155"
+        },
+        {
+            "codigoMateria": "AUS155",
+            "codigoPrerequisito": "SGI155"
+        },
+        {
+            "codigoMateria": "IBD155",
+            "codigoPrerequisito": "BAD155"
+        },
+        {
+            "codigoMateria": "COS255",
+            "codigoPrerequisito": "COS155"
+        },
+        {
+            "codigoMateria": "QTR155",
+            "codigoPrerequisito": "MEX155"
+        }
+    ]
+}

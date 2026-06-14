@@ -37,8 +37,7 @@ export class PensumNavigatorDB extends Dexie {
 
     constructor() {
         super('PensumNavigatorDB');
-        this.version(3).stores({
-            // Subimos a versión 3 por los cambios en 'Materia'
+        this.version(1).stores({
             materias: 'codigo, ciclo',
             prerequisitos: '++id, codigoMateria',
             perfil: '++id',

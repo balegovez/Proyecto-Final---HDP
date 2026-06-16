@@ -28,12 +28,22 @@
           {{ materia.nombre }}
         </div>
         
-        <div class="text-muted lh-sm" style="font-size: 0.85rem;">
+        <div class="text-muted lh-sm mb-3" style="font-size: 0.85rem;">
           ({{ materia.tipo }})
         </div>
         
-        <div class="text-muted mt-1 lh-sm" style="font-size: 0.85rem;" *ngIf="materia.prerequisitos">
-          {{ materia.prerequisitos }}
+        <div class="materia-prerequisitos">
+          
+          <ng-container *ngIf="materia.listaPrerequisitos.length > 0">
+            <span class="badge-req" *ngFor="let req of materia.listaPrerequisitos">
+              Req: {{ req }}
+            </span>
+          </ng-container>
+
+          <ng-container *ngIf="materia.listaPrerequisitos.length === 0">
+            <span class="badge-req sin-req">Bachillerato</span>
+          </ng-container>
+
         </div>
 
       </div>

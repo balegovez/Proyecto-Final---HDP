@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 
 import { PensumService } from '../../core/services/pensum.service';
 import {CommonModule } from '@angular/common';
@@ -14,11 +14,15 @@ export class PensumComponent {
   // Inyectamos el servicio para acceder a los datos del pensum y perfil
   pensumService = inject(PensumService);
 
+  materiaSeleccionada = signal<any | null>(null);
   // Agrupamos las materias por ciclo automaticamente
           //computed nos sirve para crear valores derivados de otras señales
           //aqui lo utilizamos para que si agregamos una nueva materia en nustro json
           // la lista de materias cambie segun el ciclo donde esta la nueva materia agregada 
   ciclos = computed(() => {
+    const prerequisitos = this.pensumService.prerequisitos()
+    
+    
     const materias = this.pensumService.materias();
     //Creamos un mapa (diccionario) el cual como key (clave) toma el numero de ciclo
     //y como value (valor) toma una lista la cual guardara todas las materias del ciclo 
@@ -34,10 +38,18 @@ export class PensumComponent {
       if(!mapaCiclos.has(materia.ciclo)){
         mapaCiclos.set(materia.ciclo, []);
       }
+      //Buscamos los prerequisitos que le pertenecen a la materia que se esta recorriendo
+      const materiasPrerequisitos = prerequisitos.filter(req => req.codigoMateria === materia.codigo)
+      .map(req => req.codigoPrerequisito);
+      
+      const materiaConPrerequisitos = {
+        ...materia, listaPrerequisitos: materiasPrerequisitos
+      };
+      
       //mapaCiclos.get(...) busca y obtiene el arreglo del ciclo correspondiente, ! le asegura a typescript que el resultado
       //de get no sera undefined. Es obligatorio ponerlo porque typexcript es muy sensible y estricto
       //y teme que hagamos un push en algo que no existe 
-      mapaCiclos.get(materia.ciclo)!.push(materia);
+      mapaCiclos.get(materia.ciclo)!.push(materiaConPrerequisitos);
     });
     
     //Convertimos el mapa a un array ordenado de menor a mayor 

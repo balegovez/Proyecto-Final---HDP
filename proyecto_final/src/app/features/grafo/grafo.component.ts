@@ -272,6 +272,7 @@ export class GrafoComponent implements OnDestroy {
     if (!materia) return;
 
     this.materiaSeleccionada = materia;
+    console.log(this.materiaSeleccionada);
     this.cadenaDesbloqueada = this.materiasQueDesbloquea(
       codigo,
       this.pensumService.prerequisitos(),
@@ -298,6 +299,7 @@ export class GrafoComponent implements OnDestroy {
         arista.addClass('resaltada');
       }
     });
+    
   }
 
   /**
@@ -347,6 +349,16 @@ export class GrafoComponent implements OnDestroy {
    *
    * Usamos atributos del 'data' del nodo (estado, tamano) para variar
    * la apariencia sin tener que recrear los nodos.
+   */
+    /**
+   * Convierte un código de materia en una descripción más amigable
+   * para el panel lateral.
+   *
+   * Ejemplo:
+   * MAT255 - Matemática II (Ciclo 2)
+   *
+   * Mostrar solamente el código funciona, pero esta versión ayuda
+   * al estudiante a entender mejor la cadena de desbloqueo.
    */
   private estilosCytoscape(): cytoscape.StylesheetJson {
     return [
@@ -424,5 +436,18 @@ export class GrafoComponent implements OnDestroy {
         },
       },
     ];
+  }
+  obtenerDescripcionMateria(codigo: string): string {
+
+    const materia = this.pensumService
+      .materias()
+      .find(m => m.codigo === codigo);
+
+    if (!materia) {
+      return codigo;
+    }
+
+    return `${materia.codigo} - ${materia.nombre} (Ciclo ${materia.ciclo})`;
+
   }
 }

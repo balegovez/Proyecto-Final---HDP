@@ -4,8 +4,15 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: calc(100vh - 80px); /* deja espacio para un eventual nav superior */
-  background-color: #f9fafb;
+  height: calc(100vh - 80px);
+
+  background:
+    linear-gradient(
+      to bottom,
+      #f8fafc,
+      #f1f5f9
+    );
+
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -15,17 +22,31 @@
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
+
   gap: 1rem;
-  padding: 1rem 1.5rem;
-  background: #fff;
+
+  padding: 1.25rem 1.5rem;
+
+  background: rgba(255,255,255,.9);
+
+  backdrop-filter: blur(10px);
+
   border-bottom: 1px solid #e5e7eb;
+
+  box-shadow:
+    0 2px 10px rgba(0,0,0,.05);
+
   z-index: 2;
 }
 
 .titulo h2 {
-  margin: 0 0 0.25rem 0;
-  font-size: 1.25rem;
-  color: #1f2937;
+  margin: 0 0 0.35rem 0;
+
+  font-size: 1.7rem;
+
+  font-weight: 700;
+
+  color: #111827;
 }
 
 .titulo .subtitulo {
@@ -47,7 +68,18 @@
 .leyenda-item {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: .4rem;
+
+  background: white;
+
+  padding: .45rem .8rem;
+
+  border-radius: 999px;
+
+  border: 1px solid #e5e7eb;
+
+  box-shadow:
+    0 2px 8px rgba(0,0,0,.05);
 }
 
 .dot {
@@ -71,15 +103,37 @@
 /* ============ PANEL LATERAL ============ */
 .panel-seleccion {
   position: absolute;
+
   top: 100px;
-  right: 1rem;
-  width: 280px;
+  right: 20px;
+
+  width: 340px;
+
   background: #fff;
+
+  border-radius: 16px;
+
+  padding: 1.2rem;
+
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 1rem 1rem 1rem 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  box-shadow:
+    0 15px 40px rgba(0,0,0,.12);
+
   z-index: 3;
+
+  animation: aparecer .25s ease;
+}
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .panel-seleccion h3 {
@@ -118,12 +172,29 @@
 }
 
 .lista-desbloqueadas li {
-  background: #fed7aa;
+
+  background: #fff7ed;
+
   color: #9a3412;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
+
+  border: 1px solid #fdba74;
+
+  padding: .45rem .7rem;
+
+  border-radius: 8px;
+
+  font-size: .75rem;
+
   font-weight: 600;
+
+  transition: .2s;
+}
+
+.lista-desbloqueadas li:hover {
+
+  transform: translateY(-2px);
+
+  background: #fed7aa;
 }
 
 .btn-cerrar {
@@ -171,9 +242,14 @@
 /* ============ CONTENEDOR DEL GRAFO ============ */
 .cy-container {
   flex: 1;
+
   width: 100%;
+
   min-height: 400px;
-  background: #f9fafb;
+
+  background: #f8fafc;
+
+  border-top: 1px solid #e5e7eb;
 }
 
 /* ============ RESPONSIVE ============ */
@@ -202,4 +278,21 @@
     max-height: 50vh;
     overflow-y: auto;
   }
+}
+.tipo-materia {
+  display: inline-block;
+
+  margin-bottom: .8rem;
+
+  padding: .35rem .75rem;
+
+  background: #eff6ff;
+
+  color: #1d4ed8;
+
+  border-radius: 999px;
+
+  font-size: .8rem;
+
+  font-weight: 600;
 }

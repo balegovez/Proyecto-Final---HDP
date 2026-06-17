@@ -1,10 +1,11 @@
 <div class="grafo-wrapper">
-
   <!-- Header con título y leyenda -->
   <header class="grafo-header">
     <div class="titulo">
       <h2>Grafo de Prerrequisitos</h2>
-      <p class="subtitulo">Haz clic en una materia para ver qué se desbloquea al aprobarla.</p>
+      <p class="subtitulo">
+        Haz clic en una materia para ver qué se desbloquea al aprobarla.
+      </p>
     </div>
 
     <!-- Leyenda de colores y tamaños -->
@@ -31,9 +32,19 @@
   <!-- Panel lateral: muestra la materia seleccionada y la cadena que desbloquea -->
   @if (materiaSeleccionada) {
     <aside class="panel-seleccion">
-      <button class="btn-cerrar" (click)="limpiarSeleccion()" aria-label="Cerrar">×</button>
+      <button
+        class="btn-cerrar"
+        (click)="limpiarSeleccion()"
+        aria-label="Cerrar"
+      >
+        ×
+      </button>
       <h3>{{ materiaSeleccionada.nombre }}</h3>
-      <p class="codigo">{{ materiaSeleccionada.codigo }} · Ciclo {{ materiaSeleccionada.ciclo }} · {{ materiaSeleccionada.uv }} UV</p>
+      <p class="tipo-materia">Tipo: {{ materiaSeleccionada.tipo }}</p>
+      <p class="codigo">
+        {{ materiaSeleccionada.codigo }} · Ciclo
+        {{ materiaSeleccionada.ciclo }} · {{ materiaSeleccionada.uv }} UV
+      </p>
 
       @if (cadenaDesbloqueada.length > 0) {
         <p class="resumen">
@@ -42,12 +53,16 @@
         </p>
         <ul class="lista-desbloqueadas">
           @for (codigo of cadenaDesbloqueada; track codigo) {
-            <li>{{ codigo }}</li>
+            <!-- Mostramos información más descriptiva que solo el código -->
+            <li>
+              {{ obtenerDescripcionMateria(codigo) }}
+            </li>
           }
         </ul>
       } @else {
         <p class="resumen sin-desbloqueo">
-          Esta materia no es prerrequisito de ninguna otra (es una materia "terminal").
+          Esta materia no es prerrequisito de ninguna otra (es una materia
+          "terminal").
         </p>
       }
     </aside>

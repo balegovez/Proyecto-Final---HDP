@@ -1,0 +1,205 @@
+/* Contenedor principal: ocupa toda la pantalla disponible */
+.grafo-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100vh - 80px); /* deja espacio para un eventual nav superior */
+  background-color: #f9fafb;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ============ HEADER ============ */
+.grafo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  z-index: 2;
+}
+
+.titulo h2 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+  color: #1f2937;
+}
+
+.titulo .subtitulo {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+/* ============ LEYENDA ============ */
+.leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #4b5563;
+}
+
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #374151;
+}
+
+.dot-aprobada { background: #10b981; border-color: #047857; }
+.dot-cursando { background: #3b82f6; border-color: #1e40af; }
+.dot-pendiente { background: #9ca3af; border-color: #374151; }
+.dot-grande {
+  background: #9ca3af;
+  width: 22px;
+  height: 22px;
+  border-color: #374151;
+}
+
+/* ============ PANEL LATERAL ============ */
+.panel-seleccion {
+  position: absolute;
+  top: 100px;
+  right: 1rem;
+  width: 280px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem 1rem 1rem 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 3;
+}
+
+.panel-seleccion h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  color: #1f2937;
+  padding-right: 1.5rem; /* deja espacio para el botón cerrar */
+}
+
+.panel-seleccion .codigo {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.panel-seleccion .resumen {
+  font-size: 0.85rem;
+  color: #374151;
+  margin: 0 0 0.5rem 0;
+}
+
+.panel-seleccion .sin-desbloqueo {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.lista-desbloqueadas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.lista-desbloqueadas li {
+  background: #fed7aa;
+  color: #9a3412;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.btn-cerrar {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.6rem;
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0 0.3rem;
+  border-radius: 4px;
+}
+
+.btn-cerrar:hover {
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+/* ============ ESTADOS DE CARGA / ERROR ============ */
+.estado-carga,
+.estado-error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1rem 1.5rem;
+  border-radius: 6px;
+  z-index: 4;
+}
+
+.estado-carga {
+  background: #fff;
+  color: #6b7280;
+}
+
+.estado-error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* ============ CONTENEDOR DEL GRAFO ============ */
+.cy-container {
+  flex: 1;
+  width: 100%;
+  min-height: 400px;
+  background: #f9fafb;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+  .grafo-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .titulo h2 {
+    font-size: 1.1rem;
+  }
+
+  .leyenda {
+    font-size: 0.75rem;
+    gap: 0.75rem;
+  }
+
+  .panel-seleccion {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: auto;
+    border-radius: 8px 8px 0 0;
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+}

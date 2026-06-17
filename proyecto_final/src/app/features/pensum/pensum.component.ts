@@ -15,6 +15,35 @@ export class PensumComponent {
   pensumService = inject(PensumService);
 
   materiaSeleccionada = signal<any | null>(null);
+  
+  grafoMateria = computed(() => {
+    const seleccionada = this.materiaSeleccionada();
+    if(!seleccionada) return null;
+
+    const todasMaterias = this.pensumService.materias();
+    const todosPrerequisitos = this.pensumService.prerequisitos();
+
+    const reqCodigos = todosPrerequisitos.filter(p=> p.codigoMateria === seleccionada.codigo)
+    .map(p=> p.codigoPrerequisito);
+
+    const prerequisitos = todasMaterias.filter( m => reqCodigos.includes(m.codigo));
+    const desbCodigos = todosPrerequisitos.filter(p=> p.codigoPrerequisito === seleccionada.codigo)
+    .map(p => p.codigoMateria);
+    const desbloquea = todasMaterias.filter( m => desbCodigos.includes(m.codigo));
+
+
+    return {
+      actual: seleccionada, prerequisitos, desbloquea};
+    
+  });
+
+  seleccionarMaterias(materia: any){
+    this.materiaSeleccionada.set(materia);
+  };
+  cerrarGrafo(){
+    this.materiaSeleccionada.set(null)
+  };
+  
   // Agrupamos las materias por ciclo automaticamente
           //computed nos sirve para crear valores derivados de otras señales
           //aqui lo utilizamos para que si agregamos una nueva materia en nustro json

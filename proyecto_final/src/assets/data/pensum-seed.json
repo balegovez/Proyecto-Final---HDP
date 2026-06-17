@@ -215,7 +215,7 @@
             "nombre": "Análisis de Costos Informáticos",
             "uv": 4,
             "tipo": "Electiva",
-            "ciclo": 1
+            "ciclo": 7
         },
         {
             "codigo": "DSI155",
@@ -229,14 +229,14 @@
             "nombre": "Análisis Estadístico por Computadoras",
             "uv": 4,
             "tipo": "Electiva",
-            "ciclo": 1
+            "ciclo": 7
         },
         {
             "codigo": "POO155",
             "nombre": "Programación Orientada a Objetos",
             "uv": 4,
             "tipo": "Electiva",
-            "ciclo": 1
+            "ciclo": 7
         },
         {
             "codigo": "TAD155",
@@ -299,7 +299,7 @@
             "nombre": "Introducción a la Programación en Internet",
             "uv": 4,
             "tipo": "Electiva",
-            "ciclo": 1
+            "ciclo": 8
         },
         {
             "codigo": "DSI255",
@@ -320,7 +320,7 @@
             "nombre": "Tecnología de la Comunicación de Datos",
             "uv": 4,
             "tipo": "Electiva",
-            "ciclo": 1
+            "ciclo": 8
         },
         {
             "codigo": "ANF155",
@@ -355,7 +355,7 @@
             "nombre": "Programación 3D",
             "uv": 4,
             "tipo": "Electiva",
-            "ciclo": 1
+            "ciclo": 9
         },
         {
             "codigo": "RHU155",
@@ -369,7 +369,7 @@
             "nombre": "Legislación Profesional",
             "uv": 4,
             "tipo": "Obligatoria",
-            "ciclo": 1
+            "ciclo": 9
         },
         {
             "codigo": "BAD155",
@@ -404,7 +404,7 @@
             "nombre": "Consultoría Profesional",
             "uv": 4,
             "tipo": "Obligatoria",
-            "ciclo": 1
+            "ciclo": 10
         },
         {
             "codigo": "AUS155",

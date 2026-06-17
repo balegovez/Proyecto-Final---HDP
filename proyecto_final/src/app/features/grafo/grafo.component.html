@@ -1,1 +1,72 @@
-<p>grafo works!</p>
+<div class="grafo-wrapper">
+
+  <!-- Header con título y leyenda -->
+  <header class="grafo-header">
+    <div class="titulo">
+      <h2>Grafo de Prerrequisitos</h2>
+      <p class="subtitulo">Haz clic en una materia para ver qué se desbloquea al aprobarla.</p>
+    </div>
+
+    <!-- Leyenda de colores y tamaños -->
+    <div class="leyenda">
+      <div class="leyenda-item">
+        <span class="dot dot-aprobada"></span>
+        <span>Aprobada</span>
+      </div>
+      <div class="leyenda-item">
+        <span class="dot dot-cursando"></span>
+        <span>Cursando</span>
+      </div>
+      <div class="leyenda-item">
+        <span class="dot dot-pendiente"></span>
+        <span>Pendiente</span>
+      </div>
+      <div class="leyenda-item">
+        <span class="dot dot-grande"></span>
+        <span>Cuello de botella (desbloquea muchas)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Panel lateral: muestra la materia seleccionada y la cadena que desbloquea -->
+  @if (materiaSeleccionada) {
+    <aside class="panel-seleccion">
+      <button class="btn-cerrar" (click)="limpiarSeleccion()" aria-label="Cerrar">×</button>
+      <h3>{{ materiaSeleccionada.nombre }}</h3>
+      <p class="codigo">{{ materiaSeleccionada.codigo }} · Ciclo {{ materiaSeleccionada.ciclo }} · {{ materiaSeleccionada.uv }} UV</p>
+
+      @if (cadenaDesbloqueada.length > 0) {
+        <p class="resumen">
+          Al aprobar esta materia se desbloquean
+          <strong>{{ cadenaDesbloqueada.length }}</strong> materias:
+        </p>
+        <ul class="lista-desbloqueadas">
+          @for (codigo of cadenaDesbloqueada; track codigo) {
+            <li>{{ codigo }}</li>
+          }
+        </ul>
+      } @else {
+        <p class="resumen sin-desbloqueo">
+          Esta materia no es prerrequisito de ninguna otra (es una materia "terminal").
+        </p>
+      }
+    </aside>
+  }
+
+  <!-- Estado de carga -->
+  @if (pensumService.cargando()) {
+    <div class="estado-carga">
+      <p>Cargando grafo del pensum…</p>
+    </div>
+  }
+
+  @if (pensumService.error()) {
+    <div class="estado-error">
+      <p>{{ pensumService.error() }}</p>
+    </div>
+  }
+
+  <!-- Contenedor donde Cytoscape renderiza el grafo.
+       La referencia #cyContainer es la que el TypeScript usa via @ViewChild. -->
+  <div #cyContainer class="cy-container"></div>
+</div>

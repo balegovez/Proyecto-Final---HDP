@@ -3,8 +3,22 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'perfil',
+        redirectTo: 'inicio',
         pathMatch: 'full',
+    },
+    {
+        path: 'inicio',
+        loadComponent: () =>
+            import('./features/inicio/inicio.component').then(
+                (m) => m.InicioComponent,
+            ),
+    },
+    {
+        path: 'pensum',
+        loadComponent: () =>
+            import('./features/pensum/pensum.component').then(
+                (m) => m.PensumComponent,
+            ),
     },
     {
         path: 'perfil',
@@ -36,6 +50,6 @@ export const routes: Routes = [
     },
     {
         path: '**',
-        redirectTo: 'perfil',
+        redirectTo: 'inicio',
     },
 ];

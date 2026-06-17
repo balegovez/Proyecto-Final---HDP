@@ -1,0 +1,132 @@
+    body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            width: 100px;
+            background-color: #3262c8;
+            min-height: 100vh;
+            position: fixed;    
+            left: 0;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .sidebar-logo {
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 1px solid #3a414e;
+        }
+
+        .nav-item-custom {
+            color: #aeb4c0;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 0.75rem;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #3a414e;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item-custom:hover, .nav-item-custom.active {
+            background-color: #3a414e;
+            color: #ffffff;
+            border-left: 3px solid #6c757d;
+        }
+
+        .nav-item-custom i {
+            font-size: 1.4rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .main-content {
+            margin-left: 100px; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-navbar {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 20px;
+        }
+
+        .student-badge {
+            background-color: #008f39;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+        }
+
+        .breadcrumb-container {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 10px 20px;
+            margin: 20px 0;
+        }
+        
+        .breadcrumb-container a {
+            color: #6c757d;
+            text-decoration: none;
+        }
+
+        .card-custom {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            transition: box-shadow 0.2s;
+        }
+        
+        .card-custom:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .card-title-custom {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .card-subtitle-custom {
+            font-size: 0.85rem;
+            color: #a0a0a0;
+        }
+
+        .btn-red-custom {
+            background-color: #b71c1c;
+            border-color: #b71c1c;
+            color: white;
+            border-radius: 6px;
+            padding: 8px 15px;
+        }
+
+        .btn-red-custom:hover {
+            background-color: #901616;
+            color: white;
+        }
+
+        .footer {
+            background-color: #ffffff;
+            border-top: 1px solid #e0e0e0;
+            padding: 15px 20px;
+            margin-top: auto;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .top-navbar-text {
+                font-size: 0.9rem;
+            }
+        }

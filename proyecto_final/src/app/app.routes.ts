@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { perfilGuard } from './core/guards/perfil.guard';
 
 export const routes: Routes = [
     {
@@ -28,21 +29,27 @@ export const routes: Routes = [
             ),
     },
     {
+        // Protegida: necesita un perfil creado.
         path: 'matriz',
+        canActivate: [perfilGuard],
         loadComponent: () =>
             import('./features/matriz/matriz.component').then(
                 (m) => m.MatrizComponent,
             ),
     },
     {
+        // Protegida: necesita un perfil creado.
         path: 'grafo',
+        canActivate: [perfilGuard],
         loadComponent: () =>
             import('./features/grafo/grafo.component').then(
                 (m) => m.GrafoComponent,
             ),
     },
     {
+        // Protegida: necesita un perfil creado.
         path: 'planificador',
+        canActivate: [perfilGuard],
         loadComponent: () =>
             import('./features/planificador/planificador.component').then(
                 (m) => m.PlanificadorComponent,

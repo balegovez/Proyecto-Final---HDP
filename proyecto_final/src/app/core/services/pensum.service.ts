@@ -37,10 +37,17 @@ export class PensumService {
   cargando = signal<boolean>(true);
   error = signal<string | null>(null);
 
+  /**
+   * Promesa que se resuelve cuando termina la carga inicial desde IndexedDB.
+   * El Route Guard la espera antes de decidir, para no leer perfil() cuando
+   * todavía es null por estar a medio cargar (p. ej. al recargar en /matriz).
+   */
+  readonly listo: Promise<void>;
+
   constructor() {
-    // No se puede hacer 'await' dentro de un constructor,
-    // así que delegamos a un método async aparte.
-    void this.inicializar();
+    // No se puede hacer 'await' dentro de un constructor, así que delegamos
+    // a un método async aparte y guardamos su promesa en 'listo'.
+    this.listo = this.inicializar();
   }
 
   // ---------- INICIALIZACIÓN ----------

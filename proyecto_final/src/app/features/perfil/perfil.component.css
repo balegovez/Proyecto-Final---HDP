@@ -169,7 +169,10 @@
   text-align: center;
 }
 
-.botones-demo {
+/* Fila de botones de demo: antes esto estaba en un segundo bloque
+   .botones-demo (selector duplicado) y aplastaba el label con los botones.
+   Ahora vive en su propio contenedor .demo-buttons. */
+.demo-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
@@ -374,7 +377,498 @@
     font-size: 1.5rem;
   }
 
-  .botones-demo {
+  .demo-buttons {
+    flex-direction: column;
+  }
+
+  .btn-demo {
+    width: 100%;
+  }
+
+  .ciclo-grupo {
+    padding: 1rem;
+  }
+
+  .materia-item {
+    flex-direction: column;
+    padding: 0.5rem;
+  }
+
+  .materia-checkbox {
+    margin-bottom: 0.5rem;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .perfil-container {
+    padding: 0.5rem;
+  }
+
+  .formulario-perfil {
+    padding: 1rem;
+  }
+
+  .materias-por-ciclo {
+    gap: 1rem;
+  }
+
+  .ciclo-titulo {
+    font-size: 1rem;
+  }
+
+  .materia-label .codigo {
+    font-size: 0.85rem;
+  }
+
+  .materia-label .nombre {
+    font-size: 0.8rem;
+  }
+}
+
+.perfil-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ============ SPINNER DE CARGA ============ */
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  color: #666;
+}
+
+.spinner p {
+  font-size: 1rem;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ============ ERROR BANNER ============ */
+.error-banner {
+  background-color: #fee;
+  border-left: 4px solid #c33;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  color: #933;
+}
+
+.error-banner p {
+  margin: 0;
+}
+
+/* ============ FORMULARIO DE PERFIL ============ */
+.formulario-perfil {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.formulario-perfil h2 {
+  font-size: 1.8rem;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.formulario-perfil .subtitulo {
+  color: #555;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* ============ LISTA DE MATERIAS ============ */
+.lista-materias {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lista-materias .header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.lista-materias h2 {
+  font-size: 1.8rem;
+  color: #1a1a1a;
+  margin: 0 0 0.5rem 0;
+}
+
+.lista-materias .carnet-info {
+  color: #666;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* ============ BOTONES DE DEMOSTRACIÓN ============ */
+.botones-demo {
+  background: #f9fafb;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.botones-demo .demo-label {
+  margin: 0 0 1rem 0;
+  color: #555;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Fila de botones de demo: antes esto estaba en un segundo bloque
+   .botones-demo (selector duplicado) y aplastaba el label con los botones.
+   Ahora vive en su propio contenedor .demo-buttons. */
+.demo-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn-demo {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-nuevo {
+  background-color: #10b981;
+  color: white;
+}
+
+.btn-nuevo:hover {
+  background-color: #059669;
+  transform: translateY(-2px);
+}
+
+.btn-segundo {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.btn-segundo:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+}
+
+.btn-critico {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.btn-critico:hover {
+  background-color: #d97706;
+  transform: translateY(-2px);
+}
+
+/* ============ INSTRUCCIONES ============ */
+.instrucciones {
+  background: #f0fdf4;
+  border-left: 4px solid #10b981;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 2rem;
+  color: #166534;
+  font-size: 0.95rem;
+}
+
+.instrucciones p {
+  margin: 0;
+}
+
+/* ============ PANEL DE PROGRESO ============ */
+.progreso-panel {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.progreso-stats {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.progreso-stats .stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.progreso-stats .stat-numero {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.progreso-stats .stat-label {
+  font-size: 0.8rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.progreso-barra {
+  width: 100%;
+  height: 12px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progreso-relleno {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  border-radius: 999px;
+  /* La transición anima la barra cuando cambia el porcentaje. */
+  transition: width 0.4s ease;
+}
+
+/* ============ MATERIAS POR CICLO ============ */
+.materias-por-ciclo {
+  display: grid;
+  gap: 2rem;
+}
+
+.ciclo-grupo {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.ciclo-titulo {
+  font-size: 1.2rem;
+  color: #1a1a1a;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #2563eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.ciclo-conteo {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #10b981;
+}
+
+.materias-lista {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.materia-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 0.75rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.materia-item:hover {
+  background-color: #f9fafb;
+}
+
+.materia-checkbox {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.75rem;
+  margin-top: 0.25rem;
+  cursor: pointer;
+  accent-color: #2563eb;
+}
+
+.materia-label {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.materia-label .codigo {
+  font-weight: 700;
+  color: #1a1a1a;
+  font-size: 0.95rem;
+}
+
+.materia-label .nombre {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.materia-label .uv {
+  color: #999;
+  font-size: 0.85rem;
+}
+
+.materia-label .tipo {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  width: fit-content;
+  background-color: #fee;
+  color: #c33;
+}
+
+.materia-label .tipo.obligatoria {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+/* Cambio visual cuando está checked */
+.materia-checkbox:checked + .materia-label .codigo {
+  color: #10b981;
+}
+
+.materia-checkbox:checked + .materia-label .nombre {
+  color: #10b981;
+  font-weight: 500;
+}
+
+/* ============ FOOTER ACTIONS ============ */
+.footer-actions {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-secondary {
+  padding: 0.6rem 1.2rem;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: #dc2626;
+  transform: translateY(-2px);
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+  .perfil-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .formulario-perfil {
+    padding: 1.5rem;
+  }
+
+  .formulario-perfil h2 {
+    font-size: 1.5rem;
+  }
+
+  .lista-materias h2 {
+    font-size: 1.5rem;
+  }
+
+  .demo-buttons {
     flex-direction: column;
   }
 

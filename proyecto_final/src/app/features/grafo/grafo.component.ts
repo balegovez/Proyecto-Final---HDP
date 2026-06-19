@@ -1,7 +1,6 @@
 import {
   Component,
   ElementRef,
-  Injector,
   OnDestroy,
   ViewChild,
   effect,
@@ -56,9 +55,6 @@ export class GrafoComponent implements OnDestroy {
 
   // Servicio global con todos los datos del pensum.
   pensumService = inject(PensumService);
-
-  // Necesario para crear effect() fuera del constructor.
-  private injector = inject(Injector);
 
   // Instancia de Cytoscape. Se crea cuando los datos están listos
   // y se destruye en ngOnDestroy para evitar fugas de memoria.
@@ -272,7 +268,6 @@ export class GrafoComponent implements OnDestroy {
     if (!materia) return;
 
     this.materiaSeleccionada = materia;
-    console.log(this.materiaSeleccionada);
     this.cadenaDesbloqueada = this.materiasQueDesbloquea(
       codigo,
       this.pensumService.prerequisitos(),

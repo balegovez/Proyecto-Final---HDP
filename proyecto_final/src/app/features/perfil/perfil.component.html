@@ -1,77 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Perfil</title>
-</head>
-<body>
- <div class="perfil-container">
+<section class="perfil-container">
 
-  <!-- ============================================================
-       1) Mientras IndexedDB termina de cargar, mostramos un spinner.
-       cargando() es una signal del servicio: arranca en true y pasa
-       a false cuando inicializar() termina.
-       ============================================================ -->
   @if (pensumService.cargando()) {
-    <div class="spinner">
+    <div class="spinner" role="status" aria-live="polite">
       <p>Cargando tu información...</p>
     </div>
   } @else {
 
-    <!-- 2) Si la carga falló, avisamos con el banner de error. -->
     @if (pensumService.error()) {
-      <div class="error-banner">
+      <div class="error-banner" role="alert">
         <p>{{ pensumService.error() }}</p>
       </div>
     }
 
-    <!-- ============================================================
-         3) Sin perfil  -> FORMULARIO.   Con perfil -> LISTA.
-         mostrarFormulario() es un computed derivado de perfil().
-         ============================================================ -->
     @if (mostrarFormulario()) {
 
-      <!-- ---------- FORMULARIO DE PERFIL ---------- -->
-      <div class="formulario-perfil">
-        <h2>Crea tu perfil</h2>
-        <p class="subtitulo">Registra tu nombre y carné para empezar a planificar.</p>
+      <section class="formulario-perfil">
+        <header>
+          <h2>Crea tu perfil</h2>
+          <p class="subtitulo">Registra tu nombre y carné para empezar a planificar.</p>
+        </header>
 
-        <div class="form-group">
-          <label for="nombre">Nombre completo</label>
-          <input
-            id="nombre"
-            type="text"
-            [(ngModel)]="nombre"
-            placeholder="Ej: Juan Pérez" />
-        </div>
+        <form (submit)="$event.preventDefault(); guardarPerfil()">
+          <div class="form-group">
+            <label for="nombre">Nombre completo</label>
+            <input
+              id="nombre"
+              type="text"
+              [(ngModel)]="nombre"
+              name="nombre"
+              placeholder="Ej: Juan Pérez" />
+          </div>
 
-        <div class="form-group">
-          <label for="carnet">Carné</label>
-          <input
-            id="carnet"
-            type="text"
-            [(ngModel)]="carnet"
-            placeholder="Ej: JP24001" />
-        </div>
+          <div class="form-group">
+            <label for="carnet">Carné</label>
+            <input
+              id="carnet"
+              type="text"
+              [(ngModel)]="carnet"
+              name="carnet"
+              placeholder="Ej: JP24001" />
+          </div>
 
-        <button class="btn-primary" (click)="guardarPerfil()">Guardar perfil</button>
-      </div>
+          <button type="submit" class="btn-primary">Guardar perfil</button>
+        </form>
+      </section>
 
     } @else {
 
-      <!-- ---------- LISTA DE MATERIAS ---------- -->
-      <div class="lista-materias">
+      <section class="lista-materias">
 
-        <!-- Encabezado: leemos el perfil GUARDADO directo de la signal. -->
-        <div class="header">
+        <header class="header">
           <h2>Hola, {{ pensumService.perfil()?.nombre }}</h2>
           <p class="carnet-info">Carné: {{ pensumService.perfil()?.carnet }}</p>
-        </div>
+        </header>
 
-        <!-- Panel de progreso. Todo sale del computed progreso():
-             se recalcula solo cada vez que marcas/desmarcas una materia. -->
-        <div class="progreso-panel">
+        <section class="progreso-panel" aria-label="Progreso académico">
           <div class="progreso-stats">
             <div class="stat">
               <span class="stat-numero">{{ progreso().aprobadas }}/{{ progreso().total }}</span>
@@ -86,15 +69,17 @@
               <span class="stat-label">De avance</span>
             </div>
           </div>
-          <div class="progreso-barra">
-            <!-- El ancho del relleno = porcentaje calculado. -->
+          
+          <div class="progreso-barra" 
+               role="progressbar" 
+               [attr.aria-valuenow]="progreso().porcentaje" 
+               aria-valuemin="0" 
+               aria-valuemax="100">
             <div class="progreso-relleno" [style.width.%]="progreso().porcentaje"></div>
           </div>
-        </div>
+        </section>
 
-        <!-- Botones de demostración (para la defensa). Cada uno pasa una
-             lista predefinida del servicio a cargarEscenarioDemo(). -->
-        <div class="botones-demo">
+        <aside class="botones-demo" aria-label="Escenarios de demostración">
           <p class="demo-label">Escenarios de demostración</p>
           <div class="demo-buttons">
             <button
@@ -113,28 +98,26 @@
               Flujo crítico
             </button>
           </div>
-        </div>
+        </aside>
 
-        <div class="instrucciones">
+        <aside class="instrucciones" aria-label="Instrucciones de uso">
           <p>Marca las materias que ya aprobaste. Tu progreso se guarda automáticamente.</p>
-        </div>
+        </aside>
 
-        <!-- Materias agrupadas por ciclo.
-             materiasPorCiclo() es un computed: [{ ciclo, materias[] }, ...] -->
-        <div class="materias-por-ciclo">
+        <section class="materias-por-ciclo" aria-label="Materias por ciclo académico">
           @for (grupo of materiasPorCiclo(); track grupo.ciclo) {
-            <div class="ciclo-grupo">
-              <h3 class="ciclo-titulo">
-                <span>Ciclo {{ grupo.ciclo }}</span>
-                <span class="ciclo-conteo">{{ grupo.aprobadas }}/{{ grupo.aCursar }} aprobadas</span>
-              </h3>
+            
+            <article class="ciclo-grupo">
+              <header>
+                <h3 class="ciclo-titulo">
+                  <span>Ciclo {{ grupo.ciclo }}</span>
+                  <span class="ciclo-conteo">{{ grupo.aprobadas }}/{{ grupo.aCursar }} aprobadas</span>
+                </h3>
+              </header>
 
-              <div class="materias-lista">
+              <ul class="materias-lista">
                 @for (materia of grupo.materias; track materia.codigo) {
-                  <div class="materia-item">
-                    <!-- El checkbox y la etiqueta son hermanos adyacentes:
-                         así funciona el selector CSS .materia-checkbox:checked + .materia-label.
-                         [id]/[for] enlazan label y checkbox (clic en la etiqueta lo marca). -->
+                  <li class="materia-item">
                     <input
                       type="checkbox"
                       class="materia-checkbox"
@@ -149,20 +132,19 @@
                         {{ materia.tipo }}
                       </span>
                     </label>
-                  </div>
+                  </li>
                 }
-              </div>
-            </div>
+              </ul>
+            </article>
+
           }
-        </div>
+        </section>
 
-        <div class="footer-actions">
+        <footer class="footer-actions">
           <button class="btn-secondary" (click)="borrarPerfil()">Borrar perfil</button>
-        </div>
+        </footer>
 
-      </div>
+      </section>
     }
   }
-</div>
-</body>
-</html>
+</section>

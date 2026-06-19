@@ -1,100 +1,130 @@
-<div class="container-fluid py-3 px-4">
+<section class="pensum-root">
   
-  <div class="breadcrumb-container d-flex align-items-center gap-2 mb-4 bg-white p-3 rounded">...</div>
+  <aside class="pensum-leyenda" aria-label="Leyenda de colores">
+    <p class="leyenda-titulo"><strong>Pasa el mouse sobre una materia para ver:</strong></p>
+    <ul class="leyenda-items">
+      <li class="leyenda-item leyenda-seleccionada">
+        <span class="leyenda-dot" aria-hidden="true"></span> Materia seleccionada
+      </li>
+      <li class="leyenda-item leyenda-req">
+        <span class="leyenda-dot" aria-hidden="true"></span> Sus prerrequisitos
+      </li>
+      <li class="leyenda-item leyenda-desbloquea">
+        <span class="leyenda-dot" aria-hidden="true"></span> Lo que desbloquea
+      </li>
+    </ul>
+  </aside>
 
-  <div *ngFor="let ciclo of ciclos()" class="mb-5">
-    <h4 class="mb-3 fw-normal text-dark" style="font-size: 1.5rem;">Ciclo {{ ciclo.ciclo }}</h4>
-    
-    <div class="row g-0 border-top border-start bg-white grid-materias">
+  <div class="matriz-scroll-container">
+    <section *ngFor="let ciclo of ciclos()" class="ciclo-columna">
       
-      <div class="col-12 col-md-6 col-lg-4 p-4 border-end border-bottom materia-card clickable-card" 
-           *ngFor="let materia of ciclo.listaMaterias"
-           (click)="seleccionarMaterias(materia)">
-        
-        <div class="d-flex align-items-center gap-1 mb-2">
-          <span class="fs-5 text-dark lh-1">{{ materia.codigo }}</span>
-          <span class="fw-bold text-dark fs-6 lh-1">{{ materia.uv }} UV</span>
-        </div>
-        
-        <div class="fw-bold text-dark mb-1 lh-sm" style="font-size: 0.95rem;">
-          {{ materia.nombre }}
-        </div>
-        
-        <div class="text-muted lh-sm mb-3" style="font-size: 0.85rem;">
-          ({{ materia.tipo }})
-        </div>
-        
-        <div class="materia-prerequisitos">
+      <header class="ciclo-header">
+        <h4>Ciclo {{ ciclo.ciclo }}</h4>
+      </header>
+
+      <article
+        *ngFor="let materia of ciclo.listaMaterias"
+        class="materia-card"
+        [class.aprobada]="estadoMateria(materia.codigo) === 'aprobada'"
+        [class.cursando]="estadoMateria(materia.codigo) === 'cursando'"
+        [class.pendiente]="estadoMateria(materia.codigo) === 'pendiente'"
+        [class.es-electiva]="materia.tipo === 'Electiva'"
+        [class.hover-seleccionada]="estadoHover(materia.codigo) === 'hover-seleccionada'"
+        [class.hover-requisito]="estadoHover(materia.codigo) === 'hover-requisito'"
+        [class.hover-desbloquea]="estadoHover(materia.codigo) === 'hover-desbloquea'"
+        [class.hover-opaco]="estadoHover(materia.codigo) === 'hover-opaco'"
+        (mouseenter)="activarHover(materia.codigo)"
+        (mouseleave)="desactivarHover()"
+        (click)="seleccionarMaterias(materia)"
+        tabindex="0"
+      >
+        <header class="materia-codigo">
+          <strong>{{ materia.codigo }}</strong>
+          <span class="materia-uv">{{ materia.uv }} UV</span>
+        </header>
+
+        <h5 class="materia-nombre">{{ materia.nombre }}</h5>
+
+        <span *ngIf="materia.tipo === 'Electiva'" class="badge-electiva">
+          Electiva
+        </span>
+
+        <footer class="materia-prerequisitos">
           <ng-container *ngIf="materia.listaPrerequisitos.length > 0">
-            <span class="badge-req" *ngFor="let req of materia.listaPrerequisitos">Req: {{ req }}</span>
+            <span *ngFor="let req of materia.listaPrerequisitos" class="badge-req">
+              {{ req }}
+            </span>
           </ng-container>
           <ng-container *ngIf="materia.listaPrerequisitos.length === 0">
             <span class="badge-req sin-req">Bachillerato</span>
           </ng-container>
-        </div>
-
-      </div>
-    </div>
+        </footer>
+      </article>
+      
+    </section>
   </div>
 
-  <div class="grafo-overlay" *ngIf="grafoMateria()" (click)="cerrarGrafo()">
-    <div class="grafo-modal bg-white p-4 rounded shadow-lg" (click)="$event.stopPropagation()">
+  <div class="grafo-overlay" *ngIf="grafoMateria()" (click)="cerrarGrafo()" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+    <article class="grafo-modal bg-white p-4 rounded shadow-lg" (click)="$event.stopPropagation()">
       
-      <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-        <h5 class="text-dark mb-0 fw-bold">Flujo de Prerrequisitos</h5>
-        <button class="btn-close" (click)="cerrarGrafo()"></button>
-      </div>
+      <header class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+        <h5 id="modal-titulo" class="text-dark mb-0 fw-bold">Flujo de Prerrequisitos</h5>
+        <button class="btn-close" (click)="cerrarGrafo()" aria-label="Cerrar modal"></button>
+      </header>
 
-      <div class="grafo-flow-container">
+      <section class="grafo-flow-container">
         
         <div class="grafo-col">
-          <span class="grafo-label">Prerrequisitos</span>
+          <h6 class="grafo-label">Prerrequisitos</h6>
           <div class="grafo-nodes-stack">
-            <div class="grafo-node node-req" *ngFor="let req of grafoMateria()?.prerequisitos">
+            <article class="grafo-node node-req"
+                 *ngFor="let req of grafoMateria()?.prerequisitos">
               <small class="fw-bold">{{ req.codigo }}</small>
-              <p class="mb-0 text-truncate" style="max-width: 150px;">{{ req.nombre }}</p>
-            </div>
-            <div class="text-muted fst-italic small" *ngIf="grafoMateria()?.prerequisitos?.length === 0">
+              <p class="mb-0 text-truncate" style="max-width:150px;">{{ req.nombre }}</p>
+            </article>
+            <p class="text-muted fst-italic small"
+                 *ngIf="grafoMateria()?.prerequisitos?.length === 0">
               Ninguno (Bachillerato)
-            </div>
+            </p>
           </div>
         </div>
 
-        <div class="grafo-arrow">
+        <div class="grafo-arrow" aria-hidden="true">
           <i class="fas fa-chevron-right fa-lg text-secondary d-none d-md-block"></i>
           <i class="fas fa-chevron-down fa-lg text-secondary d-block d-md-none"></i>
         </div>
 
         <div class="grafo-col">
-          <span class="grafo-label">Materia Seleccionada</span>
-          <div class="grafo-node node-current border-primary shadow-sm">
+          <h6 class="grafo-label">Materia Seleccionada</h6>
+          <article class="grafo-node node-current border-primary shadow-sm">
             <span class="badge bg-primary mb-1">{{ grafoMateria()?.actual.codigo }}</span>
             <h6 class="mb-0 fw-bold text-dark text-center">{{ grafoMateria()?.actual.nombre }}</h6>
             <small class="text-muted mt-1">{{ grafoMateria()?.actual.uv }} UV</small>
-          </div>
+          </article>
         </div>
 
-        <div class="grafo-arrow">
+        <div class="grafo-arrow" aria-hidden="true">
           <i class="fas fa-chevron-right fa-lg text-secondary d-none d-md-block"></i>
           <i class="fas fa-chevron-down fa-lg text-secondary d-block d-md-none"></i>
         </div>
 
         <div class="grafo-col">
-          <span class="grafo-label">Desbloquea Directamente</span>
+          <h6 class="grafo-label">Desbloquea Directamente</h6>
           <div class="grafo-nodes-stack">
-            <div class="grafo-node node-unlock" *ngFor="let des of grafoMateria()?.desbloquea">
+            <article class="grafo-node node-unlock"
+                 *ngFor="let des of grafoMateria()?.desbloquea">
               <small class="fw-bold">{{ des.codigo }}</small>
-              <p class="mb-0 text-truncate" style="max-width: 150px;">{{ des.nombre }}</p>
-            </div>
-            <div class="text-muted fst-italic small" *ngIf="grafoMateria()?.desbloquea?.length === 0">
+              <p class="mb-0 text-truncate" style="max-width:150px;">{{ des.nombre }}</p>
+            </article>
+            <p class="text-muted fst-italic small"
+                 *ngIf="grafoMateria()?.desbloquea?.length === 0">
               Ninguna materia posterior
-            </div>
+            </p>
           </div>
         </div>
 
-      </div>
-
-    </div>
+      </section>
+    </article>
   </div>
 
-</div> 
+</section>

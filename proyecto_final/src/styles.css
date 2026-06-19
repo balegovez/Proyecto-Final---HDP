@@ -1,1 +1,54 @@
-/* You can add global styles to this file, and also import other style files */
+/* ============================================
+   Estilos globales del proyecto
+   PensumNavigator — UES-FMO
+   ============================================ */
+
+/* Variables de color con la identidad UES.
+   Usar var(--ues-sidebar) en cualquier componente. */
+:root {
+  --ues-sidebar: #3262c8;       /* Azul institucional del sidebar */
+  --ues-sidebar-active: #3a414e;
+  --ues-red: #b71c1c;            /* Rojo institucional (botones, acentos) */
+  --ues-red-hover: #901616;
+  --ues-green: #008f39;          /* Verde del badge "Estudiante" */
+  --ues-text-muted: #6c757d;
+  --ues-border: #e0e0e0;
+  --ues-bg: #f8f9fa;
+}
+
+/* Reset suave del body */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--ues-bg);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Clases globales reutilizables en cualquier componente */
+
+.btn-red-custom {
+  background-color: var(--ues-red);
+  border-color: var(--ues-red);
+  color: white;
+  border-radius: 6px;
+  padding: 8px 15px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-red-custom:hover,
+.btn-red-custom:focus {
+  background-color: var(--ues-red-hover);
+  border-color: var(--ues-red-hover);
+  color: white;
+}
+
+.student-badge {
+  background-color: var(--ues-green);
+  font-size: 0.75rem;
+  padding: 4px 10px;
+}

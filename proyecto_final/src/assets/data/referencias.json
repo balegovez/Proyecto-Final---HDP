@@ -1,0 +1,360 @@
+{
+    "referencias": [
+        {
+            "codigoMateria": "ILI155",
+            "nombre": "Introducción a la Informática",
+            "fuente": "oficial",
+            "temas": [],
+            "libros": [
+                {
+                    "titulo": "Fundamentos de Programación",
+                    "autores": "Luis Joyanes",
+                    "editorial": "McGraw-Hill",
+                    "anio": "1996"
+                },
+                {
+                    "titulo": "Fundamentos de Informática",
+                    "autores": "Luis A. Ureña, Antonio M. Sánchez, Mario T. Martín, José M. Santos",
+                    "editorial": "Alfaomega",
+                    "anio": "1999"
+                },
+                {
+                    "titulo": "Metodología de Programación Tomo 1 y 2",
+                    "autores": "Osvaldo Carió",
+                    "editorial": "Alfaomega",
+                    "anio": "1995"
+                },
+                {
+                    "titulo": "Introducción a la Computación",
+                    "autores": "Sonia Villarreal",
+                    "editorial": "McGraw-Hill",
+                    "anio": "1999"
+                }
+            ]
+        },
+        {
+            "codigoMateria": "MSM155",
+            "nombre": "Manejo de Software para Microcomputadoras",
+            "fuente": "oficial",
+            "temas": [],
+            "libros": [
+                {
+                    "titulo": "Serie Visual a Toda Máquina",
+                    "autores": "Marco Antonio Tiznado Santana",
+                    "editorial": "McGraw-Hill",
+                    "anio": ""
+                },
+                {
+                    "titulo": "Microsoft Official Academic Course — Microsoft Office Word, Excel, Access y PowerPoint",
+                    "autores": "Microsoft",
+                    "editorial": "Microsoft",
+                    "anio": "2016"
+                },
+                {
+                    "titulo": "HTML y CSS",
+                    "autores": "Luján Mora, Sergio",
+                    "editorial": "Alfaomega / Altaria (Biblioteca UES)",
+                    "anio": ""
+                }
+            ]
+        },
+        {
+            "codigoMateria": "FIS155",
+            "nombre": "Física I",
+            "fuente": "oficial",
+            "temas": [],
+            "libros": [
+                {
+                    "titulo": "Física Universitaria con Física Moderna 1 — Volumen 1, Primera edición",
+                    "autores": "Young, Hugh D.; Freedman, Roger A.",
+                    "editorial": "Pearson Educación",
+                    "anio": "2018"
+                },
+                {
+                    "titulo": "Física para Ciencias e Ingeniería — Volumen 1, Cuarta edición",
+                    "autores": "Giancoli, Douglas C.",
+                    "editorial": "Pearson Educación",
+                    "anio": "2008"
+                },
+                {
+                    "titulo": "Física para Ciencias e Ingeniería — Volumen 1, Séptima edición",
+                    "autores": "Serway, Raymond A.; Jewett, Jr. John W.",
+                    "editorial": "Cengage Learning Editores",
+                    "anio": "2008"
+                },
+                {
+                    "titulo": "Física — Volumen 1, Quinta edición",
+                    "autores": "Resnick, Robert; Halliday, David; Krane, Kenneth S.",
+                    "editorial": "Editorial Patria",
+                    "anio": "2008"
+                },
+                {
+                    "titulo": "Física para la ciencia y la tecnología — Volumen 1A, Sexta edición",
+                    "autores": "Tipler, Paul Allen; Mosca, Gene",
+                    "editorial": "Editorial Reverté",
+                    "anio": "2020"
+                }
+            ]
+        },
+        {
+            "codigoMateria": "FIS255",
+            "nombre": "Física II",
+            "fuente": "oficial",
+            "temas": [],
+            "libros": [
+                {
+                    "titulo": "Física Universitaria — Sears, Zemansky, Young y Freedman, 13ª Ed. Volumen 1",
+                    "autores": "Sears, Zemansky, Young, Freedman",
+                    "editorial": "Pearson",
+                    "anio": ""
+                },
+                {
+                    "titulo": "Física — Tomo I, Cuarta Edición",
+                    "autores": "Serway, Raymond",
+                    "editorial": "McGraw-Hill",
+                    "anio": "1997"
+                },
+                {
+                    "titulo": "Fundamentos de Física — Tercera Edición",
+                    "autores": "Blatt, Frank J.",
+                    "editorial": "Prentice Hall, Hispanoamérica S. A.",
+                    "anio": "1991"
+                },
+                {
+                    "titulo": "Física — Tercera Edición",
+                    "autores": "Giancoli, Douglas",
+                    "editorial": "Prentice Hall, Hispanoamericana S. A.",
+                    "anio": "1980"
+                },
+                {
+                    "titulo": "Física — Tomo I",
+                    "autores": "Resnick, Halliday y Kramer",
+                    "editorial": "Compañía Editorial Continental, S. A.",
+                    "anio": "1997"
+                },
+                {
+                    "titulo": "Física I",
+                    "autores": "Tipler, Paul A.",
+                    "editorial": "Editorial Reverté, S. A.",
+                    "anio": "1978"
+                }
+            ]
+        },
+        {
+            "codigoMateria": "MAT255",
+            "nombre": "Matemática II",
+            "fuente": "oficial",
+            "temas": [],
+            "libros": [
+                {
+                    "titulo": "Cálculo y Geometría Analítica — Sexta edición, Volumen 1",
+                    "autores": "Larson, Roland E.; Hostetler, Robert P.; Edwards, Bruce H.",
+                    "editorial": "McGrawHill",
+                    "anio": ""
+                },
+                {
+                    "titulo": "Matemática para administración y economía — Décima segunda edición",
+                    "autores": "Haeussler, Ernest F.; Paul, Richard S.; Wood, Richard J.",
+                    "editorial": "PEARSON Prentice Hall",
+                    "anio": ""
+                },
+                {
+                    "titulo": "Matemática I",
+                    "autores": "Raúl Aguilera Liborio",
+                    "editorial": "UCA editores",
+                    "anio": ""
+                },
+                {
+                    "titulo": "Cálculo con Geometría analítica — Séptima edición",
+                    "autores": "Louis Leithold",
+                    "editorial": "",
+                    "anio": ""
+                },
+                {
+                    "titulo": "Cálculo — Novena edición",
+                    "autores": "Purcell, Edwin J.; Varberg, Dale; Rigdon, Steven E.",
+                    "editorial": "PEARSON Prentice Hall",
+                    "anio": ""
+                },
+                {
+                    "titulo": "Cálculo con Geometría analítica — 2da edición",
+                    "autores": "Earl Swokowski",
+                    "editorial": "Grupo Editorial Iberoamericana",
+                    "anio": ""
+                }
+            ]
+        },
+        {
+            "codigoMateria": "MAT355",
+            "nombre": "Matemática III",
+            "fuente": "oficial",
+            "temas": [],
+            "libros": [
+                {
+                    "titulo": "Cálculo y Geometría Analítica — Sexta edición, Volumen 1",
+                    "autores": "Larson, Roland E.; Hostetler, Robert P.; Edwards, Bruce H.",
+                    "editorial": "McGrawHill",
+                    "anio": ""
+                },
+                {
+                    "titulo": "Matemática para administración y economía — Décima segunda edición",
+                    "autores": "Haeussler, Ernest F.; Paul, Richard S.; Wood, Richard J.",
+                    "editorial": "PEARSON Prentice Hall",
+                    "anio": ""
+                },
+                {
+                    "titulo": "Matemática I",
+                    "autores": "Raúl Aguilera Liborio",
+                    "editorial": "UCA editores",
+                    "anio": ""
+                },
+                {
+                    "titulo": "Cálculo con Geometría analítica — Séptima edición",
+                    "autores": "Louis Leithold",
+                    "editorial": "",
+                    "anio": ""
+                },
+                {
+                    "titulo": "Cálculo — Novena edición",
+                    "autores": "Purcell, Edwin J.; Varberg, Dale; Rigdon, Steven E.",
+                    "editorial": "PEARSON Prentice Hall",
+                    "anio": ""
+                },
+                {
+                    "titulo": "Cálculo con Geometría analítica — 2da edición",
+                    "autores": "Earl Swokowski",
+                    "editorial": "Grupo Editorial Iberoamericana",
+                    "anio": ""
+                }
+            ]
+        },
+        {
+            "codigoMateria": "ANS155",
+            "nombre": "Análisis Numérico",
+            "fuente": "oficial",
+            "temas": [],
+            "libros": [
+                {
+                    "titulo": "Análisis numérico — 7a edición",
+                    "autores": "Burden, R. L.; Faires, J. D.",
+                    "editorial": "Thomson Learning",
+                    "anio": "2002"
+                },
+                {
+                    "titulo": "Métodos numéricos para ingenieros — 5a edición",
+                    "autores": "Chapra, S. C.; Canale, R. P.",
+                    "editorial": "McGraw-Hill",
+                    "anio": "2007"
+                },
+                {
+                    "titulo": "Análisis numérico básico: Un enfoque algorítmico con el soporte de Python — Versión 4.4",
+                    "autores": "Rodríguez Ojeda, L.",
+                    "editorial": "ESPOL",
+                    "anio": "2016"
+                }
+            ]
+        },
+        {
+            "codigoMateria": "IEC155",
+            "nombre": "Ingeniería Económica",
+            "fuente": "oficial",
+            "temas": [],
+            "libros": [
+                {
+                    "titulo": "Ingeniería Económica — 2ª Ed.",
+                    "autores": "DeGarmo, E.P.",
+                    "editorial": "Prentice Hall",
+                    "anio": "1998"
+                },
+                {
+                    "titulo": "Principios de Ingeniería Económica — 2ª Ed.",
+                    "autores": "Grant, E.L.",
+                    "editorial": "CECSA",
+                    "anio": "1995"
+                },
+                {
+                    "titulo": "Ingeniería Económica — 4ª Ed.",
+                    "autores": "Tarkin, A.; Blank, L.",
+                    "editorial": "McGrawHill",
+                    "anio": "1999"
+                },
+                {
+                    "titulo": "Ingeniería Económica",
+                    "autores": "Taylor, G.A.",
+                    "editorial": "LIMUSA",
+                    "anio": "1990"
+                },
+                {
+                    "titulo": "Matemáticas Financieras — Cuarta edición",
+                    "autores": "Mata, A. D.",
+                    "editorial": "McGrawHill",
+                    "anio": "2008"
+                },
+                {
+                    "titulo": "Ingeniería Económica — Sexta edición",
+                    "autores": "Tarquin, L. B.",
+                    "editorial": "McGrawHill",
+                    "anio": "2006"
+                }
+            ]
+        },
+        {
+            "codigoMateria": "SDU155",
+            "nombre": "Sistemas Digitales I",
+            "fuente": "oficial",
+            "temas": [],
+            "libros": [
+                {
+                    "titulo": "Análisis y Diseño de Circuitos Lógicos Digitales",
+                    "autores": "Nelson, Victor P.",
+                    "editorial": "Prentice Hall Hispanoamericana",
+                    "anio": "1996"
+                },
+                {
+                    "titulo": "Diseño Digital Principios y Prácticas",
+                    "autores": "Wakerly, John F.",
+                    "editorial": "Prentice Hall Hispanoamericana",
+                    "anio": "1992"
+                },
+                {
+                    "titulo": "Sistemas Digitales Principios y Aplicaciones — 6ª Ed.",
+                    "autores": "Tocci, Ronald J.",
+                    "editorial": "PHH",
+                    "anio": "1996"
+                },
+                {
+                    "titulo": "Sistemas Electrónicos Digitales — 7ª Ed.",
+                    "autores": "Mandado, Enrique",
+                    "editorial": "Alfaomega-Marcombo",
+                    "anio": "1992"
+                },
+                {
+                    "titulo": "Fundamentos de Sistemas Digitales",
+                    "autores": "Floyd, T.L.",
+                    "editorial": "Prentice Hall Hispanoamericana",
+                    "anio": "1997"
+                },
+                {
+                    "titulo": "Diseño Lógico",
+                    "autores": "Lloris Antonio",
+                    "editorial": "McGrawHill Interamericana de España",
+                    "anio": "1996"
+                }
+            ]
+        },
+        {
+            "codigoMateria": "ESD155",
+            "nombre": "Estructura de Datos",
+            "fuente": "oficial",
+            "temas": [
+                "Arreglos unidimensionales y bidimensionales",
+                "Pilas y colas",
+                "Listas y diccionarios",
+                "Hilos",
+                "Árboles y grafos",
+                "Introducción al diseño web (ASP.NET Core)"
+            ],
+            "libros": []
+        }
+    ]
+}

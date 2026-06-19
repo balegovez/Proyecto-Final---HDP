@@ -29,7 +29,6 @@ export const routes: Routes = [
             ),
     },
     {
-        // Protegida: necesita un perfil creado.
         path: 'matriz',
         canActivate: [perfilGuard],
         loadComponent: () =>
@@ -38,7 +37,6 @@ export const routes: Routes = [
             ),
     },
     {
-        // Protegida: necesita un perfil creado.
         path: 'grafo',
         canActivate: [perfilGuard],
         loadComponent: () =>
@@ -47,7 +45,6 @@ export const routes: Routes = [
             ),
     },
     {
-        // Protegida: necesita un perfil creado.
         path: 'planificador',
         canActivate: [perfilGuard],
         loadComponent: () =>

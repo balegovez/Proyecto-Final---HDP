@@ -24,61 +24,46 @@ export class MatrizComponent {
   // ── Constantes ───────────────────────────────────────────────────
   readonly LIMITE_UV = 20;
 
-  readonly dias = [
-    'Lunes',
-    'Martes',
-    'Miércoles',
-    'Jueves',
-    'Viernes',
-  ] as const;
+  readonly dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'] as const;
+  readonly horas = ['07:00', '09:00', '11:00', '13:00', '15:00'] as const;
 
-  readonly horas = [
-    '07:00',
-    '09:00',
-    '11:00',
-    '13:00',
-    '15:00',
-  ] as const;
-
-  /**
-   * Array tipado vacío que se pasa como [cdkDropListData] en cada celda.
-   * Evita que TypeScript infiera never[] desde un literal [].
-   */
   readonly celdaVacia: string[] = [];
 
-  // ── IDs de celdas (calculado una sola vez, no en getter) ─────────
-  /**
-   * Se declara como propiedad en vez de getter para que Angular no lo
-   * recalcule en cada ciclo de detección de cambios.
-   */
   readonly dropIds: string[] = this.dias.flatMap(dia =>
     this.horas.map(hora => `drop-${dia}-${hora}`)
   );
 
-  // ── Las tres colecciones (fuente de verdad) ───────────────────────
-
-  /** Horario armado: clave = "Dia-HH:MM", valor = código de materia */
+  // ── Colecciones (fuente de verdad) ────────────────────────────────
   readonly horario = signal<Record<string, string>>({});
-
-  /** Materias elegidas por el estudiante, pendientes de ubicar */
   readonly materiasSeleccionadas = signal<string[]>([]);
 
   /**
-   * Materias que aún no están en ninguna de las otras dos colecciones.
-   * computed() garantiza que se recalcule cuando cambien los signals.
+   * MODO TÁCTIL (móvil): código de la materia "tomada" con un toque.
+   * Cuando vale null, no hay materia tomada. Cuando tiene un código, el
+   * siguiente toque en una celda vacía la coloca ahí.
+   *
+   * Esto resuelve el problema del drag & drop en móvil: arrastrar a una
+   * tabla pequeña con el dedo es impreciso, así que ofrecemos "tocar para
+   * tomar, tocar para soltar" como alternativa accesible.
+   */
+  readonly materiaTomada = signal<string | null>(null);
+
+  /**
+   * Materias DISPONIBLES = inscribibles (prereqs cumplidos, no aprobadas)
+   * que aún no están ni en seleccionadas ni en el horario.
+   *
+   * CAMBIO CLAVE: ahora parte de materiasInscribibles() del servicio en vez
+   * de todas las materias. Así la Matriz solo muestra lo que el estudiante
+   * REALMENTE puede inscribir según su ciclo y prerrequisitos.
    */
   readonly materiasDisponibles = computed(() => {
     const enSeleccionadas = new Set(this.materiasSeleccionadas());
-    const enHorario       = new Set(Object.values(this.horario()));
+    const enHorario = new Set(Object.values(this.horario()));
     return this.pensumService
-      .materias()
+      .materiasInscribibles()
       .filter(m => !enSeleccionadas.has(m.codigo) && !enHorario.has(m.codigo));
   });
 
-  /**
-   * Total de UV en el horario como computed para que la vista
-   * no repita cálculos en cada interpolación {{ totalUV() }}.
-   */
   readonly uvInscritas = computed(() => {
     const enHorario = new Set(Object.values(this.horario()));
     return this.pensumService
@@ -87,83 +72,83 @@ export class MatrizComponent {
       .reduce((sum, m) => sum + m.uv, 0);
   });
 
-  /** Materias efectivamente colocadas en el horario. */
-  readonly materiasUbicadas = computed(() =>
-    Object.keys(this.horario()).length
-  );
+  readonly materiasUbicadas = computed(() => Object.keys(this.horario()).length);
 
   // ── Helpers ───────────────────────────────────────────────────────
 
-  /**
-   * Devuelve la materia completa a partir de su código.
-   * Centraliza la búsqueda para no repetirla en el template.
-   */
   obtenerMateria(codigo: string) {
     return this.pensumService.materias().find(m => m.codigo === codigo);
   }
 
   /**
-   * Verifica si todos los prerrequisitos de una materia están aprobados.
+   * ¿Se puede inscribir? Ahora delega en el servicio, que centraliza la
+   * regla (no aprobada + todos los prereqs aprobados).
    */
   puedeInscribir(codigoMateria: string): boolean {
-    const prerequisitos = this.pensumService
-      .prerequisitos()
-      .filter(p => p.codigoMateria === codigoMateria);
-
-    if (prerequisitos.length === 0) return true;
-
-    return prerequisitos.every(
-      pr => this.pensumService.estadoDe(pr.codigoPrerequisito) === 'aprobada'
-    );
+    return this.pensumService.esInscribible(codigoMateria);
   }
 
-  // ── Acciones ──────────────────────────────────────────────────────
+  // ── Acciones DISPONIBLES ↔ SELECCIONADAS ──────────────────────────
 
-  /**
-   * DISPONIBLES → SELECCIONADAS
-   * Mueve una materia al panel de seleccionadas.
-   * No hace nada si tiene prerrequisitos pendientes.
-   */
   agregarASeleccionadas(codigo: string): void {
     if (!this.puedeInscribir(codigo)) return;
     this.materiasSeleccionadas.update(lista => [...lista, codigo]);
   }
 
-  /**
-   * SELECCIONADAS → DISPONIBLES
-   * Devuelve una materia al listado de disponibles.
-   */
   quitarDeSeleccionadas(codigo: string): void {
     this.materiasSeleccionadas.update(lista => lista.filter(c => c !== codigo));
+    // Si esta materia estaba "tomada" en modo táctil, la soltamos.
+    if (this.materiaTomada() === codigo) {
+      this.materiaTomada.set(null);
+    }
+  }
+
+  // ── DRAG & DROP (escritorio) ──────────────────────────────────────
+
+  soltarEnCelda(event: CdkDragDrop<string[]>, dia: string, hora: string): void {
+    const codigo: string = event.item.data;
+    this.colocarEnCelda(codigo, dia, hora);
+  }
+
+  // ── MODO TÁCTIL (móvil): tomar / soltar con toques ────────────────
+
+  /**
+   * Primer toque: "toma" la materia. Segundo toque en la misma: la suelta.
+   * Se usa en móvil donde arrastrar es impreciso.
+   */
+  tomarMateria(codigo: string): void {
+    if (this.materiaTomada() === codigo) {
+      this.materiaTomada.set(null); // toque de nuevo = soltar
+    } else {
+      this.materiaTomada.set(codigo);
+    }
   }
 
   /**
-   * SELECCIONADAS → HORARIO  (evento drop)
-   *
-   * Solo se invoca cuando el elemento cae dentro de un cdkDropList válido.
-   * Si el usuario suelta fuera de cualquier celda, CDK cancela el drag
-   * y esta función nunca se ejecuta — la materia queda en seleccionadas.
+   * Toque en una celda: si hay una materia tomada, la coloca ahí.
    */
-  soltarEnCelda(
-    event: CdkDragDrop<string[]>,
-    dia: string,
-    hora: string
-  ): void {
-    const codigo: string = event.item.data;
+  tocarCelda(dia: string, hora: string): void {
+    const codigo = this.materiaTomada();
+    if (!codigo) return;
+    this.colocarEnCelda(codigo, dia, hora);
+    this.materiaTomada.set(null);
+  }
+
+  /**
+   * Lógica COMPARTIDA entre drag&drop y modo táctil: valida y coloca la
+   * materia en la celda. Centraliza las reglas para no duplicarlas.
+   */
+  private colocarEnCelda(codigo: string, dia: string, hora: string): void {
     if (!codigo) return;
     if (!this.puedeInscribir(codigo)) return;
 
     const llave = `${dia}-${hora}`;
-
-    // Celda ya ocupada — no sobreescribir
-    if (this.horario()[llave]) return;
+    if (this.horario()[llave]) return; // celda ocupada
 
     const materia = this.obtenerMateria(codigo);
     if (!materia) return;
 
-    // Validar límite de UV
     if (this.uvInscritas() + materia.uv > this.LIMITE_UV) {
-      // No se usa alert() nativo; se expone un mensaje reactivo
       this.mensajeError.set(
         `Límite alcanzado: no puedes superar ${this.LIMITE_UV} UV por ciclo.`
       );
@@ -171,17 +156,12 @@ export class MatrizComponent {
       return;
     }
 
-    // Mover de seleccionadas → horario de forma atómica
     this.materiasSeleccionadas.update(lista => lista.filter(c => c !== codigo));
     this.horario.update(h => ({ ...h, [llave]: codigo }));
   }
 
-  /**
-   * HORARIO → SELECCIONADAS  (clic en celda ocupada)
-   * Elimina la materia del horario y la devuelve a seleccionadas.
-   */
   devolverASeleccionadas(dia: string, hora: string): void {
-    const llave  = `${dia}-${hora}`;
+    const llave = `${dia}-${hora}`;
     const codigo = this.horario()[llave];
     if (!codigo) return;
 
@@ -194,6 +174,6 @@ export class MatrizComponent {
     this.materiasSeleccionadas.update(lista => [...lista, codigo]);
   }
 
-  // ── Feedback de errores (reemplaza alert nativo) ──────────────────
+  // ── Feedback de errores ───────────────────────────────────────────
   readonly mensajeError = signal<string | null>(null);
 }

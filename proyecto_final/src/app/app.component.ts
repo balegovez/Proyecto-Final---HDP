@@ -5,11 +5,11 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
  * AppComponent
  * -----------
  * Layout principal de la aplicación.
- * Contiene el sidebar de navegación, el navbar superior, el router-outlet
- * donde se cargan los módulos, y el footer.
  *
- * Cada item del sidebar tiene su 'routerLink' real y se resalta con
- * 'routerLinkActive' cuando la ruta actual coincide.
+ * En ESCRITORIO: sidebar vertical a la izquierda.
+ * En MÓVIL: el sidebar se oculta y aparece una barra de navegación inferior
+ * (bottom navigation), patrón estándar de apps móviles. Así los íconos de
+ * navegación siguen accesibles en pantallas pequeñas.
  */
 @Component({
   selector: 'app-root',
@@ -21,17 +21,15 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 export class AppComponent {
 
   /**
-   * Items de navegación del sidebar.
-   * Cada uno tiene:
-   *  - icono: clase de Font Awesome
-   *  - etiqueta: texto que se muestra
-   *  - ruta: a dónde navega (o null si es solo decorativo / placeholder UES)
+   * Items de navegación. Se usan tanto en el sidebar (escritorio) como en
+   * la barra inferior (móvil), iterando con @for.
    */
   readonly navItems = [
-    { icono: 'fas fa-user',           etiqueta: 'Perfil',      ruta: '/perfil'    },
-    { icono: 'fas fa-home',           etiqueta: 'Inicio',      ruta: '/inicio'    },
-    { icono: 'fas fa-th',             etiqueta: 'Pensum',      ruta: '/pensum'    },
-    { icono: 'fas fa-table',          etiqueta: 'Matriz',      ruta: '/matriz'    },
-    { icono: 'fas fa-project-diagram', etiqueta: 'Grafo',      ruta: '/grafo'     },
+    { icono: 'fas fa-user',            etiqueta: 'Perfil',   ruta: '/perfil'   },
+    { icono: 'fas fa-home',            etiqueta: 'Inicio',   ruta: '/inicio'   },
+    { icono: 'fas fa-th',              etiqueta: 'Pensum',   ruta: '/pensum'   },
+    { icono: 'fas fa-table',           etiqueta: 'Matriz',   ruta: '/matriz'   },
+    { icono: 'fas fa-project-diagram', etiqueta: 'Grafo',    ruta: '/grafo'    },
+    { icono: 'fas fa-calendar-check',  etiqueta: 'Horarios', ruta: '/horarios' },
   ];
 }

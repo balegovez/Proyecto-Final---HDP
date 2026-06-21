@@ -1,14 +1,10 @@
-<div class="mz-root">
+<div class="container-fluid py-4 min-vh-100 bg-light" style="font-family: 'Inter', system-ui, sans-serif;">
 
-  <!-- ══════════════════════════════════════════
-       HEADER
-  ══════════════════════════════════════════ -->
-  <header class="mz-header">
+  <header class="row mb-4 align-items-start gap-3 gap-lg-0">
 
-    <div class="mz-header__brand">
-      <div class="mz-header__icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <div class="col-lg-5 d-flex align-items-center gap-3">
+      <div class="bg-primary text-white rounded-3 p-2 d-flex align-items-center justify-content-center" aria-hidden="true" style="width: 48px; height: 48px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;">
           <rect x="3" y="4" width="18" height="18" rx="2"/>
           <line x1="16" y1="2" x2="16" y2="6"/>
           <line x1="8"  y1="2" x2="8"  y2="6"/>
@@ -16,323 +12,240 @@
         </svg>
       </div>
       <div>
-        <h1 class="mz-header__title">Planificador de Horario</h1>
-        <p class="mz-header__sub">
-          Selecciona materias y arrástralas a las celdas de tu semana
+        <h1 class="h4 fw-bold mb-1 text-dark">Planificador de Horario</h1>
+        <p class="text-secondary small mb-0">
+          Selecciona materias y arrástralas (o tócalas en móvil) a las celdas de tu semana
         </p>
       </div>
     </div>
 
-    <div class="mz-stats">
-
-      <div class="mz-stat">
-        <span class="mz-stat__num"
-              [class.mz-stat__num--warn]="uvInscritas() >= LIMITE_UV * 0.8"
-              [class.mz-stat__num--danger]="uvInscritas() >= LIMITE_UV">
-          {{ uvInscritas() }}
-          <span class="mz-stat__den">/ {{ LIMITE_UV }}</span>
+    <div class="col-lg-7 d-flex flex-wrap gap-2 justify-content-lg-end">
+      <article class="card shadow-sm border-0 flex-fill text-center p-2" style="min-width: 130px;">
+        <span class="fs-4 fw-bold lh-1 text-primary"
+              [class.text-warning]="uvInscritas() >= LIMITE_UV * 0.8"
+              [class.text-danger]="uvInscritas() >= LIMITE_UV">
+          {{ uvInscritas() }} <span class="fs-6 fw-normal text-muted">/ {{ LIMITE_UV }}</span>
         </span>
-        <span class="mz-stat__label">UV inscritas</span>
-        <div class="mz-stat__bar">
-          <div class="mz-stat__fill"
+        <span class="text-uppercase text-muted" style="font-size: 0.7rem; letter-spacing: 0.05em;">UV inscritas</span>
+        <div class="progress mt-2" style="height: 5px;">
+          <div class="progress-bar bg-primary transition-all"
+               role="progressbar"
                [style.width.%]="(uvInscritas() / LIMITE_UV) * 100"
-               [class.mz-stat__fill--warn]="uvInscritas() >= LIMITE_UV * 0.8"
-               [class.mz-stat__fill--danger]="uvInscritas() >= LIMITE_UV">
-          </div>
+               [class.bg-warning]="uvInscritas() >= LIMITE_UV * 0.8"
+               [class.bg-danger]="uvInscritas() >= LIMITE_UV"></div>
         </div>
-      </div>
+      </article>
 
-      <div class="mz-stat">
-        <span class="mz-stat__num">{{ materiasSeleccionadas().length }}</span>
-        <span class="mz-stat__label">En cola</span>
-      </div>
+      <article class="card shadow-sm border-0 flex-fill text-center p-2" style="min-width: 100px;">
+        <span class="fs-4 fw-bold lh-1 text-primary">{{ materiasSeleccionadas().length }}</span>
+        <span class="text-uppercase text-muted mt-auto" style="font-size: 0.7rem; letter-spacing: 0.05em;">En cola</span>
+      </article>
 
-      <div class="mz-stat">
-        <span class="mz-stat__num">
-          {{ materiasUbicadas() }}
-          <span class="mz-stat__den">/ {{ pensumService.materias().length }}</span>
-        </span>
-        <span class="mz-stat__label">Ubicadas</span>
-      </div>
-
+      <article class="card shadow-sm border-0 flex-fill text-center p-2" style="min-width: 100px;">
+        <span class="fs-4 fw-bold lh-1 text-primary">{{ materiasUbicadas() }}</span>
+        <span class="text-uppercase text-muted mt-auto" style="font-size: 0.7rem; letter-spacing: 0.05em;">Ubicadas</span>
+      </article>
     </div>
 
   </header>
 
-  <!-- Toast de error -->
+  @if (materiaTomada(); as tomada) {
+    @if (obtenerMateria(tomada); as mat) {
+      <div class="alert alert-primary d-flex align-items-center justify-content-between shadow-sm mz-touch-banner" role="status">
+        <span class="small">
+          <strong class="font-monospace">{{ mat.codigo }}</strong> tomada — toca una celda libre para colocarla
+        </span>
+        <button type="button" class="btn btn-sm btn-primary fw-bold" (click)="materiaTomada.set(null)">
+          Cancelar
+        </button>
+      </div>
+    }
+  }
+
   @if (mensajeError()) {
-    <div class="mz-toast" role="alert">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <line x1="12" y1="8" x2="12" y2="12"/>
-        <line x1="12" y1="16" x2="12.01" y2="16"/>
+    <div class="alert alert-danger d-flex align-items-center shadow-sm" role="alert">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2" style="width: 18px; height: 18px;">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
       </svg>
-      {{ mensajeError() }}
+      <span class="small fw-medium">{{ mensajeError() }}</span>
     </div>
   }
 
-  <!-- ══════════════════════════════════════════
-       CUERPO
-  ══════════════════════════════════════════ -->
-  <div class="mz-body">
+  <div class="row g-4">
 
-    <!-- ╔══════════════════════════════╗
-         ║  PANEL IZQUIERDO             ║
-         ╚══════════════════════════════╝ -->
-    <aside class="mz-sidebar">
+    <aside class="col-xl-3 col-lg-4 d-flex flex-column gap-3">
 
-      <!-- ── MATERIAS SELECCIONADAS ─────────────────────────────────
-           El cdkDrag vive ÚNICAMENTE aquí.
-           El chip completo es la zona de drag (sin cdkDragHandle).
-           El botón ✕ usa stopPropagation para evitar drag accidental.
-      ──────────────────────────────────────────────────────────── -->
-      <div class="mz-queue">
-
-        <div class="mz-queue__head">
-          <span class="mz-section-label">Materias seleccionadas</span>
+      <section class="card shadow-sm border-0 overflow-hidden" aria-labelledby="title-queue">
+        <header class="card-header bg-primary bg-opacity-10 border-bottom border-primary border-opacity-25 d-flex justify-content-between align-items-center py-2">
+          <h2 id="title-queue" class="h6 mb-0 text-uppercase fw-bold text-secondary" style="font-size: 0.75rem;">Materias seleccionadas</h2>
           @if (materiasSeleccionadas().length > 0) {
-            <span class="mz-badge">{{ materiasSeleccionadas().length }}</span>
+            <span class="badge rounded-pill text-bg-primary">{{ materiasSeleccionadas().length }}</span>
           }
-        </div>
+        </header>
 
-        <div
-          cdkDropList
-          id="lista-seleccionadas"
-          [cdkDropListConnectedTo]="dropIds"
-          [cdkDropListData]="materiasSeleccionadas()"
-          class="mz-queue__list"
-          [class.mz-queue__list--empty]="materiasSeleccionadas().length === 0"
-        >
+        <div class="card-body p-2 d-flex flex-column gap-2"
+             cdkDropList
+             id="lista-seleccionadas"
+             [cdkDropListConnectedTo]="dropIds"
+             [cdkDropListData]="materiasSeleccionadas()"
+             style="min-height: 80px;">
 
           @if (materiasSeleccionadas().length === 0) {
-            <div class="mz-empty mz-empty--sm">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                   stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <div class="text-center text-muted p-3">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; opacity: 0.5;">
                 <path d="M12 5v14M5 12l7-7 7 7"/>
               </svg>
-              <p>Haz clic en una materia para agregarla aquí</p>
+              <p class="small mt-2 mb-0">Haz clic en una materia para agregarla aquí</p>
             </div>
           }
 
           @for (codigo of materiasSeleccionadas(); track codigo) {
-
             @if (obtenerMateria(codigo); as mat) {
+              <article class="card flex-row align-items-center border border-primary border-opacity-25 bg-white shadow-sm p-2 mz-chip"
+                       [class.mz-chip--tomada]="materiaTomada() === codigo"
+                       cdkDrag [cdkDragData]="codigo"
+                       title="Arrastra al horario (o toca para tomar en móvil)"
+                       [attr.aria-label]="mat.nombre"
+                       (click)="tomarMateria(codigo)"
+                       role="button" tabindex="0">
 
-              <!--
-                El chip completo es arrastrable.
-                NO usamos cdkDragHandle porque restringe el área de agarre.
-                El botón ✕ llama a stopPropagation para no activar el drag.
-              -->
-              <div
-                class="mz-chip"
-                cdkDrag
-                [cdkDragData]="codigo"
-                title="Arrastra al horario"
-                [attr.aria-label]="mat.nombre"
-              >
-                <!-- Ícono decorativo (NO es cdkDragHandle) -->
-                <div class="mz-chip__grip" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="9"  cy="5"  r="1.5"/>
-                    <circle cx="15" cy="5"  r="1.5"/>
-                    <circle cx="9"  cy="12" r="1.5"/>
-                    <circle cx="15" cy="12" r="1.5"/>
-                    <circle cx="9"  cy="19" r="1.5"/>
-                    <circle cx="15" cy="19" r="1.5"/>
+                <div class="text-muted pe-2 flex-shrink-0" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="currentColor" style="width: 14px;">
+                    <circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/>
+                    <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
+                    <circle cx="9" cy="19" r="1.5"/><circle cx="15" cy="19" r="1.5"/>
                   </svg>
                 </div>
 
-                <div class="mz-chip__body">
-                  <span class="mz-chip__code">{{ mat.codigo }}</span>
-                  <span class="mz-chip__name">{{ mat.nombre }}</span>
-                  <span class="mz-chip__uv">{{ mat.uv }} UV</span>
+                <div class="flex-grow-1 overflow-hidden">
+                  <div class="font-monospace fw-bold text-primary" style="font-size: 0.75rem;">{{ mat.codigo }}</div>
+                  <div class="text-truncate text-dark" style="font-size: 0.8rem;">{{ mat.nombre }}</div>
+                  <div class="text-muted" style="font-size: 0.7rem;">{{ mat.uv }} UV</div>
                 </div>
 
-                <!--
-                  stopPropagation evita que el clic en ✕ active el drag.
-                  mousedown.stop evita que CDK tome el evento antes que Angular.
-                -->
-                <button
-                  class="mz-chip__remove"
-                  type="button"
-                  aria-label="Quitar de seleccionadas"
-                  (mousedown)="$event.stopPropagation()"
-                  (click)="$event.stopPropagation(); quitarDeSeleccionadas(codigo)"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                       stroke-width="2.5" stroke-linecap="round">
-                    <line x1="18" y1="6"  x2="6"  y2="18"/>
-                    <line x1="6"  y1="6"  x2="18" y2="18"/>
+                <button type="button" class="btn btn-sm btn-light text-muted p-1 ms-1 hover-danger d-flex align-items-center"
+                        aria-label="Quitar de seleccionadas"
+                        (mousedown)="$event.stopPropagation()"
+                        (click)="$event.stopPropagation(); quitarDeSeleccionadas(codigo)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width: 14px;">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                   </svg>
                 </button>
-
-              </div>
-
+              </article>
             }
-
           }
-
         </div>
+      </section>
 
-      </div>
-
-      <!-- ── MATERIAS DISPONIBLES ───────────────────────────────────
-           Sin cdkDrag. Clic → mueve a seleccionadas.
-      ──────────────────────────────────────────────────────────── -->
-      <div class="mz-catalog">
-
-        <div class="mz-catalog__head">
-          <span class="mz-section-label">Materias disponibles</span>
+      <section class="card shadow-sm border-0 overflow-hidden" aria-labelledby="title-catalog">
+        <header class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-2">
+          <h2 id="title-catalog" class="h6 mb-0 text-uppercase fw-bold text-secondary" style="font-size: 0.75rem;">Materias disponibles</h2>
           @if (materiasDisponibles().length > 0) {
-            <span class="mz-badge mz-badge--gray">
-              {{ materiasDisponibles().length }}
-            </span>
+            <span class="badge rounded-pill text-bg-secondary">{{ materiasDisponibles().length }}</span>
           }
-        </div>
+        </header>
 
-        <div class="mz-catalog__list">
+        <div class="card-body p-2 d-flex flex-column gap-2 overflow-y-auto" style="max-height: 440px;">
 
           @if (materiasDisponibles().length === 0) {
-            <div class="mz-empty mz-empty--sm">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                   stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <div class="text-center text-muted p-3">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; opacity: 0.5;">
                 <path d="M5 13l4 4L19 7"/>
               </svg>
-              <p>Todas las materias están en uso</p>
+              <p class="small mt-2 mb-0">No hay materias disponibles para inscribir</p>
             </div>
           }
 
           @for (materia of materiasDisponibles(); track materia.codigo) {
-
-            <div
-              class="mz-card"
-              [class.mz-card--available]="puedeInscribir(materia.codigo)"
-              [class.mz-card--locked]="!puedeInscribir(materia.codigo)"
-              (click)="agregarASeleccionadas(materia.codigo)"
-              [attr.aria-disabled]="!puedeInscribir(materia.codigo)"
-              [attr.aria-label]="
-                puedeInscribir(materia.codigo)
-                  ? 'Agregar ' + materia.nombre
-                  : materia.nombre + ': prerrequisitos pendientes'
-              "
-              role="button"
-            >
-              <div class="mz-card__top">
-                <span class="mz-card__code">{{ materia.codigo }}</span>
-                <span class="mz-card__uv">{{ materia.uv }} UV</span>
+            <article class="card p-2 border-success bg-success bg-opacity-10 mz-card-available"
+                     (click)="agregarASeleccionadas(materia.codigo)"
+                     [attr.aria-label]="'Agregar ' + materia.nombre"
+                     role="button" tabindex="0">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="badge bg-success bg-opacity-25 text-success font-monospace">{{ materia.codigo }}</span>
+                <span class="fw-bold text-success opacity-75" style="font-size: 0.7rem;">{{ materia.uv }} UV</span>
               </div>
-
-              <p class="mz-card__name">{{ materia.nombre }}</p>
-
-              @if (!puedeInscribir(materia.codigo)) {
-                <div class="mz-card__lock">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                  </svg>
-                  Prerrequisitos pendientes
-                </div>
-              } @else {
-                <div class="mz-card__cta">Clic para seleccionar →</div>
-              }
-
-            </div>
-
+              <p class="mb-1 text-success-emphasis fw-semibold lh-sm" style="font-size: 0.82rem;">{{ materia.nombre }}</p>
+              <div class="text-success opacity-75" style="font-size: 0.7rem;">Clic para seleccionar →</div>
+            </article>
           }
-
         </div>
-
-      </div>
+      </section>
 
     </aside>
 
-    <!-- ╔══════════════════════════════╗
-         ║  PANEL DERECHO — HORARIO     ║
-         ╚══════════════════════════════╝ -->
-    <main class="mz-schedule">
+    <main class="col-xl-9 col-lg-8">
+      
+      <section class="card shadow-sm border-0 overflow-hidden" aria-labelledby="title-schedule">
+        <header class="card-header bg-white border-bottom d-flex flex-wrap justify-content-between align-items-center py-2 px-3">
+          <h2 id="title-schedule" class="h6 mb-0 text-uppercase fw-bold text-secondary" style="font-size: 0.75rem;">Horario semanal</h2>
+          <span class="text-muted small">Arrastra (escritorio) o toca una materia y luego una celda (móvil)</span>
+        </header>
 
-      <div class="mz-schedule__head">
-        <span class="mz-section-label">Horario semanal</span>
-        <span class="mz-schedule__hint">
-          Arrastra una materia seleccionada hacia la celda deseada
-        </span>
-      </div>
-
-      <div class="mz-table-wrap">
-        <table class="mz-table" role="grid">
-
-          <thead>
-            <tr>
-              <th class="mz-table__corner" scope="col">Hora</th>
-              @for (dia of dias; track dia) {
-                <th class="mz-table__day" scope="col">{{ dia }}</th>
-              }
-            </tr>
-          </thead>
-
-          <tbody>
-            @for (hora of horas; track hora) {
+        <div class="table-responsive p-3">
+          <table class="table table-bordered text-center align-middle mb-0 mz-table" role="grid" style="min-width: 640px; border-spacing: 4px; border-collapse: separate;">
+            
+            <thead>
               <tr>
-
-                <td class="mz-table__time">
-                  <span class="mz-time-block">{{ hora }}</span>
-                </td>
-
+                <th scope="col" class="border-0 bg-transparent" style="width: 72px;"></th>
                 @for (dia of dias; track dia) {
-
-                  <td
-                    class="mz-cell"
-                    cdkDropList
-                    [id]="'drop-' + dia + '-' + hora"
-                    [cdkDropListData]="celdaVacia"
-                    (cdkDropListDropped)="soltarEnCelda($event, dia, hora)"
-                    [class.mz-cell--occupied]="!!horario()[dia + '-' + hora]"
-                  >
-
-                    @if (horario()[dia + '-' + hora]; as codigo) {
-
-                      @if (obtenerMateria(codigo); as mat) {
-                        <div
-                          class="mz-slot"
-                          title="Clic para devolver a seleccionadas"
-                          (click)="devolverASeleccionadas(dia, hora)"
-                          role="button"
-                          [attr.aria-label]="'Quitar ' + mat.nombre + ' de ' + dia + ' ' + hora"
-                        >
-                          <span class="mz-slot__code">{{ mat.codigo }}</span>
-                          <span class="mz-slot__name">{{ mat.nombre }}</span>
-                          <span class="mz-slot__uv">{{ mat.uv }} UV</span>
-                          <span class="mz-slot__remove" aria-hidden="true">✕</span>
-                        </div>
-                      }
-
-                    } @else {
-
-                      <span class="mz-cell__empty" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                          <line x1="12" y1="5" x2="12" y2="19"/>
-                          <line x1="5"  y1="12" x2="19" y2="12"/>
-                        </svg>
-                      </span>
-
-                    }
-
-                  </td>
-
+                  <th scope="col" class="bg-primary text-white text-uppercase rounded-2 fw-bold" style="font-size: 0.8rem; padding: 10px 6px;">{{ dia }}</th>
                 }
-
               </tr>
-            }
-          </tbody>
+            </thead>
 
-        </table>
-      </div>
+            <tbody>
+              @for (hora of horas; track hora) {
+                <tr>
+                  <th scope="row" class="border-0 p-0 align-middle">
+                    <time class="d-flex align-items-center justify-content-center bg-light text-secondary rounded-2 font-monospace fw-bold m-1" style="font-size: 0.75rem; min-height: 88px;">
+                      {{ hora }}
+                    </time>
+                  </th>
+
+                  @for (dia of dias; track dia) {
+                    <td class="p-1 border-0"
+                        cdkDropList
+                        [id]="'drop-' + dia + '-' + hora"
+                        [cdkDropListData]="celdaVacia"
+                        (cdkDropListDropped)="soltarEnCelda($event, dia, hora)">
+                      
+                      <div class="mz-cell w-100 h-100 rounded-2 position-relative d-flex align-items-center justify-content-center"
+                           [class.mz-cell--occupied]="!!horario()[dia + '-' + hora]"
+                           [class.mz-cell--target]="materiaTomada() && !horario()[dia + '-' + hora]"
+                           (click)="!horario()[dia + '-' + hora] ? tocarCelda(dia, hora) : null">
+
+                        @if (horario()[dia + '-' + hora]; as codigo) {
+                          @if (obtenerMateria(codigo); as mat) {
+                            <article class="mz-slot w-100 h-100 rounded-2 p-2 text-start text-white shadow-sm"
+                                     title="Clic para devolver a seleccionadas"
+                                     (click)="devolverASeleccionadas(dia, hora)"
+                                     role="button" tabindex="0"
+                                     [attr.aria-label]="'Quitar ' + mat.nombre + ' de ' + dia + ' ' + hora">
+                              <span class="font-monospace fw-bold opacity-75 text-uppercase" style="font-size: 0.65rem;">{{ mat.codigo }}</span>
+                              <h3 class="fw-bold mb-0 lh-sm text-truncate text-wrap mt-1" style="font-size: 0.75rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
+                                {{ mat.nombre }}
+                              </h3>
+                              <span class="opacity-75 mt-auto d-block" style="font-size: 0.65rem;">{{ mat.uv }} UV</span>
+                              <span class="mz-slot__remove" aria-hidden="true">✕</span>
+                            </article>
+                          }
+                        } @else {
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-secondary opacity-25" style="width: 18px;">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                          </svg>
+                        }
+                      </div>
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+
+          </table>
+        </div>
+      </section>
 
     </main>
-
   </div>
-
 </div>

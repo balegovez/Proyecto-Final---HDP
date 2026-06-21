@@ -1,5 +1,6 @@
 <section class="perfil-container">
 
+  <!-- Spinner de carga inicial -->
   @if (pensumService.cargando()) {
     <div class="spinner" role="status" aria-live="polite">
       <p>Cargando tu información...</p>
@@ -12,46 +13,112 @@
       </div>
     }
 
+    <!-- ════════════════════════════════════════════════
+         MODO FORMULARIO (sin perfil)
+    ════════════════════════════════════════════════ -->
     @if (mostrarFormulario()) {
 
-      <section class="formulario-perfil">
-        <header>
-          <h2>Crea tu perfil</h2>
-          <p class="subtitulo">Registra tu nombre y carné para empezar a planificar.</p>
-        </header>
+      <!-- ── PASO 1: datos básicos + ciclo ── -->
+      @if (paso() === 1) {
+        <section class="formulario-perfil" aria-labelledby="titulo-form">
+          <header>
+            <h2 id="titulo-form">Crea tu perfil</h2>
+            <p class="subtitulo">Registra tus datos y el ciclo que vas a cursar.</p>
+          </header>
 
-        <form (submit)="$event.preventDefault(); guardarPerfil()">
-          <div class="form-group">
-            <label for="nombre">Nombre completo</label>
-            <input
-              id="nombre"
-              type="text"
-              [(ngModel)]="nombre"
-              name="nombre"
-              placeholder="Ej: Juan Pérez" />
+          <form (submit)="$event.preventDefault(); irAPaso2()">
+            <div class="form-group">
+              <label for="nombre">Nombre completo</label>
+              <input id="nombre" type="text" name="nombre"
+                     [(ngModel)]="nombre" placeholder="Ej: Juan Pérez" />
+            </div>
+
+            <div class="form-group">
+              <label for="carnet">Carné</label>
+              <input id="carnet" type="text" name="carnet"
+                     [(ngModel)]="carnet" placeholder="Ej: JP24001" />
+            </div>
+
+            <div class="form-group">
+              <label for="ciclo">¿Qué ciclo vas a cursar?</label>
+              <select id="ciclo" name="ciclo"
+                      [ngModel]="cicloSeleccionado()"
+                      (ngModelChange)="cicloSeleccionado.set($event)">
+                @for (c of ciclosDisponibles(); track c) {
+                  <option [value]="c">Ciclo {{ c }}</option>
+                }
+              </select>
+              <small class="form-hint">
+                Las materias de ciclos anteriores se marcarán como aprobadas
+                automáticamente (podrás indicar cuáles reprobaste en el siguiente paso).
+              </small>
+            </div>
+
+            <button type="submit" class="btn-primary">
+              {{ cicloSeleccionado() === 1 ? 'Guardar perfil' : 'Siguiente' }}
+            </button>
+          </form>
+        </section>
+      }
+
+      <!-- ── PASO 2: marcar materias reprobadas ── -->
+      @if (paso() === 2) {
+        <section class="formulario-perfil paso-reprobadas" aria-labelledby="titulo-reprob">
+          <header>
+            <h2 id="titulo-reprob">¿Reprobaste alguna materia?</h2>
+            <p class="subtitulo">
+              Marca las materias de ciclos anteriores que <strong>NO</strong> has aprobado.
+              Las que dependan de ellas también quedarán pendientes.
+            </p>
+          </header>
+
+          <div class="reprobadas-scroll">
+            @for (grupo of materiasAnteriores(); track grupo.ciclo) {
+              <fieldset class="reprob-ciclo">
+                <legend>Ciclo {{ grupo.ciclo }}</legend>
+                <ul class="reprob-lista">
+                  @for (materia of grupo.materias; track materia.codigo) {
+                    <li class="reprob-item">
+                      <input type="checkbox"
+                             class="reprob-check"
+                             [id]="'rep-' + materia.codigo"
+                             [checked]="esReprobada(materia.codigo)"
+                             (change)="toggleReprobada(materia.codigo)" />
+                      <label [for]="'rep-' + materia.codigo" class="reprob-label">
+                        <span class="reprob-codigo">{{ materia.codigo }}</span>
+                        <span class="reprob-nombre">{{ materia.nombre }}</span>
+                      </label>
+                    </li>
+                  }
+                </ul>
+              </fieldset>
+            }
           </div>
 
-          <div class="form-group">
-            <label for="carnet">Carné</label>
-            <input
-              id="carnet"
-              type="text"
-              [(ngModel)]="carnet"
-              name="carnet"
-              placeholder="Ej: JP24001" />
+          <div class="reprob-acciones">
+            <button type="button" class="btn-secondary" (click)="volverAPaso1()">
+              Atrás
+            </button>
+            <button type="button" class="btn-primary" (click)="guardarPerfil()">
+              Guardar perfil
+            </button>
           </div>
-
-          <button type="submit" class="btn-primary">Guardar perfil</button>
-        </form>
-      </section>
+        </section>
+      }
 
     } @else {
 
+      <!-- ════════════════════════════════════════════════
+           MODO RESUMEN (con perfil)
+      ════════════════════════════════════════════════ -->
       <section class="lista-materias">
 
         <header class="header">
           <h2>Hola, {{ pensumService.perfil()?.nombre }}</h2>
-          <p class="carnet-info">Carné: {{ pensumService.perfil()?.carnet }}</p>
+          <p class="carnet-info">
+            Carné: {{ pensumService.perfil()?.carnet }}
+            · Ciclo actual: {{ pensumService.perfil()?.cicloActual }}
+          </p>
         </header>
 
         <section class="progreso-panel" aria-label="Progreso académico">
@@ -69,61 +136,49 @@
               <span class="stat-label">De avance</span>
             </div>
           </div>
-          
-          <div class="progreso-barra" 
-               role="progressbar" 
-               [attr.aria-valuenow]="progreso().porcentaje" 
-               aria-valuemin="0" 
-               aria-valuemax="100">
+          <div class="progreso-barra">
             <div class="progreso-relleno" [style.width.%]="progreso().porcentaje"></div>
           </div>
         </section>
 
-        <aside class="botones-demo" aria-label="Escenarios de demostración">
+        <section class="botones-demo" aria-label="Escenarios de demostración">
           <p class="demo-label">Escenarios de demostración</p>
           <div class="demo-buttons">
-            <button
-              class="btn-demo btn-nuevo"
-              (click)="cargarEscenarioDemo(pensumService.escenariosDemo.nuevoIngreso)">
+            <button class="btn-demo btn-nuevo"
+                    (click)="cargarEscenarioDemo(pensumService.escenariosDemo.nuevoIngreso)">
               Nuevo ingreso
             </button>
-            <button
-              class="btn-demo btn-segundo"
-              (click)="cargarEscenarioDemo(pensumService.escenariosDemo.segundoAnio)">
+            <button class="btn-demo btn-segundo"
+                    (click)="cargarEscenarioDemo(pensumService.escenariosDemo.segundoAnio)">
               Segundo año
             </button>
-            <button
-              class="btn-demo btn-critico"
-              (click)="cargarEscenarioDemo(pensumService.escenariosDemo.flujoCritico)">
+            <button class="btn-demo btn-critico"
+                    (click)="cargarEscenarioDemo(pensumService.escenariosDemo.flujoCritico)">
               Flujo crítico
             </button>
           </div>
-        </aside>
+        </section>
 
-        <aside class="instrucciones" aria-label="Instrucciones de uso">
+        <div class="instrucciones">
           <p>Marca las materias que ya aprobaste. Tu progreso se guarda automáticamente.</p>
-        </aside>
+        </div>
 
-        <section class="materias-por-ciclo" aria-label="Materias por ciclo académico">
+        <section class="materias-por-ciclo">
           @for (grupo of materiasPorCiclo(); track grupo.ciclo) {
-            
             <article class="ciclo-grupo">
-              <header>
-                <h3 class="ciclo-titulo">
-                  <span>Ciclo {{ grupo.ciclo }}</span>
-                  <span class="ciclo-conteo">{{ grupo.aprobadas }}/{{ grupo.aCursar }} aprobadas</span>
-                </h3>
-              </header>
+              <h3 class="ciclo-titulo">
+                <span>Ciclo {{ grupo.ciclo }}</span>
+                <span class="ciclo-conteo">{{ grupo.aprobadas }}/{{ grupo.aCursar }} aprobadas</span>
+              </h3>
 
               <ul class="materias-lista">
                 @for (materia of grupo.materias; track materia.codigo) {
                   <li class="materia-item">
-                    <input
-                      type="checkbox"
-                      class="materia-checkbox"
-                      [id]="materia.codigo"
-                      [checked]="estaAprobada(materia.codigo)"
-                      (change)="marcarMateria(materia.codigo, $event)" />
+                    <input type="checkbox"
+                           class="materia-checkbox"
+                           [id]="materia.codigo"
+                           [checked]="estaAprobada(materia.codigo)"
+                           (change)="marcarMateria(materia.codigo, $event)" />
                     <label class="materia-label" [for]="materia.codigo">
                       <span class="codigo">{{ materia.codigo }}</span>
                       <span class="nombre">{{ materia.nombre }}</span>
@@ -136,7 +191,6 @@
                 }
               </ul>
             </article>
-
           }
         </section>
 

@@ -1,50 +1,81 @@
 import Dexie, { Table } from 'dexie';
 
-// 1. LOS DATOS DE LAS MATERIAS Y PREREQUISITOS
 export interface Materia {
-    codigo: string;
-    nombre: string;
-    uv: number;
-    tipo: string;
-    ciclo: number;
+  codigo: string;
+  nombre: string;
+  uv: number;
+  tipo: string;
+  ciclo: number;
 }
 
-// Para los prerequisitos, guardamos el código de la materia y el código del prerequisito, y un ID autoincremental para facilitar las consultas. Esto nos permite tener múltiples prerequisitos para una misma materia sin complicaciones.
 export interface Prerequisito {
-    id?: number;
-    codigoMateria: string;
-    codigoPrerequisito: string;
+  id?: number;
+  codigoMateria: string;
+  codigoPrerequisito: string;
 }
 
-// 2. LOS DATOS DEL USUARIO LOCAL
+
 export interface Perfil {
-    id?: number;
-    nombre: string;
-    carnet: string;
+  id?: number;
+  nombre: string;
+  carnet: string;
+  cicloActual: number; 
 }
 
-// 3. EL HISTORIAL ACADÉMICO DEL ESTUDIANTE
 export interface HistorialEstudiante {
-    codigoMateria: string;
-    estado: 'aprobada' | 'cursando' | 'pendiente';
+  codigoMateria: string;
+  estado: 'aprobada' | 'cursando' | 'pendiente';
 }
+
+
+/**
+ * Inscripción del estudiante a UN grupo de UNA materia.
+ *
+ * Diseño clave: la PK es `codigoMateria`. Así, por diseño, el estudiante solo
+ * puede estar en UN grupo por materia: si se inscribe a otro grupo de la misma
+ * materia, el put() sobreescribe la inscripción anterior (eso es el UPDATE,
+ * o sea el "cambio de grupo").
+ */
+export interface Inscripcion {
+  codigoMateria: string;    // PK — una materia = una inscripción activa
+  numeroGrupo: string;      // '01', '02', ...
+  fechaInscripcion: string; // ISO date string
+}
+
 
 export class PensumNavigatorDB extends Dexie {
-    materias!: Table<Materia, string>;
-    prerequisitos!: Table<Prerequisito, number>;
-    perfil!: Table<Perfil, number>;
-    historial!: Table<HistorialEstudiante, string>;
+  materias!: Table<Materia, string>;
+  prerequisitos!: Table<Prerequisito, number>;
+  perfil!: Table<Perfil, number>;
+  historial!: Table<HistorialEstudiante, string>;
+  inscripciones!: Table<Inscripcion, string>; // ← NUEVA tabla
 
-    constructor() {
-        super('PensumNavigatorDB');
-        this.version(1).stores({
-            materias: 'codigo, ciclo',
-            prerequisitos: '++id, codigoMateria',
-            perfil: '++id',
-            historial: 'codigoMateria, estado',
-        });
-    }
+  constructor() {
+    super('PensumNavigatorDB');
+
+    // ── Versión 1 (esquema original) ──
+    // Se mantiene para que un navegador que ya tenga la v1 migre a v2 sin
+    // perder los datos que ya guardó.
+    this.version(1).stores({
+      materias: 'codigo, ciclo',
+      prerequisitos: '++id, codigoMateria',
+      perfil: '++id',
+      historial: 'codigoMateria, estado',
+    });
+
+    // ── Versión 2 (agrega inscripciones; perfil ahora lleva cicloActual) ──
+    // Dexie migra de v1 a v2 automáticamente. 'inscripciones' es tabla nueva.
+    // 'cicloActual' no se indexa (no va en el string del store), solo se
+    // guarda como propiedad del objeto Perfil.
+    this.version(2).stores({
+      materias: 'codigo, ciclo',
+      prerequisitos: '++id, codigoMateria',
+      perfil: '++id',
+      historial: 'codigoMateria, estado',
+      inscripciones: 'codigoMateria, numeroGrupo',
+    });
+  }
 }
 
-// Exportamos una instancia de la base de datos para que pueda ser utilizada en toda la aplicación.
+// Instancia única de la base de datos, usada en toda la aplicación.
 export const db = new PensumNavigatorDB();

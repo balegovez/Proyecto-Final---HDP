@@ -3,12 +3,12 @@ import { perfilGuard } from './core/guards/perfil.guard';
 
 /**
  * Rutas de la aplicación.
- * - 'inicio' es la ruta por defecto (página principal del expediente).
- * - 'perfil' es la ÚNICA ruta accesible sin perfil creado.
- * - 'matriz' y 'grafo' están protegidas con perfilGuard.
+ * - 'inicio' es la ruta por defecto.
+ * - 'perfil' es la única accesible sin perfil creado.
+ * - 'matriz', 'grafo' y 'horarios' están protegidas con perfilGuard.
  *
- * Todas usan lazy loading (`loadComponent`): el código del componente solo
- * se descarga cuando el usuario navega a esa ruta, no al iniciar la app.
+ * Todas usan lazy loading: el código del componente solo se descarga al
+ * navegar a esa ruta.
  */
 export const routes: Routes = [
   {
@@ -19,41 +19,36 @@ export const routes: Routes = [
   {
     path: 'inicio',
     loadComponent: () =>
-      import('./features/inicio/inicio.component').then(
-        (m) => m.InicioComponent,
-      ),
+      import('./features/inicio/inicio.component').then(m => m.InicioComponent),
   },
   {
     path: 'pensum',
     loadComponent: () =>
-      import('./features/pensum/pensum.component').then(
-        (m) => m.PensumComponent,
-      ),
+      import('./features/pensum/pensum.component').then(m => m.PensumComponent),
   },
   {
     path: 'perfil',
     loadComponent: () =>
-      import('./features/perfil/perfil.component').then(
-        (m) => m.PerfilComponent,
-      ),
+      import('./features/perfil/perfil.component').then(m => m.PerfilComponent),
   },
   {
-    // Protegida: necesita un perfil creado.
     path: 'matriz',
     canActivate: [perfilGuard],
     loadComponent: () =>
-      import('./features/matriz/matriz.component').then(
-        (m) => m.MatrizComponent,
-      ),
+      import('./features/matriz/matriz.component').then(m => m.MatrizComponent),
   },
   {
-    // Protegida: necesita un perfil creado.
     path: 'grafo',
     canActivate: [perfilGuard],
     loadComponent: () =>
-      import('./features/grafo/grafo.component').then(
-        (m) => m.GrafoComponent,
-      ),
+      import('./features/grafo/grafo.component').then(m => m.GrafoComponent),
+  },
+  {
+    // NUEVO: módulo de inscripción a grupos (CRUD sobre IndexedDB).
+    path: 'horarios',
+    canActivate: [perfilGuard],
+    loadComponent: () =>
+      import('./features/horarios/horarios.component').then(m => m.HorariosComponent),
   },
   {
     path: '**',

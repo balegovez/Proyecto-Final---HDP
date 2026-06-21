@@ -6,7 +6,7 @@ import { PensumService } from '../services/pensum.service';
  * perfilGuard
  * -----------
  * Protege las rutas que NO tienen sentido sin un perfil creado:
- * /matriz, /grafo y /planificador. Si no hay perfil, redirige a /perfil.
+ * /matriz, /grafo y /horarios. Si no hay perfil, redirige a /perfil.
  *
  * ¿Por qué es async y espera 'pensumService.listo'?
  * La carga desde IndexedDB es asíncrona. Si el usuario recarga la página

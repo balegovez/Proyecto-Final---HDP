@@ -1,0 +1,103 @@
+<section class="hr-root">
+
+  <!-- ══════════════════════════════ ENCABEZADO INSTITUCIONAL ══════════ -->
+  <header class="hr-institucional text-center py-3 mb-3">
+    <h1 class="hr-uni-nombre">UNIVERSIDAD DE EL SALVADOR</h1>
+    <p class="hr-uni-sub mb-0">Administración Académica</p>
+    <p class="hr-uni-sub mb-0"><strong>Horarios de clase</strong></p>
+  </header>
+
+  <!-- ══════════════════════════════ BARRA DE INFO ══════════ -->
+  <div class="row g-0 mb-4 border rounded overflow-hidden hr-info-bar">
+    <div class="col text-center py-2 border-end">
+      <span class="hr-info-valor">I50515</span>
+      <span class="hr-info-label">Código</span>
+    </div>
+    <div class="col text-center py-2 border-end">
+      <span class="hr-info-valor">Ingeniería de Sistemas Informáticos</span>
+      <span class="hr-info-label">Carrera</span>
+    </div>
+    <div class="col text-center py-2 border-end">
+      <span class="hr-info-valor">1998</span>
+      <span class="hr-info-label">Plan</span>
+    </div>
+    <div class="col text-center py-2 border-end">
+      <span class="hr-info-valor">Presencial</span>
+      <span class="hr-info-label">Modalidad</span>
+    </div>
+    <div class="col text-center py-2">
+      <span class="hr-info-valor">Estudiante</span>
+      <span class="hr-info-label">Estado</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ LOADING ══════════ -->
+  @if (pensumService.cargando()) {
+    <div class="text-center py-5" role="status" aria-live="polite">
+      <p class="text-muted">Cargando horarios...</p>
+    </div>
+  } @else {
+
+    <!-- ══════════════════════════════ TABLAS POR CICLO ══════════ -->
+    @if (horariosPorCiclo().length === 0) {
+      <p class="text-muted text-center py-4">No hay horarios disponibles.</p>
+    }
+
+    @for (grupo of horariosPorCiclo(); track grupo.ciclo) {
+      <section class="mb-5">
+
+        <h2 class="text-center hr-ciclo-titulo">Ciclo {{ grupo.ciclo }}</h2>
+
+        <div class="table-responsive">
+          <table class="table table-borderless hr-tabla align-middle">
+
+            <thead>
+              <tr class="hr-tabla-head">
+                <th scope="col">Codigo</th>
+                <th scope="col">Materia</th>
+                <th scope="col" class="text-center">Grupo</th>
+                <th scope="col" class="text-center">Tipo</th>
+                <th scope="col">Docente</th>
+                <th scope="col">Horario</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (materia of grupo.listaMaterias; track materia.codigoMateria) {
+                @for (grp of materia.grupos; track grp.numeroGrupo) {
+                  <tr class="hr-fila">
+
+                    <td class="hr-codigo">{{ materia.codigoMateria }}</td>
+
+                    <td class="hr-materia-nombre">{{ materia.nombreMateria }}</td>
+
+                    <td class="text-center">{{ grp.numeroGrupo }}</td>
+
+                    <td class="text-center">{{ grp.tipo }}</td>
+
+                    <td class="hr-docente">{{ grp.docente }}</td>
+
+                    <td>
+                      <ul class="hr-horario-lista">
+                        @for (franja of grp.horario; track franja.dia) {
+                          <li>
+                            {{ franja.dia }} {{ franja.horaInicio }} -{{ franja.horaFin }} {{ franja.aula }}
+                          </li>
+                        }
+                      </ul>
+                    </td>
+
+                  </tr>
+                }
+              }
+            </tbody>
+
+          </table>
+        </div>
+
+      </section>
+    }
+
+  }
+
+</section>

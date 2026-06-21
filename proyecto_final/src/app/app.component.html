@@ -1,73 +1,145 @@
 <!--
+
   Layout principal de la app: sidebar a la izquierda, contenido al centro.
+
   Mantiene la identidad visual de la UES (sidebar azul, navbar blanco,
+
   badge verde "Estudiante"). Bootstrap se carga UNA vez en index.html.
+
 -->
 
+
+
 <!-- SIDEBAR (oculto en pantallas pequeñas con d-md-block) -->
+
 <nav class="sidebar d-none d-md-block">
 
+
+
   <!-- Logo institucional -->
+
   <div class="sidebar-logo text-white">
+
     <i class="fas fa-university fa-2x"></i>
+
   </div>
 
+
+
   <!-- Items de navegación: cada item usa routerLink (no href="#") -->
+
   @for (item of navItems; track item.ruta) {
+
     <a
+
       [routerLink]="item.ruta"
+
       routerLinkActive="active"
+
       class="nav-item-custom"
+
     >
+
       <i [class]="item.icono"></i>
+
       {{ item.etiqueta }}
+
     </a>
+
   }
+
+
 
 </nav>
 
+
+
 <!-- CONTENIDO PRINCIPAL -->
+
 <div class="main-content">
 
+
+
   <!-- Barra superior -->
+
   <header class="top-navbar d-flex justify-content-between align-items-center">
 
+
+
     <div class="d-flex align-items-center top-navbar-text text-muted fw-semibold">
+
       I50515 Ingeniería de Sistemas Informáticos (PR) - 1998
+
       <span class="badge rounded-pill student-badge text-white ms-2">
+
         Estudiante
+
       </span>
+
     </div>
 
+
+
     <div class="d-flex align-items-center gap-3">
+
       <i class="fas fa-moon text-muted" style="cursor: pointer;"></i>
+
       <div class="d-flex align-items-center gap-2 border-start ps-3">
+
         <img
+
           src="https://ui-avatars.com/api/?name=V+G&background=2c313c&color=fff"
+
           alt="Usuario"
+
           class="rounded-circle"
+
           width="32"
+
           height="32"
+
         >
+
         <span class="text-muted fw-semibold" style="font-size: 0.9rem;">
+
           VG24028
+
         </span>
+
       </div>
+
       <i class="fas fa-bars text-muted ms-2 fs-4" style="cursor: pointer;"></i>
+
     </div>
+
+
 
   </header>
 
+
+
   <!-- Aquí Angular inyecta el componente de la ruta actual -->
+
   <router-outlet></router-outlet>
 
+
+
   <!-- Footer -->
+
   <footer class="footer d-flex justify-content-between">
+
     <div class="d-flex align-items-center gap-2">
+
       <i class="fas fa-university text-dark"></i>
+
       <span class="fw-semibold text-dark">Universidad de El Salvador</span>
+
     </div>
+
     <div>© DTI UES - 2025</div>
+
   </footer>
+
+
 
 </div>

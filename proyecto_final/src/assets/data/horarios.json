@@ -1,0 +1,454 @@
+{
+  "ciclo": "01-2025",
+  "materias": [
+
+    {
+      "codigoMateria": "ANS155",
+      "nombreMateria": "Análisis Numérico",
+      "cicloAcademico": 5,
+      "grupos": [
+        {
+          "numeroGrupo": "01",
+          "tipo": "Teorico",
+          "docente": "María Teresa Meléndez Serrano",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Lunes",     "horaInicio": "09:00", "horaFin": "11:30", "aula": "Cómputo B" },
+            { "dia": "Miércoles", "horaInicio": "10:00", "horaFin": "11:40", "aula": "Cómputo C (UESED)" }
+          ]
+        },
+        {
+          "numeroGrupo": "02",
+          "tipo": "Teorico",
+          "docente": "María Teresa Meléndez Serrano",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Martes",  "horaInicio": "13:00", "horaFin": "15:30", "aula": "Cómputo B" },
+            { "dia": "Jueves",  "horaInicio": "14:00", "horaFin": "15:40", "aula": "Cómputo B" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "codigoMateria": "HDP155",
+      "nombreMateria": "Herramientas de Productividad",
+      "cicloAcademico": 5,
+      "grupos": [
+        {
+          "numeroGrupo": "01",
+          "tipo": "Teorico",
+          "docente": "Diego Armando Herrera Flores",
+          "cuposTotal": 30,
+          "horario": [
+            { "dia": "Martes",    "horaInicio": "10:00", "horaFin": "11:40", "aula": "Cómputo B" },
+            { "dia": "Miércoles", "horaInicio": "07:00", "horaFin": "09:30", "aula": "Cómputo B" }
+          ]
+        },
+        {
+          "numeroGrupo": "02",
+          "tipo": "Teorico",
+          "docente": "Diego Armando Herrera Flores",
+          "cuposTotal": 30,
+          "horario": [
+            { "dia": "Lunes",   "horaInicio": "15:00", "horaFin": "16:40", "aula": "Cómputo B" },
+            { "dia": "Viernes", "horaInicio": "13:00", "horaFin": "15:30", "aula": "Cómputo B" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "codigoMateria": "MOP155",
+      "nombreMateria": "Métodos de Optimización",
+      "cicloAcademico": 5,
+      "grupos": [
+        {
+          "numeroGrupo": "01",
+          "tipo": "Teorico",
+          "docente": "Wilfredo Arnoldo Ventura Alvarez",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Jueves",  "horaInicio": "07:00", "horaFin": "09:30", "aula": "Cómputo B" },
+            { "dia": "Viernes", "horaInicio": "07:00", "horaFin": "08:40", "aula": "Cómputo B" }
+          ]
+        },
+        {
+          "numeroGrupo": "02",
+          "tipo": "Teorico",
+          "docente": "Wilfredo Arnoldo Ventura Alvarez",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Lunes",   "horaInicio": "13:00", "horaFin": "15:30", "aula": "Cómputo B" },
+            { "dia": "Martes",  "horaInicio": "14:00", "horaFin": "15:40", "aula": "Cómputo B" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "codigoMateria": "SDU155",
+      "nombreMateria": "Sistemas Digitales I",
+      "cicloAcademico": 5,
+      "grupos": [
+        {
+          "numeroGrupo": "01",
+          "tipo": "Teorico",
+          "docente": "Milagro Alicia González de Reyes",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Jueves",  "horaInicio": "10:00", "horaFin": "11:40", "aula": "Aula 18" },
+            { "dia": "Viernes", "horaInicio": "09:00", "horaFin": "11:30", "aula": "Cómputo B" }
+          ]
+        },
+        {
+          "numeroGrupo": "02",
+          "tipo": "Teorico",
+          "docente": "Milagro Alicia González de Reyes",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Lunes",     "horaInicio": "15:00", "horaFin": "16:40", "aula": "Aula 18" },
+            { "dia": "Miércoles", "horaInicio": "14:00", "horaFin": "16:30", "aula": "Cómputo B" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "codigoMateria": "SYP155",
+      "nombreMateria": "Sistemas y Procedimientos",
+      "cicloAcademico": 5,
+      "grupos": [
+        {
+          "numeroGrupo": "01",
+          "tipo": "Teorico",
+          "docente": "Ligia Astrid Hernandez Bonilla",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Lunes",  "horaInicio": "07:00", "horaFin": "08:40", "aula": "Cómputo B" },
+            { "dia": "Martes", "horaInicio": "07:00", "horaFin": "09:30", "aula": "Cómputo B" }
+          ]
+        },
+        {
+          "numeroGrupo": "02",
+          "tipo": "Teorico",
+          "docente": "Ligia Astrid Hernandez Bonilla",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Jueves",  "horaInicio": "16:00", "horaFin": "17:40", "aula": "Cómputo B" },
+            { "dia": "Viernes", "horaInicio": "15:00", "horaFin": "17:30", "aula": "Cómputo B" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "codigoMateria": "DSI155",
+      "nombreMateria": "Diseño de Sistemas I",
+      "cicloAcademico": 7,
+      "grupos": [
+        {
+          "numeroGrupo": "01",
+          "tipo": "Teorico",
+          "docente": "Josselin Vanessa Marquez Argueta",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Miércoles", "horaInicio": "13:00", "horaFin": "15:30", "aula": "Cómputo B" },
+            { "dia": "Viernes",   "horaInicio": "13:00", "horaFin": "14:40", "aula": "Cómputo B" }
+          ]
+        },
+        {
+          "numeroGrupo": "02",
+          "tipo": "Teorico",
+          "docente": "Josselin Vanessa Marquez Argueta",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Lunes",  "horaInicio": "15:00", "horaFin": "17:30", "aula": "Cómputo B" },
+            { "dia": "Martes", "horaInicio": "16:00", "horaFin": "17:40", "aula": "Cómputo B" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "codigoMateria": "MIP155",
+      "nombreMateria": "Microprogramación",
+      "cicloAcademico": 7,
+      "grupos": [
+        {
+          "numeroGrupo": "01",
+          "tipo": "Teorico",
+          "docente": "María Teresa Meléndez Serrano",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Lunes",  "horaInicio": "13:00", "horaFin": "15:30", "aula": "Cómputo B" },
+            { "dia": "Martes", "horaInicio": "13:00", "horaFin": "14:40", "aula": "Cómputo B" }
+          ]
+        },
+        {
+          "numeroGrupo": "02",
+          "tipo": "Teorico",
+          "docente": "María Teresa Meléndez Serrano",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Miércoles", "horaInicio": "07:00", "horaFin": "09:30", "aula": "Cómputo B" },
+            { "dia": "Jueves",    "horaInicio": "07:00", "horaFin": "08:40", "aula": "Cómputo B" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "codigoMateria": "PDM155",
+      "nombreMateria": "Programación para Dispositivos Móviles",
+      "cicloAcademico": 7,
+      "grupos": [
+        {
+          "numeroGrupo": "01",
+          "tipo": "Teorico",
+          "docente": "Héctor Javier Paiz Ramos",
+          "cuposTotal": 30,
+          "horario": [
+            { "dia": "Miércoles", "horaInicio": "16:00", "horaFin": "17:40", "aula": "Cómputo B" },
+            { "dia": "Jueves",    "horaInicio": "13:00", "horaFin": "15:30", "aula": "Cómputo B" }
+          ]
+        },
+        {
+          "numeroGrupo": "02",
+          "tipo": "Teorico",
+          "docente": "Héctor Javier Paiz Ramos",
+          "cuposTotal": 30,
+          "horario": [
+            { "dia": "Lunes",   "horaInicio": "16:00", "horaFin": "17:40", "aula": "Cómputo B" },
+            { "dia": "Viernes", "horaInicio": "14:00", "horaFin": "16:30", "aula": "Cómputo B" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "codigoMateria": "TAD155",
+      "nombreMateria": "Teoría Administrativa",
+      "cicloAcademico": 7,
+      "grupos": [
+        {
+          "numeroGrupo": "01",
+          "tipo": "Teorico",
+          "docente": "Mario Alberto Chavarría Amaya",
+          "cuposTotal": 40,
+          "horario": [
+            { "dia": "Lunes",  "horaInicio": "16:00", "horaFin": "17:40", "aula": "Aula 11" },
+            { "dia": "Martes", "horaInicio": "15:00", "horaFin": "17:30", "aula": "Aula 11" }
+          ]
+        },
+        {
+          "numeroGrupo": "02",
+          "tipo": "Teorico",
+          "docente": "Mario Alberto Chavarría Amaya",
+          "cuposTotal": 40,
+          "horario": [
+            { "dia": "Miércoles", "horaInicio": "07:00", "horaFin": "08:40", "aula": "Aula 11" },
+            { "dia": "Jueves",    "horaInicio": "07:00", "horaFin": "09:30", "aula": "Aula 11" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "codigoMateria": "TDS155",
+      "nombreMateria": "Técnicas de Simulación",
+      "cicloAcademico": 7,
+      "grupos": [
+        {
+          "numeroGrupo": "01",
+          "tipo": "Teorico",
+          "docente": "José Alexander Guandique Flores",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Jueves",  "horaInicio": "16:00", "horaFin": "17:40", "aula": "Cómputo B" },
+            { "dia": "Viernes", "horaInicio": "15:00", "horaFin": "17:30", "aula": "Cómputo B" }
+          ]
+        },
+        {
+          "numeroGrupo": "02",
+          "tipo": "Teorico",
+          "docente": "José Alexander Guandique Flores",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Lunes",  "horaInicio": "13:00", "horaFin": "14:40", "aula": "Cómputo B" },
+            { "dia": "Martes", "horaInicio": "13:00", "horaFin": "15:30", "aula": "Cómputo B" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "codigoMateria": "BAD155",
+      "nombreMateria": "Bases de Datos",
+      "cicloAcademico": 9,
+      "grupos": [
+        {
+          "numeroGrupo": "01",
+          "tipo": "Teorico",
+          "docente": "Jose Guadalupe Vasquez Martinez",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Lunes",  "horaInicio": "13:00", "horaFin": "15:00", "aula": "Cómputo A" },
+            { "dia": "Martes", "horaInicio": "13:00", "horaFin": "14:40", "aula": "Cómputo A" }
+          ]
+        },
+        {
+          "numeroGrupo": "02",
+          "tipo": "Teorico",
+          "docente": "Jose Guadalupe Vasquez Martinez",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Miércoles", "horaInicio": "15:00", "horaFin": "17:00", "aula": "Cómputo A" },
+            { "dia": "Jueves",    "horaInicio": "15:00", "horaFin": "16:40", "aula": "Cómputo A" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "codigoMateria": "LPR155",
+      "nombreMateria": "Legislación Profesional",
+      "cicloAcademico": 9,
+      "grupos": [
+        {
+          "numeroGrupo": "01",
+          "tipo": "Teorico",
+          "docente": "Claudia Elizabeth Osegueda Jiménez",
+          "cuposTotal": 40,
+          "horario": [
+            { "dia": "Jueves",  "horaInicio": "16:00", "horaFin": "17:40", "aula": "Aula 6A" },
+            { "dia": "Viernes", "horaInicio": "15:00", "horaFin": "17:30", "aula": "Aula 6A" }
+          ]
+        },
+        {
+          "numeroGrupo": "02",
+          "tipo": "Teorico",
+          "docente": "Claudia Elizabeth Osegueda Jiménez",
+          "cuposTotal": 40,
+          "horario": [
+            { "dia": "Lunes",  "horaInicio": "07:00", "horaFin": "08:40", "aula": "Aula 6A" },
+            { "dia": "Martes", "horaInicio": "07:00", "horaFin": "09:30", "aula": "Aula 6A" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "codigoMateria": "PDD155",
+      "nombreMateria": "Programación 3D",
+      "cicloAcademico": 9,
+      "grupos": [
+        {
+          "numeroGrupo": "01",
+          "tipo": "Teorico",
+          "docente": "José Alexander Guandique Flores",
+          "cuposTotal": 30,
+          "horario": [
+            { "dia": "Miércoles", "horaInicio": "16:00", "horaFin": "17:40", "aula": "Cómputo C (UESED)" },
+            { "dia": "Jueves",    "horaInicio": "13:00", "horaFin": "15:30", "aula": "Cómputo C (UESED)" }
+          ]
+        },
+        {
+          "numeroGrupo": "02",
+          "tipo": "Teorico",
+          "docente": "José Alexander Guandique Flores",
+          "cuposTotal": 30,
+          "horario": [
+            { "dia": "Lunes",   "horaInicio": "16:00", "horaFin": "17:40", "aula": "Cómputo C (UESED)" },
+            { "dia": "Viernes", "horaInicio": "13:00", "horaFin": "15:30", "aula": "Cómputo C (UESED)" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "codigoMateria": "RHU155",
+      "nombreMateria": "Recursos Humanos",
+      "cicloAcademico": 9,
+      "grupos": [
+        {
+          "numeroGrupo": "01",
+          "tipo": "Teorico",
+          "docente": "Ligia Astrid Hernandez Bonilla",
+          "cuposTotal": 40,
+          "horario": [
+            { "dia": "Lunes",  "horaInicio": "16:00", "horaFin": "17:40", "aula": "Cómputo A" },
+            { "dia": "Martes", "horaInicio": "15:00", "horaFin": "17:30", "aula": "Cómputo A" }
+          ]
+        },
+        {
+          "numeroGrupo": "02",
+          "tipo": "Teorico",
+          "docente": "Ligia Astrid Hernandez Bonilla",
+          "cuposTotal": 40,
+          "horario": [
+            { "dia": "Miércoles", "horaInicio": "07:00", "horaFin": "08:40", "aula": "Cómputo A" },
+            { "dia": "Jueves",    "horaInicio": "07:00", "horaFin": "09:30", "aula": "Cómputo A" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "codigoMateria": "SGI155",
+      "nombreMateria": "Sistemas de Información Gerencial",
+      "cicloAcademico": 9,
+      "grupos": [
+        {
+          "numeroGrupo": "01",
+          "tipo": "Teorico",
+          "docente": "Rosalba Elizabeth Sandoval Guerra",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Miércoles", "horaInicio": "13:00", "horaFin": "15:30", "aula": "Cómputo A" },
+            { "dia": "Viernes",   "horaInicio": "13:00", "horaFin": "14:40", "aula": "Cómputo A" }
+          ]
+        },
+        {
+          "numeroGrupo": "02",
+          "tipo": "Teorico",
+          "docente": "Rosalba Elizabeth Sandoval Guerra",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Lunes",  "horaInicio": "07:00", "horaFin": "09:30", "aula": "Cómputo A" },
+            { "dia": "Martes", "horaInicio": "07:00", "horaFin": "08:40", "aula": "Cómputo A" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "codigoMateria": "SIF155",
+      "nombreMateria": "Seguridad Informática",
+      "cicloAcademico": 9,
+      "grupos": [
+        {
+          "numeroGrupo": "01",
+          "tipo": "Teorico",
+          "docente": "Milagro Alicia González de Reyes",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Miércoles", "horaInicio": "16:00", "horaFin": "17:40", "aula": "Cómputo A" },
+            { "dia": "Jueves",    "horaInicio": "13:00", "horaFin": "15:30", "aula": "Cómputo A" }
+          ]
+        },
+        {
+          "numeroGrupo": "02",
+          "tipo": "Teorico",
+          "docente": "Milagro Alicia González de Reyes",
+          "cuposTotal": 35,
+          "horario": [
+            { "dia": "Lunes",   "horaInicio": "13:00", "horaFin": "14:40", "aula": "Cómputo A" },
+            { "dia": "Viernes", "horaInicio": "15:00", "horaFin": "17:30", "aula": "Cómputo A" }
+          ]
+        }
+      ]
+    }
+
+  ]
+}

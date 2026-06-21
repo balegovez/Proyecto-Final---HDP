@@ -916,3 +916,127 @@
     font-size: 0.8rem;
   }
 }
+/* ════════════════════════════════════════════════════════════
+   NUEVO: SELECTOR DE CICLO (paso 1)
+   ════════════════════════════════════════════════════════════ */
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #fff;
+  color: #1f2937;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.form-group select:focus {
+  outline: none;
+  border-color: #3262c8;
+  box-shadow: 0 0 0 3px rgba(50, 98, 200, 0.15);
+}
+
+.form-hint {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+/* ════════════════════════════════════════════════════════════
+   NUEVO: PASO 2 — MATERIAS REPROBADAS
+   ════════════════════════════════════════════════════════════ */
+.paso-reprobadas {
+  max-width: 600px;
+}
+
+.reprobadas-scroll {
+  max-height: 50vh;
+  overflow-y: auto;
+  margin: 1rem 0;
+  padding-right: 0.5rem;
+}
+
+.reprob-ciclo {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.75rem 1rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.reprob-ciclo legend {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #3262c8;
+  padding: 0 0.5rem;
+}
+
+.reprob-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.reprob-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.reprob-check {
+  width: 18px;
+  height: 18px;
+  accent-color: #b71c1c;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.reprob-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.reprob-codigo {
+  font-weight: 700;
+  color: #374151;
+  min-width: 64px;
+}
+
+.reprob-nombre {
+  color: #6b7280;
+}
+
+.reprob-acciones {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.reprob-acciones button {
+  flex: 1;
+}
+
+/* Botón secundario (Atrás) */
+.btn-secondary {
+  background-color: #e5e7eb;
+  color: #374151;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: #d1d5db;
+}

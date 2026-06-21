@@ -1,13 +1,12 @@
-/* ============================================
-   AppComponent
-   Estilos del layout principal (sidebar + navbar + footer).
-   Estilos GLOBALES (body, fuente) están en src/styles.css
-   ============================================ */
+/* ════════════════════════════════════════════════════════════
+   AppComponent — Layout principal
+   Estilos globales (body, fuente) están en src/styles.css
+   ════════════════════════════════════════════════════════════ */
 
-/* ---- SIDEBAR ---- */
+/* ── SIDEBAR (escritorio) ── */
 .sidebar {
   width: 100px;
-  background-color: var(--ues-sidebar);
+  background-color: var(--ues-sidebar, #3262c8);
   min-height: 100vh;
   position: fixed;
   left: 0;
@@ -18,7 +17,7 @@
 .sidebar-logo {
   padding: 20px 0;
   text-align: center;
-  border-bottom: 1px solid var(--ues-sidebar-active);
+  border-bottom: 1px solid var(--ues-sidebar-active, #3a414e);
 }
 
 .nav-item-custom {
@@ -28,13 +27,13 @@
   font-size: 0.75rem;
   text-decoration: none;
   display: block;
-  border-bottom: 1px solid var(--ues-sidebar-active);
+  border-bottom: 1px solid var(--ues-sidebar-active, #3a414e);
   transition: all 0.3s ease;
 }
 
 .nav-item-custom:hover,
 .nav-item-custom.active {
-  background-color: var(--ues-sidebar-active);
+  background-color: var(--ues-sidebar-active, #3a414e);
   color: #ffffff;
   border-left: 3px solid #6c757d;
 }
@@ -45,7 +44,7 @@
   margin-bottom: 5px;
 }
 
-/* ---- CONTENIDO PRINCIPAL ---- */
+/* ── CONTENIDO PRINCIPAL ── */
 .main-content {
   margin-left: 100px;
   min-height: 100vh;
@@ -53,32 +52,151 @@
   flex-direction: column;
 }
 
-/* ---- NAVBAR SUPERIOR ---- */
-.top-navbar {
-  background-color: #ffffff;
-  border-bottom: 1px solid var(--ues-border);
-  padding: 10px 20px;
+.route-host {
+  flex: 1;
+  display: block;
 }
 
-/* ---- FOOTER ---- */
+/* ── NAVBAR SUPERIOR ── */
+.top-navbar {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--ues-border, #e0e0e0);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.top-navbar-text {
+  display: flex;
+  align-items: center;
+  color: #6c757d;
+  font-weight: 600;
+}
+
+.top-navbar-carrera {
+  font-size: 0.95rem;
+}
+
+.top-navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-left: 1px solid #e0e0e0;
+  padding-left: 12px;
+}
+
+.user-carnet {
+  color: #6c757d;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* ── FOOTER ── */
 .footer {
   background-color: #ffffff;
-  border-top: 1px solid var(--ues-border);
+  border-top: 1px solid var(--ues-border, #e0e0e0);
   padding: 15px 20px;
   margin-top: auto;
   font-size: 0.85rem;
-  color: var(--ues-text-muted);
+  color: var(--ues-text-muted, #6c757d);
+  display: flex;
+  justify-content: space-between;
 }
 
-/* ---- RESPONSIVE ---- */
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── BOTTOM NAV (móvil) — oculto en escritorio ── */
+.bottom-nav {
+  display: none;
+}
+
+/* ════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
+
+  /* Ocultar sidebar lateral */
   .sidebar {
     display: none;
   }
+
+  /* El contenido ocupa todo el ancho */
   .main-content {
     margin-left: 0;
+    /* Espacio inferior para que el bottom-nav no tape contenido */
+    padding-bottom: 68px;
   }
-  .top-navbar-text {
-    font-size: 0.9rem;
+
+  /* Navbar superior más compacto */
+  .top-navbar {
+    padding: 8px 12px;
+  }
+
+  .top-navbar-carrera {
+    font-size: 0.72rem;
+    line-height: 1.2;
+  }
+
+  /* Mostrar barra de navegación inferior */
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--ues-sidebar, #3262c8);
+    z-index: 1000;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+    justify-content: space-around;
+  }
+
+  .bottom-nav__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 8px 2px;
+    color: #aeb4c0;
+    text-decoration: none;
+    font-size: 0.62rem;
+    transition: all 0.2s;
+  }
+
+  .bottom-nav__item i {
+    font-size: 1.15rem;
+  }
+
+  .bottom-nav__item.active {
+    color: #ffffff;
+    background: var(--ues-sidebar-active, #3a414e);
+  }
+
+  .bottom-nav__label {
+    font-size: 0.6rem;
+    text-align: center;
+  }
+}
+
+/* Pantallas muy pequeñas: ocultar texto del carné para ganar espacio */
+@media (max-width: 420px) {
+  .user-carnet {
+    display: none;
+  }
+
+  .bottom-nav__label {
+    font-size: 0.55rem;
   }
 }

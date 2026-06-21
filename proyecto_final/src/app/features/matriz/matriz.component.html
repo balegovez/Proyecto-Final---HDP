@@ -1,9 +1,24 @@
-<div class="container-fluid py-4 min-vh-100 bg-light" style="font-family: 'Inter', system-ui, sans-serif;">
+<!-- ════════════════════════════════════════════════════════════════════
+     MATRIZ DE HORARIOS — Planificador con drag&drop, CRUD persistido,
+     confirmación, exportación .ics y PDF.
 
-  <header class="row mb-4 align-items-start gap-3 gap-lg-0">
+     Estructura semántica:
+       <main>          - contenedor de la página
+         <header>      - cabecera con KPIs
+         <nav>         - filtros (paridad de ciclo)
+         <section>     - cuerpo con dos zonas (aside + section)
+           <aside>     - barra lateral (grupos disponibles)
+           <section>   - matriz / vista por día
+         <footer>      - botones de acción (confirmar / exportar)
+     ════════════════════════════════════════════════════════════════════ -->
 
-    <div class="col-lg-5 d-flex align-items-center gap-3">
-      <div class="bg-primary text-white rounded-3 p-2 d-flex align-items-center justify-content-center" aria-hidden="true" style="width: 48px; height: 48px;">
+<main class="container-fluid py-3 py-md-4 min-vh-100 bg-light mz-root">
+
+  <!-- ───────────────────── CABECERA + KPIs ───────────────────── -->
+  <header class="row g-3 align-items-center mb-3">
+    <div class="col-12 col-lg-5 d-flex align-items-center gap-3">
+      <div class="bg-primary text-white rounded-3 p-2 d-flex align-items-center justify-content-center flex-shrink-0"
+           aria-hidden="true" style="width: 48px; height: 48px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;">
           <rect x="3" y="4" width="18" height="18" rx="2"/>
           <line x1="16" y1="2" x2="16" y2="6"/>
@@ -14,12 +29,12 @@
       <div>
         <h1 class="h4 fw-bold mb-1 text-dark">Planificador de Horario</h1>
         <p class="text-secondary small mb-0">
-          Selecciona materias y arrástralas (o tócalas en móvil) a las celdas de tu semana
+          Arrastra un <strong>grupo teórico</strong> a la matriz: la materia se ubicará automáticamente en sus celdas.
         </p>
       </div>
     </div>
 
-    <div class="col-lg-7 d-flex flex-wrap gap-2 justify-content-lg-end">
+    <div class="col-12 col-lg-7 d-flex flex-wrap gap-2 justify-content-lg-end">
       <article class="card shadow-sm border-0 flex-fill text-center p-2" style="min-width: 130px;">
         <span class="fs-4 fw-bold lh-1 text-primary"
               [class.text-warning]="uvInscritas() >= LIMITE_UV * 0.8"
@@ -28,8 +43,7 @@
         </span>
         <span class="text-uppercase text-muted" style="font-size: 0.7rem; letter-spacing: 0.05em;">UV inscritas</span>
         <div class="progress mt-2" style="height: 5px;">
-          <div class="progress-bar bg-primary transition-all"
-               role="progressbar"
+          <div class="progress-bar bg-primary" role="progressbar"
                [style.width.%]="(uvInscritas() / LIMITE_UV) * 100"
                [class.bg-warning]="uvInscritas() >= LIMITE_UV * 0.8"
                [class.bg-danger]="uvInscritas() >= LIMITE_UV"></div>
@@ -37,215 +51,402 @@
       </article>
 
       <article class="card shadow-sm border-0 flex-fill text-center p-2" style="min-width: 100px;">
-        <span class="fs-4 fw-bold lh-1 text-primary">{{ materiasSeleccionadas().length }}</span>
-        <span class="text-uppercase text-muted mt-auto" style="font-size: 0.7rem; letter-spacing: 0.05em;">En cola</span>
+        <span class="fs-4 fw-bold lh-1 text-primary">{{ gruposDisponibles().length }}</span>
+        <span class="text-uppercase text-muted mt-auto" style="font-size: 0.7rem; letter-spacing: 0.05em;">Disponibles</span>
       </article>
 
       <article class="card shadow-sm border-0 flex-fill text-center p-2" style="min-width: 100px;">
         <span class="fs-4 fw-bold lh-1 text-primary">{{ materiasUbicadas() }}</span>
-        <span class="text-uppercase text-muted mt-auto" style="font-size: 0.7rem; letter-spacing: 0.05em;">Ubicadas</span>
+        <span class="text-uppercase text-muted mt-auto" style="font-size: 0.7rem; letter-spacing: 0.05em;">Inscritas</span>
+      </article>
+
+      <article class="card shadow-sm border-0 flex-fill text-center p-2" style="min-width: 100px;">
+        <span class="fs-4 fw-bold lh-1"
+              [class.text-success]="todoConfirmado()"
+              [class.text-secondary]="!todoConfirmado()">
+          {{ confirmadas().size }} / {{ materiasUbicadas() }}
+        </span>
+        <span class="text-uppercase text-muted mt-auto" style="font-size: 0.7rem; letter-spacing: 0.05em;">Confirmadas</span>
       </article>
     </div>
-
   </header>
 
-  @if (materiaTomada(); as tomada) {
-    @if (obtenerMateria(tomada); as mat) {
-      <div class="alert alert-primary d-flex align-items-center justify-content-between shadow-sm mz-touch-banner" role="status">
-        <span class="small">
-          <strong class="font-monospace">{{ mat.codigo }}</strong> tomada — toca una celda libre para colocarla
-        </span>
-        <button type="button" class="btn btn-sm btn-primary fw-bold" (click)="materiaTomada.set(null)">
-          Cancelar
-        </button>
-      </div>
-    }
-  }
+  <!-- ───────────────────── FILTRO POR PARIDAD ───────────────────── -->
+  <nav class="d-flex flex-wrap align-items-center gap-2 mb-3" aria-label="Filtros de ciclo">
+    <span class="text-uppercase fw-bold text-secondary me-1" style="font-size: 0.7rem; letter-spacing: 0.05em;">Ciclos:</span>
+    <div class="btn-group btn-group-sm" role="group" aria-label="Filtro por paridad de ciclo">
+      <button type="button" class="btn"
+              [class.btn-primary]="paridadCiclo() === 'todos'"
+              [class.btn-outline-primary]="paridadCiclo() !== 'todos'"
+              (click)="paridadCiclo.set('todos')">Todos</button>
+      <button type="button" class="btn"
+              [class.btn-primary]="paridadCiclo() === 'impar'"
+              [class.btn-outline-primary]="paridadCiclo() !== 'impar'"
+              (click)="paridadCiclo.set('impar')">Impar (I)</button>
+      <button type="button" class="btn"
+              [class.btn-primary]="paridadCiclo() === 'par'"
+              [class.btn-outline-primary]="paridadCiclo() !== 'par'"
+              (click)="paridadCiclo.set('par')">Par (II)</button>
+    </div>
 
+    @if (gruposInscritos().length > 0) {
+      <button type="button" class="btn btn-sm btn-outline-danger ms-auto" (click)="limpiarTodo()">
+        <i class="fa-solid fa-eraser me-1"></i>Vaciar horario
+      </button>
+    }
+  </nav>
+
+  <!-- ───────────────────── ALERTAS ───────────────────── -->
   @if (mensajeError()) {
-    <div class="alert alert-danger d-flex align-items-center shadow-sm" role="alert">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2" style="width: 18px; height: 18px;">
-        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-      </svg>
+    <div class="alert alert-danger d-flex align-items-center shadow-sm py-2" role="alert">
+      <i class="fa-solid fa-circle-exclamation me-2"></i>
       <span class="small fw-medium">{{ mensajeError() }}</span>
     </div>
   }
+  @if (mensajeExito()) {
+    <div class="alert alert-success d-flex align-items-center shadow-sm py-2" role="status">
+      <i class="fa-solid fa-circle-check me-2"></i>
+      <span class="small fw-medium">{{ mensajeExito() }}</span>
+    </div>
+  }
 
-  <div class="row g-4">
+  <!-- Banner del modo táctil (móvil) -->
+  @if (grupoTomado() && esMovil()) {
+    <div class="alert alert-primary d-flex align-items-center justify-content-between shadow-sm py-2 mz-touch-banner" role="status">
+      <span class="small">
+        <i class="fa-solid fa-hand-pointer me-1"></i>
+        Grupo tomado. Pulsa <strong>"Inscribir aquí"</strong> abajo para asignarlo.
+      </span>
+      <button type="button" class="btn btn-sm btn-light fw-bold" (click)="grupoTomado.set(null)">Cancelar</button>
+    </div>
+  }
 
-    <aside class="col-xl-3 col-lg-4 d-flex flex-column gap-3">
+  <!-- ═══════════════════ CUERPO PRINCIPAL ═══════════════════ -->
+  <section class="row g-3">
 
-      <section class="card shadow-sm border-0 overflow-hidden" aria-labelledby="title-queue">
+    <!-- ───────────── ASIDE: Grupos disponibles ───────────── -->
+    <aside class="col-12 col-lg-4 col-xl-3 d-flex flex-column gap-3 mz-aside">
+      <section class="card shadow-sm border-0 overflow-hidden" aria-labelledby="title-catalogo">
         <header class="card-header bg-primary bg-opacity-10 border-bottom border-primary border-opacity-25 d-flex justify-content-between align-items-center py-2">
-          <h2 id="title-queue" class="h6 mb-0 text-uppercase fw-bold text-secondary" style="font-size: 0.75rem;">Materias seleccionadas</h2>
-          @if (materiasSeleccionadas().length > 0) {
-            <span class="badge rounded-pill text-bg-primary">{{ materiasSeleccionadas().length }}</span>
+          <h2 id="title-catalogo" class="h6 mb-0 text-uppercase fw-bold text-secondary" style="font-size: 0.75rem;">
+            Grupos teóricos disponibles
+          </h2>
+          @if (gruposDisponibles().length > 0) {
+            <span class="badge rounded-pill text-bg-primary">{{ gruposDisponibles().length }}</span>
           }
         </header>
 
-        <div class="card-body p-2 d-flex flex-column gap-2"
+        <div class="card-body p-2 d-flex flex-column gap-2 overflow-y-auto mz-lista-grupos"
              cdkDropList
-             id="lista-seleccionadas"
-             [cdkDropListConnectedTo]="dropIds"
-             [cdkDropListData]="materiasSeleccionadas()"
-             style="min-height: 80px;">
+             [id]="DROP_LIST_ID_SIDEBAR"
+             [cdkDropListConnectedTo]="[DROP_LIST_ID_MATRIZ]"
+             [cdkDropListData]="gruposDisponibles()"
+             [cdkDropListSortingDisabled]="true">
 
-          @if (materiasSeleccionadas().length === 0) {
-            <div class="text-center text-muted p-3">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; opacity: 0.5;">
-                <path d="M12 5v14M5 12l7-7 7 7"/>
-              </svg>
-              <p class="small mt-2 mb-0">Haz clic en una materia para agregarla aquí</p>
+          @if (gruposDisponibles().length === 0) {
+            <div class="text-center text-muted p-4">
+              <i class="fa-solid fa-circle-check fa-2x opacity-50 mb-2"></i>
+              <p class="small mb-0">
+                No hay grupos que coincidan con tus filtros y prerrequisitos.
+              </p>
             </div>
           }
 
-          @for (codigo of materiasSeleccionadas(); track codigo) {
-            @if (obtenerMateria(codigo); as mat) {
-              <article class="card flex-row align-items-center border border-primary border-opacity-25 bg-white shadow-sm p-2 mz-chip"
-                       [class.mz-chip--tomada]="materiaTomada() === codigo"
-                       cdkDrag [cdkDragData]="codigo"
-                       title="Arrastra al horario (o toca para tomar en móvil)"
-                       [attr.aria-label]="mat.nombre"
-                       (click)="tomarMateria(codigo)"
-                       role="button" tabindex="0">
+          @for (grupo of gruposDisponibles(); track grupo.key) {
+            <article class="card border bg-white shadow-sm p-2 mz-card-grupo"
+                     [class.mz-card-grupo--tomada]="grupoTomado() === grupo.key"
+                     [style.--mz-acc]="obtenerColorPorMateria(grupo.codigoMateria)"
+                     [attr.aria-label]="grupo.codigoMateria + ' grupo ' + grupo.numeroGrupo"
+                     cdkDrag
+                     [cdkDragData]="grupo"
+                     [cdkDragDisabled]="esMovil()">
 
-                <div class="text-muted pe-2 flex-shrink-0" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="currentColor" style="width: 14px;">
-                    <circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/>
-                    <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
-                    <circle cx="9" cy="19" r="1.5"/><circle cx="15" cy="19" r="1.5"/>
-                  </svg>
+              <div class="d-flex justify-content-between align-items-start mb-1">
+                <div class="d-flex align-items-center gap-1 flex-grow-1 overflow-hidden">
+                  <span class="badge font-monospace mz-badge-codigo">{{ grupo.codigoMateria }}</span>
+                  <span class="badge bg-secondary bg-opacity-25 text-secondary font-monospace">G{{ grupo.numeroGrupo }}</span>
                 </div>
-
-                <div class="flex-grow-1 overflow-hidden">
-                  <div class="font-monospace fw-bold text-primary" style="font-size: 0.75rem;">{{ mat.codigo }}</div>
-                  <div class="text-truncate text-dark" style="font-size: 0.8rem;">{{ mat.nombre }}</div>
-                  <div class="text-muted" style="font-size: 0.7rem;">{{ mat.uv }} UV</div>
-                </div>
-
-                <button type="button" class="btn btn-sm btn-light text-muted p-1 ms-1 hover-danger d-flex align-items-center"
-                        aria-label="Quitar de seleccionadas"
-                        (mousedown)="$event.stopPropagation()"
-                        (click)="$event.stopPropagation(); quitarDeSeleccionadas(codigo)">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width: 14px;">
-                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                  </svg>
-                </button>
-              </article>
-            }
-          }
-        </div>
-      </section>
-
-      <section class="card shadow-sm border-0 overflow-hidden" aria-labelledby="title-catalog">
-        <header class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-2">
-          <h2 id="title-catalog" class="h6 mb-0 text-uppercase fw-bold text-secondary" style="font-size: 0.75rem;">Materias disponibles</h2>
-          @if (materiasDisponibles().length > 0) {
-            <span class="badge rounded-pill text-bg-secondary">{{ materiasDisponibles().length }}</span>
-          }
-        </header>
-
-        <div class="card-body p-2 d-flex flex-column gap-2 overflow-y-auto" style="max-height: 440px;">
-
-          @if (materiasDisponibles().length === 0) {
-            <div class="text-center text-muted p-3">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; opacity: 0.5;">
-                <path d="M5 13l4 4L19 7"/>
-              </svg>
-              <p class="small mt-2 mb-0">No hay materias disponibles para inscribir</p>
-            </div>
-          }
-
-          @for (materia of materiasDisponibles(); track materia.codigo) {
-            <article class="card p-2 border-success bg-success bg-opacity-10 mz-card-available"
-                     (click)="agregarASeleccionadas(materia.codigo)"
-                     [attr.aria-label]="'Agregar ' + materia.nombre"
-                     role="button" tabindex="0">
-              <div class="d-flex justify-content-between align-items-center mb-1">
-                <span class="badge bg-success bg-opacity-25 text-success font-monospace">{{ materia.codigo }}</span>
-                <span class="fw-bold text-success opacity-75" style="font-size: 0.7rem;">{{ materia.uv }} UV</span>
+                <span class="text-muted ms-1 flex-shrink-0" style="font-size: 0.7rem;">
+                  C{{ grupo.cicloAcademico }} · {{ grupo.uv }}UV
+                </span>
               </div>
-              <p class="mb-1 text-success-emphasis fw-semibold lh-sm" style="font-size: 0.82rem;">{{ materia.nombre }}</p>
-              <div class="text-success opacity-75" style="font-size: 0.7rem;">Clic para seleccionar →</div>
+
+              <p class="mb-1 fw-semibold text-dark lh-sm" style="font-size: 0.82rem;">
+                {{ grupo.nombreMateria }}
+              </p>
+
+              <ul class="list-unstyled mb-1 small text-secondary mz-horarios-mini">
+                @for (f of grupo.horario; track f.dia + f.horaInicio) {
+                  <li>
+                    <i class="fa-regular fa-clock me-1 opacity-75"></i>
+                    <strong>{{ f.dia }}</strong> {{ f.horaInicio }}–{{ f.horaFin }} · {{ f.aula }}
+                  </li>
+                }
+              </ul>
+
+              <!-- Acciones según viewport -->
+              @if (!esMovil()) {
+                <p class="text-muted mb-0 mz-pista-drag" style="font-size: 0.7rem;">
+                  <i class="fa-solid fa-up-down-left-right me-1"></i>Arrastra a la matriz →
+                </p>
+              } @else {
+                <div class="d-flex gap-1 mt-1">
+                  <button type="button" class="btn btn-sm btn-outline-primary flex-grow-1" (click)="tomarGrupo(grupo)">
+                    @if (grupoTomado() === grupo.key) {
+                      <i class="fa-solid fa-xmark me-1"></i>Cancelar
+                    } @else {
+                      <i class="fa-solid fa-hand-pointer me-1"></i>Tomar
+                    }
+                  </button>
+                  <button type="button" class="btn btn-sm btn-primary" (click)="inscribirGrupo(grupo)">
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+              }
             </article>
           }
         </div>
       </section>
-
     </aside>
 
-    <main class="col-xl-9 col-lg-8">
-      
-      <section class="card shadow-sm border-0 overflow-hidden" aria-labelledby="title-schedule">
+    <!-- ───────────── SECTION: Matriz / Vista por día ───────────── -->
+    <section class="col-12 col-lg-8 col-xl-9 mz-main">
+
+      <!-- VISTA ESCRITORIO: tabla matriz -->
+      <section class="card shadow-sm border-0 overflow-hidden d-none d-md-block mz-vista-pc"
+               aria-labelledby="title-matriz" #areaImpresion>
         <header class="card-header bg-white border-bottom d-flex flex-wrap justify-content-between align-items-center py-2 px-3">
-          <h2 id="title-schedule" class="h6 mb-0 text-uppercase fw-bold text-secondary" style="font-size: 0.75rem;">Horario semanal</h2>
-          <span class="text-muted small">Arrastra (escritorio) o toca una materia y luego una celda (móvil)</span>
+          <h2 id="title-matriz" class="h6 mb-0 text-uppercase fw-bold text-secondary" style="font-size: 0.75rem;">
+            Matriz semanal
+          </h2>
+          <span class="text-muted small d-none d-lg-inline">
+            <i class="fa-solid fa-arrow-pointer me-1"></i>Arrastra cualquier grupo aquí
+          </span>
         </header>
 
-        <div class="table-responsive p-3">
-          <table class="table table-bordered text-center align-middle mb-0 mz-table" role="grid" style="min-width: 640px; border-spacing: 4px; border-collapse: separate;">
-            
+        <div class="table-responsive p-2 p-md-3"
+             cdkDropList
+             [id]="DROP_LIST_ID_MATRIZ"
+             [cdkDropListConnectedTo]="[DROP_LIST_ID_SIDEBAR]"
+             [cdkDropListData]="[]"
+             (cdkDropListDropped)="alSoltarEnMatriz($event)">
+
+          <table class="table table-bordered align-middle mb-0 mz-tabla">
             <thead>
-              <tr>
-                <th scope="col" class="border-0 bg-transparent" style="width: 72px;"></th>
-                @for (dia of dias; track dia) {
-                  <th scope="col" class="bg-primary text-white text-uppercase rounded-2 fw-bold" style="font-size: 0.8rem; padding: 10px 6px;">{{ dia }}</th>
+              <tr class="mz-tabla-head">
+                <th scope="col" class="mz-col-hora">Hora</th>
+                @for (dia of DIAS; track dia) {
+                  <th scope="col" class="text-secondary fw-semibold">{{ dia }}</th>
                 }
               </tr>
             </thead>
 
             <tbody>
-              @for (hora of horas; track hora) {
+              @if (filasHorario().length === 0) {
                 <tr>
-                  <th scope="row" class="border-0 p-0 align-middle">
-                    <time class="d-flex align-items-center justify-content-center bg-light text-secondary rounded-2 font-monospace fw-bold m-1" style="font-size: 0.75rem; min-height: 88px;">
-                      {{ hora }}
-                    </time>
+                  <td [attr.colspan]="DIAS.length + 1" class="text-center text-muted py-5">
+                    <i class="fa-regular fa-calendar-plus fa-2x opacity-50 d-block mb-2"></i>
+                    Arrastra (o pulsa, en móvil) un grupo teórico de la izquierda para comenzar.
+                  </td>
+                </tr>
+              }
+
+              @for (fila of filasHorario(); track fila.etiqueta) {
+                <tr>
+                  <th scope="row" class="mz-col-hora text-secondary fw-semibold font-monospace small">
+                    {{ fila.etiqueta }}
                   </th>
 
-                  @for (dia of dias; track dia) {
-                    <td class="p-1 border-0"
-                        cdkDropList
-                        [id]="'drop-' + dia + '-' + hora"
-                        [cdkDropListData]="celdaVacia"
-                        (cdkDropListDropped)="soltarEnCelda($event, dia, hora)">
-                      
-                      <div class="mz-cell w-100 h-100 rounded-2 position-relative d-flex align-items-center justify-content-center"
-                           [class.mz-cell--occupied]="!!horario()[dia + '-' + hora]"
-                           [class.mz-cell--target]="materiaTomada() && !horario()[dia + '-' + hora]"
-                           (click)="!horario()[dia + '-' + hora] ? tocarCelda(dia, hora) : null">
-
-                        @if (horario()[dia + '-' + hora]; as codigo) {
-                          @if (obtenerMateria(codigo); as mat) {
-                            <article class="mz-slot w-100 h-100 rounded-2 p-2 text-start text-white shadow-sm"
-                                     title="Clic para devolver a seleccionadas"
-                                     (click)="devolverASeleccionadas(dia, hora)"
-                                     role="button" tabindex="0"
-                                     [attr.aria-label]="'Quitar ' + mat.nombre + ' de ' + dia + ' ' + hora">
-                              <span class="font-monospace fw-bold opacity-75 text-uppercase" style="font-size: 0.65rem;">{{ mat.codigo }}</span>
-                              <h3 class="fw-bold mb-0 lh-sm text-truncate text-wrap mt-1" style="font-size: 0.75rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
-                                {{ mat.nombre }}
-                              </h3>
-                              <span class="opacity-75 mt-auto d-block" style="font-size: 0.65rem;">{{ mat.uv }} UV</span>
-                              <span class="mz-slot__remove" aria-hidden="true">✕</span>
-                            </article>
-                          }
-                        } @else {
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-secondary opacity-25" style="width: 18px;">
-                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                          </svg>
-                        }
-                      </div>
+                  @for (dia of DIAS; track dia) {
+                    <td class="mz-celda">
+                      @if (celdaEn(fila, dia); as ocupada) {
+                        <article class="mz-bloque" [style.--mz-acc]="obtenerColorPorMateria(ocupada.codigoMateria)">
+                          <span class="mz-bloque__texto">{{ ocupada.contenido }}</span>
+                          <button type="button"
+                                  class="mz-bloque__cerrar"
+                                  aria-label="Eliminar materia del horario"
+                                  title="Eliminar"
+                                  (click)="eliminarMateria(ocupada.codigoMateria)">
+                            <i class="fa-solid fa-xmark"></i>
+                          </button>
+                        </article>
+                      }
                     </td>
                   }
                 </tr>
               }
             </tbody>
-
           </table>
         </div>
       </section>
 
-    </main>
+      <!-- VISTA MÓVIL: acordeón por día -->
+      <section class="card shadow-sm border-0 d-md-none mz-vista-movil" aria-labelledby="title-matriz-movil">
+        <header class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-2 px-3">
+          <h2 id="title-matriz-movil" class="h6 mb-0 text-uppercase fw-bold text-secondary" style="font-size: 0.75rem;">
+            Mi horario
+          </h2>
+          @if (grupoTomado()) {
+            <button type="button" class="btn btn-sm btn-primary" (click)="confirmarTomadoEnMatriz()">
+              <i class="fa-solid fa-plus me-1"></i>Inscribir aquí
+            </button>
+          }
+        </header>
+
+        <div class="card-body p-2">
+          @if (vistaPorDia().length === 0) {
+            <div class="text-center text-muted py-4">
+              <i class="fa-regular fa-calendar-plus fa-2x opacity-50 d-block mb-2"></i>
+              <p class="small mb-0">Toma un grupo arriba y pulsa "Inscribir aquí".</p>
+            </div>
+          }
+
+          <div class="accordion accordion-flush" id="acordeonHorarioMovil">
+            @for (bloque of vistaPorDia(); track bloque.dia; let i = $index) {
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button" type="button"
+                          data-bs-toggle="collapse"
+                          [attr.data-bs-target]="'#dia-' + bloque.dia"
+                          [attr.aria-controls]="'dia-' + bloque.dia">
+                    <i class="fa-regular fa-calendar me-2"></i>
+                    <strong>{{ bloque.dia }}</strong>
+                    <span class="badge text-bg-primary ms-2">{{ bloque.items.length }}</span>
+                  </button>
+                </h3>
+                <div [id]="'dia-' + bloque.dia" class="accordion-collapse collapse show">
+                  <div class="accordion-body p-2">
+                    @for (it of bloque.items; track it.codigoMateria + it.horaInicio) {
+                      <article class="mz-mov-item d-flex align-items-center gap-2 p-2 mb-2 rounded-2 border"
+                               [style.--mz-acc]="obtenerColorPorMateria(it.codigoMateria)">
+                        <div class="mz-mov-bar"></div>
+                        <div class="flex-grow-1 overflow-hidden">
+                          <div class="font-monospace fw-bold small">
+                            {{ it.codigoMateria }} {{ it.tipo }} {{ +it.numeroGrupo }}
+                          </div>
+                          <div class="text-truncate text-dark" style="font-size: 0.8rem;">
+                            {{ it.nombreMateria }}
+                          </div>
+                          <div class="text-muted small">
+                            {{ it.rangoEtq }} · {{ it.aula }}
+                          </div>
+                        </div>
+                        <button type="button"
+                                class="btn btn-sm btn-light text-danger"
+                                aria-label="Eliminar"
+                                (click)="eliminarMateria(it.codigoMateria)">
+                          <i class="fa-solid fa-xmark"></i>
+                        </button>
+                      </article>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </section>
+    </section>
+  </section>
+
+  <!-- ───────────────────── FOOTER: Acciones ───────────────────── -->
+  <footer class="d-flex flex-wrap gap-2 mt-3 justify-content-end">
+    <button type="button"
+            class="btn btn-outline-primary"
+            (click)="abrirConfirmacion()"
+            [disabled]="gruposInscritos().length === 0">
+      <i class="fa-solid fa-clipboard-check me-1"></i>Confirmar materias
+    </button>
+
+    <button type="button"
+            class="btn btn-outline-secondary"
+            (click)="descargarPdf()"
+            [disabled]="gruposInscritos().length === 0">
+      <i class="fa-solid fa-file-pdf me-1"></i>Exportar PDF
+    </button>
+
+    <button type="button"
+            class="btn btn-success"
+            (click)="descargarIcs()"
+            [disabled]="!todoConfirmado()"
+            [title]="todoConfirmado() ? 'Descargar archivo .ics para Google Calendar' : 'Primero confirma las materias'">
+      <i class="fa-regular fa-calendar-plus me-1"></i>Exportar .ics (Google Calendar)
+    </button>
+  </footer>
+
+</main>
+
+<!-- ═══════════════════ MODAL DE CONFIRMACIÓN ═══════════════════ -->
+@if (modalAbierta()) {
+  <div class="mz-modal-backdrop" (click)="cerrarConfirmacion()"></div>
+
+  <div class="mz-modal" role="dialog" aria-modal="true" aria-labelledby="modal-confirm-titulo">
+    <article class="card border-0 shadow-lg mz-modal-card">
+      <header class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h2 id="modal-confirm-titulo" class="h5 mb-0">
+          <i class="fa-solid fa-clipboard-check me-2 text-primary"></i>
+          Confirmar materias del horario
+        </h2>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="cerrarConfirmacion()"></button>
+      </header>
+
+      <div class="card-body mz-modal-body">
+        <p class="text-muted small mb-3">
+          Revisa los datos de cada clase antes de exportar.
+        </p>
+
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead class="table-light">
+              <tr>
+                <th scope="col">Código / Nombre</th>
+                <th scope="col" class="text-center">Grupo</th>
+                <th scope="col">Horario y aula</th>
+                <th scope="col" class="text-center">UV</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (g of gruposParaConfirmar(); track g.key) {
+                <tr>
+                  <td>
+                    <span class="font-monospace fw-bold text-primary d-block">{{ g.codigoMateria }}</span>
+                    <span class="small text-dark">{{ g.nombreMateria }}</span>
+                  </td>
+                  <td class="text-center">
+                    <span class="badge bg-secondary bg-opacity-25 text-secondary font-monospace">
+                      {{ g.tipo }} {{ +g.numeroGrupo }}
+                    </span>
+                  </td>
+                  <td>
+                    <ul class="list-unstyled mb-0 small">
+                      @for (f of g.franjas; track f.dia + f.horaInicio) {
+                        <li>
+                          <strong>{{ f.dia }}</strong> {{ f.horaInicio }}–{{ f.horaFin }}
+                          <span class="text-muted">· {{ f.aula }}</span>
+                        </li>
+                      }
+                    </ul>
+                  </td>
+                  <td class="text-center fw-semibold">{{ g.uv }}</td>
+                </tr>
+              }
+            </tbody>
+            <tfoot>
+              <tr class="table-light">
+                <td colspan="3" class="text-end fw-semibold">Total UV:</td>
+                <td class="text-center fw-bold">{{ uvInscritas() }}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <footer class="card-footer bg-white d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-light" (click)="cerrarConfirmacion()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="confirmarTodo()">
+          <i class="fa-solid fa-check me-1"></i>Confirmar todo
+        </button>
+      </footer>
+    </article>
   </div>
-</div>
+}

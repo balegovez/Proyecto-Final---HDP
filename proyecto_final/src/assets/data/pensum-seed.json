@@ -438,10 +438,6 @@
             "codigoPrerequisito": "MEX155"
         },
         {
-            "codigoMateria": "FIS155",
-            "codigoPrerequisito": "MAT255"
-        },
-        {
             "codigoMateria": "HSC155",
             "codigoPrerequisito": "PSS155"
         },

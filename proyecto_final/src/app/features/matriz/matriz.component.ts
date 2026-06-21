@@ -158,7 +158,7 @@ export class MatrizComponent {
   areaImpresion?: ElementRef<HTMLElement>;
 
   // ── Constantes ─────────────────────────────────────────────────
-  readonly LIMITE_UV = 20;
+  
   readonly DIAS = DIAS_SEMANA;
   readonly DROP_LIST_ID_SIDEBAR = 'lista-grupos-disponibles';
   readonly DROP_LIST_ID_MATRIZ = 'matriz-horario';
@@ -209,6 +209,9 @@ export class MatrizComponent {
     }, 3000);
   }
 
+  // ────────────────────────────────────────────────────────────────
+  // FUENTES DERIVADAS (computed)
+  // ────────────────────────────────────────────────────────────────
 
   /** Lista plana de TODOS los grupos teóricos del catálogo. */
   private readonly catalogoGrupos = computed<GrupoSeleccionable[]>(() => {
@@ -427,13 +430,7 @@ export class MatrizComponent {
       g => g.codigoMateria === grupo.codigoMateria
     );
 
-    // UV: si es cambio de grupo, no se suma; si es nuevo, sí.
-    const uvFuturas = yaInscrito
-      ? this.uvInscritas()
-      : this.uvInscritas() + grupo.uv;
-    if (uvFuturas > this.LIMITE_UV) {
-      return `Límite alcanzado: ${this.LIMITE_UV} UV por ciclo.`;
-    }
+    
 
     // Choque de horarios: revisamos contra todas las franjas inscritas
     // EXCEPTO las del grupo viejo de la misma materia (que va a salir).
@@ -554,8 +551,13 @@ export class MatrizComponent {
   private generarIcs(): string {
     const lineas: string[] = [];
     const ahora = new Date();
+    // YYYYMMDDTHHMMSSZ
     const dtstamp =
-      ahora.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+      ahora.toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z';
+
+    const byDayMap: Record<number, string> = {
+      1: 'MO', 2: 'TU', 3: 'WE', 4: 'TH', 5: 'FR', 6: 'SA', 7: 'SU',
+    };
 
     lineas.push('BEGIN:VCALENDAR');
     lineas.push('VERSION:2.0');
@@ -563,40 +565,46 @@ export class MatrizComponent {
     lineas.push('CALSCALE:GREGORIAN');
     lineas.push('METHOD:PUBLISH');
 
+    let eventosEmitidos = 0;
+
     for (const g of this.gruposInscritos()) {
-      for (const [idx, f] of g.horario.entries()) {
+      const franjas = g.horario ?? [];
+      for (let idx = 0; idx < franjas.length; idx++) {
+        const f = franjas[idx];
         const diaIso = DIA_A_ISO[f.dia as DiaSemana];
         if (!diaIso) continue;
+
         const fechaInicio = proximaFecha(diaIso, ahora);
         const horaIni = aHoraIcs(f.horaInicio);
         const horaFin = aHoraIcs(f.horaFin);
         const uid = `${g.codigoMateria}-${g.numeroGrupo}-${idx}-${fechaInicio}@pensumnavigator`;
-        const byDayMap: Record<number, string> = {
-          1: 'MO', 2: 'TU', 3: 'WE', 4: 'TH', 5: 'FR', 6: 'SA', 7: 'SU',
-        };
+
+        // Texto plano sin guiones largos, sin saltos de línea reales —
+        // evitamos cualquier carácter que algunos parsers traten raro.
+        const titulo = `${g.codigoMateria} - ${g.nombreMateria} (G${g.numeroGrupo})`;
+        const descripcion = `Docente: ${g.docente}. Tipo: ${g.tipo}. Grupo: ${g.numeroGrupo}.`;
 
         lineas.push('BEGIN:VEVENT');
         lineas.push(`UID:${uid}`);
         lineas.push(`DTSTAMP:${dtstamp}`);
         lineas.push(`DTSTART:${fechaInicio}T${horaIni}`);
         lineas.push(`DTEND:${fechaInicio}T${horaFin}`);
-        lineas.push(
-          `RRULE:FREQ=WEEKLY;BYDAY=${byDayMap[diaIso]};COUNT=16`
-        );
-        lineas.push(
-          `SUMMARY:${escIcs(g.codigoMateria + ' — ' + g.nombreMateria + ' (G' + g.numeroGrupo + ')')}`
-        );
+        lineas.push(`RRULE:FREQ=WEEKLY;BYDAY=${byDayMap[diaIso]};COUNT=16`);
+        lineas.push(`SUMMARY:${escIcs(titulo)}`);
         lineas.push(`LOCATION:${escIcs(f.aula)}`);
-        lineas.push(
-          `DESCRIPTION:${escIcs(`Docente: ${g.docente}\nTipo: ${g.tipo}\nGrupo: ${g.numeroGrupo}`)}`
-        );
+        lineas.push(`DESCRIPTION:${escIcs(descripcion)}`);
         lineas.push('END:VEVENT');
+        eventosEmitidos++;
       }
     }
 
     lineas.push('END:VCALENDAR');
-    // RFC 5545 exige CRLF
-    return lineas.join('\r\n');
+
+    if (eventosEmitidos === 0) {
+      throw new Error('No se generó ningún evento (revisa los días de tus grupos).');
+    }
+    // RFC 5545: CRLF entre líneas y al final.
+    return lineas.join('\r\n') + '\r\n';
   }
 
   descargarIcs(): void {
@@ -604,21 +612,33 @@ export class MatrizComponent {
       this.mostrarError('No hay materias inscritas para exportar.');
       return;
     }
-    const contenido = this.generarIcs();
-    const blob = new Blob([contenido], { type: 'text/calendar;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'horario-ues.ics';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 500);
-    this.mostrarExito('Archivo .ics descargado. Impórtalo en Google Calendar.');
+    try {
+      const contenido = this.generarIcs();
+      const blob = new Blob([contenido], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'horario-ues.ics';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 500);
+      this.mostrarExito('Archivo .ics descargado. Impórtalo en Google Calendar.');
+    } catch (err) {
+      console.error('Error generando .ics:', err);
+      this.mostrarError(
+        'No se pudo generar el .ics: ' +
+        (err instanceof Error ? err.message : 'error desconocido')
+      );
+    }
   }
 
   // ────────────────────────────────────────────────────────────────
   // EXPORTACIÓN PDF (html2pdf.js cargado on-demand)
+  //
+  // En vez de clonar el DOM (que sufre con la encapsulación de Angular
+  // y el `.d-none !important` de Bootstrap), generamos un fragmento HTML
+  // auto-contenido con estilos en línea. Es 100% portable y siempre rinde.
   // ────────────────────────────────────────────────────────────────
 
   private cargarLibreriaPdf(): Promise<any> {
@@ -636,45 +656,133 @@ export class MatrizComponent {
     });
   }
 
+  /** Escapa texto para insertar como contenido HTML. */
+  private escHtml(s: string): string {
+    return s
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+ private construirHtmlPdf(): string {
+    const filas = this.filasHorario();
+    const dias = this.DIAS;
+
+    // Estilos ajustados: más padding, texto centrado, anchos definidos y mejor interlineado
+    const sThHora = 'width:12%;border:1px solid #94a3b8;padding:12px 8px;font-size:12px;text-transform:uppercase;color:#475569;font-weight:bold;background:#e2e8f0;text-align:center;';
+    const sThDias = 'width:12.5%;border:1px solid #94a3b8;padding:12px 8px;font-size:12px;text-transform:uppercase;color:#475569;font-weight:bold;background:#f1f5f9;text-align:center;';
+    const sHoraTh = 'border:1px solid #94a3b8;padding:12px 8px;font-size:12px;font-family:Consolas,Menlo,monospace;color:#475569;font-weight:600;background:#f8fafc;text-align:center;white-space:nowrap;';
+    const sTdVacia = 'border:1px solid #cbd5e1;padding:12px 8px;background:#ffffff;height:50px;';
+    const sTdLlena = 'border:1px solid #cbd5e1;padding:12px 8px;font-size:12px;color:#1f2937;background:#ffffff;vertical-align:middle;text-align:center;white-space:normal;line-height:1.5;';
+
+    const cabeceras = dias
+      .map(d => `<th style="${sThDias}">${this.escHtml(d)}</th>`)
+      .join('');
+
+    let cuerpo = '';
+    if (filas.length === 0) {
+      cuerpo = `<tr><td colspan="${dias.length + 1}" style="border:1px solid #cbd5e1;padding:24px;text-align:center;color:#94a3b8;font-size:12px;">Sin materias inscritas.</td></tr>`;
+    } else {
+      cuerpo = filas
+        .map(fila => {
+          const celdas = dias
+            .map(dia => {
+              const ocupada = this.celdaEn(fila, dia);
+              if (ocupada) {
+                return `<td style="${sTdLlena}"><strong>${this.escHtml(ocupada.codigoMateria)}</strong><br>${this.escHtml(ocupada.tipo)} ${this.escHtml(ocupada.numeroGrupo)}<br>${this.escHtml(ocupada.aula)}</td>`;
+              }
+              return `<td style="${sTdVacia}"></td>`;
+            })
+            .join('');
+          return `<tr>
+            <th style="${sHoraTh}">${this.escHtml(fila.etiqueta)}</th>
+            ${celdas}
+          </tr>`;
+        })
+        .join('');
+    }
+
+    return `
+      <div style="font-family:Arial,Helvetica,sans-serif;padding:24px;background:#ffffff;color:#1f2937;">
+        <h1 style="font-size:22px;margin:0 0 6px 0;color:#0f172a;text-align:center;">Horario Semanal — UES-FMO</h1>
+        <p style="font-size:12px;color:#64748b;margin:0 0 20px 0;text-align:center;">
+          
+          &nbsp;·&nbsp; Materias: <strong>${this.materiasUbicadas()}</strong>
+          &nbsp;·&nbsp; Generado: ${this.escHtml(new Date().toLocaleString())}
+        </p>
+        <table style="width:100%;border-collapse:collapse;table-layout:fixed;font-family:Arial,Helvetica,sans-serif;">
+          <thead>
+            <tr>
+              <th style="${sThHora}">Hora</th>
+              ${cabeceras}
+            </tr>
+          </thead>
+          <tbody>
+            ${cuerpo}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
   async descargarPdf(): Promise<void> {
     if (this.gruposInscritos().length === 0) {
       this.mostrarError('No hay materias inscritas para exportar.');
       return;
     }
-    if (!this.areaImpresion) {
-      this.mostrarError('No se pudo localizar el área a imprimir.');
-      return;
-    }
+    
     try {
+      this.mostrarExito('Generando PDF, por favor espera...'); // Pequeño aviso para móviles
       const html2pdf = await this.cargarLibreriaPdf();
-      // Forzamos el render desktop (la tabla) aunque estemos en móvil:
-      // clonamos el nodo y le quitamos el display:none que aplica el CSS.
-      const clon = this.areaImpresion.nativeElement.cloneNode(true) as HTMLElement;
-      clon.classList.add('mz-print-force');
+
       const contenedor = document.createElement('div');
-      contenedor.style.position = 'fixed';
-      contenedor.style.left = '-10000px';
+      contenedor.innerHTML = this.construirHtmlPdf();
+      
+      // ─────────────────────────────────────────────────────────────
+      // TRUCO PARA MÓVILES: No lo mandes fuera de la pantalla. 
+      // Ponlo arriba a la izquierda, pero DETRÁS de toda la app.
+      // ─────────────────────────────────────────────────────────────
+      contenedor.style.position = 'absolute'; 
       contenedor.style.top = '0';
-      contenedor.style.width = '1100px';
+      contenedor.style.left = '0';
+      contenedor.style.width = '1440px'; 
       contenedor.style.background = '#ffffff';
-      contenedor.appendChild(clon);
+      contenedor.style.zIndex = '-9999'; // Escondido detrás
+      contenedor.style.pointerEvents = 'none'; // Que no interfiera con los toques
+      
       document.body.appendChild(contenedor);
 
       await html2pdf()
-        .from(clon)
+        .from(contenedor.firstElementChild as HTMLElement)
         .set({
-          margin: 8,
+          margin: 10,
           filename: 'horario-ues.pdf',
-          html2canvas: { scale: 2, backgroundColor: '#ffffff' },
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { 
+            scale: 2, 
+            backgroundColor: '#ffffff', 
+            useCORS: true,
+            windowWidth: 1440,
+            scrollY: 0, // ¡CRUCIAL PARA MÓVIL! Ignora si el usuario bajó la pantalla
+            scrollX: 0,
+            logging: false,
+            ignoreElements: (node: Element) => node.tagName === 'LINK'
+          },
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
         })
         .save();
 
+      // Limpiamos la basura después de que termine
       document.body.removeChild(contenedor);
       this.mostrarExito('PDF generado correctamente.');
+      
     } catch (err) {
-      console.error(err);
-      this.mostrarError('No se pudo generar el PDF.');
+      console.error('Error generando PDF:', err);
+      this.mostrarError(
+        'No se pudo generar el PDF: ' +
+        (err instanceof Error ? err.message : 'error desconocido')
+      );
     }
   }
 }

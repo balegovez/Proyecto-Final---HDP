@@ -1,20 +1,5 @@
-<!-- ════════════════════════════════════════════════════════════════════
-     MATRIZ DE HORARIOS — Planificador con drag&drop, CRUD persistido,
-     confirmación, exportación .ics y PDF.
-
-     Estructura semántica:
-       <main>          - contenedor de la página
-         <header>      - cabecera con KPIs
-         <nav>         - filtros (paridad de ciclo)
-         <section>     - cuerpo con dos zonas (aside + section)
-           <aside>     - barra lateral (grupos disponibles)
-           <section>   - matriz / vista por día
-         <footer>      - botones de acción (confirmar / exportar)
-     ════════════════════════════════════════════════════════════════════ -->
-
 <main class="container-fluid py-3 py-md-4 min-vh-100 bg-light mz-root">
 
-  <!-- ───────────────────── CABECERA + KPIs ───────────────────── -->
   <header class="row g-3 align-items-center mb-3">
     <div class="col-12 col-lg-5 d-flex align-items-center gap-3">
       <div class="bg-primary text-white rounded-3 p-2 d-flex align-items-center justify-content-center flex-shrink-0"
@@ -34,22 +19,7 @@
       </div>
     </div>
 
-    <div class="col-12 col-lg-7 d-flex flex-wrap gap-2 justify-content-lg-end">
-      <article class="card shadow-sm border-0 flex-fill text-center p-2" style="min-width: 130px;">
-        <span class="fs-4 fw-bold lh-1 text-primary"
-              [class.text-warning]="uvInscritas() >= LIMITE_UV * 0.8"
-              [class.text-danger]="uvInscritas() >= LIMITE_UV">
-          {{ uvInscritas() }} <span class="fs-6 fw-normal text-muted">/ {{ LIMITE_UV }}</span>
-        </span>
-        <span class="text-uppercase text-muted" style="font-size: 0.7rem; letter-spacing: 0.05em;">UV inscritas</span>
-        <div class="progress mt-2" style="height: 5px;">
-          <div class="progress-bar bg-primary" role="progressbar"
-               [style.width.%]="(uvInscritas() / LIMITE_UV) * 100"
-               [class.bg-warning]="uvInscritas() >= LIMITE_UV * 0.8"
-               [class.bg-danger]="uvInscritas() >= LIMITE_UV"></div>
-        </div>
-      </article>
-
+    <div class="col-12 col-lg-7 d-flex flex-wrap gap-2 justify-content-lg-end">   
       <article class="card shadow-sm border-0 flex-fill text-center p-2" style="min-width: 100px;">
         <span class="fs-4 fw-bold lh-1 text-primary">{{ gruposDisponibles().length }}</span>
         <span class="text-uppercase text-muted mt-auto" style="font-size: 0.7rem; letter-spacing: 0.05em;">Disponibles</span>
@@ -74,20 +44,7 @@
   <!-- ───────────────────── FILTRO POR PARIDAD ───────────────────── -->
   <nav class="d-flex flex-wrap align-items-center gap-2 mb-3" aria-label="Filtros de ciclo">
     <span class="text-uppercase fw-bold text-secondary me-1" style="font-size: 0.7rem; letter-spacing: 0.05em;">Ciclos:</span>
-    <div class="btn-group btn-group-sm" role="group" aria-label="Filtro por paridad de ciclo">
-      <button type="button" class="btn"
-              [class.btn-primary]="paridadCiclo() === 'todos'"
-              [class.btn-outline-primary]="paridadCiclo() !== 'todos'"
-              (click)="paridadCiclo.set('todos')">Todos</button>
-      <button type="button" class="btn"
-              [class.btn-primary]="paridadCiclo() === 'impar'"
-              [class.btn-outline-primary]="paridadCiclo() !== 'impar'"
-              (click)="paridadCiclo.set('impar')">Impar (I)</button>
-      <button type="button" class="btn"
-              [class.btn-primary]="paridadCiclo() === 'par'"
-              [class.btn-outline-primary]="paridadCiclo() !== 'par'"
-              (click)="paridadCiclo.set('par')">Par (II)</button>
-    </div>
+    
 
     @if (gruposInscritos().length > 0) {
       <button type="button" class="btn btn-sm btn-outline-danger ms-auto" (click)="limpiarTodo()">
@@ -124,8 +81,8 @@
   <!-- ═══════════════════ CUERPO PRINCIPAL ═══════════════════ -->
   <section class="row g-3">
 
-    <!-- ───────────── ASIDE: Grupos disponibles ───────────── -->
-    <aside class="col-12 col-lg-4 col-xl-3 d-flex flex-column gap-3 mz-aside">
+    <!-- ───────────── ASIDE: Grupos disponibles (tira horizontal) ───────────── -->
+    <aside class="col-12 mz-aside">
       <section class="card shadow-sm border-0 overflow-hidden" aria-labelledby="title-catalogo">
         <header class="card-header bg-primary bg-opacity-10 border-bottom border-primary border-opacity-25 d-flex justify-content-between align-items-center py-2">
           <h2 id="title-catalogo" class="h6 mb-0 text-uppercase fw-bold text-secondary" style="font-size: 0.75rem;">
@@ -166,9 +123,7 @@
                   <span class="badge font-monospace mz-badge-codigo">{{ grupo.codigoMateria }}</span>
                   <span class="badge bg-secondary bg-opacity-25 text-secondary font-monospace">G{{ grupo.numeroGrupo }}</span>
                 </div>
-                <span class="text-muted ms-1 flex-shrink-0" style="font-size: 0.7rem;">
-                  C{{ grupo.cicloAcademico }} · {{ grupo.uv }}UV
-                </span>
+                
               </div>
 
               <p class="mb-1 fw-semibold text-dark lh-sm" style="font-size: 0.82rem;">
@@ -209,8 +164,8 @@
       </section>
     </aside>
 
-    <!-- ───────────── SECTION: Matriz / Vista por día ───────────── -->
-    <section class="col-12 col-lg-8 col-xl-9 mz-main">
+    <!-- ───────────── SECTION: Matriz / Vista por día (ancho completo) ───────────── -->
+    <section class="col-12 mz-main">
 
       <!-- VISTA ESCRITORIO: tabla matriz -->
       <section class="card shadow-sm border-0 overflow-hidden d-none d-md-block mz-vista-pc"

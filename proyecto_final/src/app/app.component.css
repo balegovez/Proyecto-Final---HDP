@@ -15,9 +15,19 @@
 }
 
 .sidebar-logo {
-  padding: 20px 0;
+  padding: 16px 12px;
   text-align: center;
   border-bottom: 1px solid var(--ues-sidebar-active, #3a414e);
+}
+
+.sidebar-logo-img {
+  max-width: 75%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  /* Si tu logo tiene fondo blanco/transparente y querés que se vea bien
+     sobre el sidebar azul, podés usar un filtro para forzar blanco: */
+  /* filter: brightness(0) invert(1); */
 }
 
 .nav-item-custom {
@@ -59,7 +69,7 @@
 
 /* ── NAVBAR SUPERIOR ── */
 .top-navbar {
-  background-color: #ffffff;
+  background-color: var(--ues-card-bg, #ffffff);
   border-bottom: 1px solid var(--ues-border, #e0e0e0);
   padding: 10px 20px;
   display: flex;
@@ -71,8 +81,39 @@
 .top-navbar-text {
   display: flex;
   align-items: center;
-  color: #6c757d;
+  color: var(--ues-text-muted, #6c757d);
   font-weight: 600;
+}
+
+/* Texto que antes usaba text-muted/text-dark de Bootstrap (colores fijos
+   que no reaccionaban al tema). Estas sí siguen las variables del tema. */
+.navbar-text-primary {
+  color: var(--ues-text, #212529);
+}
+
+.navbar-text-secondary {
+  color: var(--ues-text-muted, #6c757d);
+}
+
+.btn-crear-perfil {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  background-color: var(--ues-red, #b71c1c);
+  color: #ffffff;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.2s, transform 0.15s;
+}
+
+.btn-crear-perfil:hover {
+  background-color: var(--ues-red-hover, #901616);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .top-navbar-carrera {
@@ -101,7 +142,7 @@
 
 /* ── FOOTER ── */
 .footer {
-  background-color: #ffffff;
+  background-color: var(--ues-card-bg, #ffffff);
   border-top: 1px solid var(--ues-border, #e0e0e0);
   padding: 15px 20px;
   margin-top: auto;
@@ -199,4 +240,74 @@
   .bottom-nav__label {
     font-size: 0.55rem;
   }
+}
+
+/* ── MENÚ HAMBURGUESA (dropdown superior derecho) ── */
+.menu-toggle {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.menu-toggle:hover,
+.menu-toggle.active {
+  color: var(--ues-sidebar, #3262c8) !important;
+}
+
+.menu-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 220px;
+  background: var(--ues-card-bg, #ffffff);
+  border: 1px solid var(--ues-border, #e0e0e0);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  padding: 6px 0;
+  z-index: 1050;
+  animation: menuFade 0.15s ease-out;
+}
+
+@keyframes menuFade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.menu-dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  color: var(--ues-text, #495057);
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.menu-dropdown__item:hover {
+  background-color: var(--ues-bg, #f4f6f9);
+  color: var(--ues-sidebar, #3262c8);
+}
+
+.menu-dropdown__item i {
+  width: 18px;
+  text-align: center;
+}
+
+.menu-dropdown__item--danger {
+  color: #dc3545;
+}
+
+.menu-dropdown__item--danger:hover {
+  background-color: #fdf2f3;
+  color: #dc3545;
+}
+
+.menu-dropdown__sep {
+  margin: 6px 0;
+  border-color: var(--ues-border, #e0e0e0);
 }

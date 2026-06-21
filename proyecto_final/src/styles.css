@@ -6,7 +6,7 @@
 /* Variables de color con la identidad UES.
    Usar var(--ues-sidebar) en cualquier componente. */
 :root {
-  --ues-sidebar: #3262c8;       /* Azul institucional del sidebar */
+  --ues-sidebar: #343a40;       /* Azul institucional del sidebar */
   --ues-sidebar-active: #3a414e;
   --ues-red: #b71c1c;            /* Rojo institucional (botones, acentos) */
   --ues-red-hover: #901616;

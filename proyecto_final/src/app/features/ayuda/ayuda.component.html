@@ -1,0 +1,143 @@
+<section class="container-fluid p-4 ayuda-root" aria-labelledby="ayuda-titulo">
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb-container d-flex align-items-center gap-2 mb-4"
+       aria-label="Ruta de navegación">
+    <a routerLink="/inicio" aria-label="Inicio">
+      <i class="fas fa-home" aria-hidden="true"></i>
+    </a>
+    <span class="text-muted"><i class="fas fa-chevron-right fa-xs" aria-hidden="true"></i></span>
+    <span class="text-muted">Centro de ayuda</span>
+  </nav>
+
+  <header class="ayuda-header mb-4">
+    <h1 id="ayuda-titulo" class="ayuda-titulo">
+      <i class="fas fa-question-circle me-2" aria-hidden="true"></i>
+      Centro de ayuda
+    </h1>
+    <p class="ayuda-subtitulo">
+      Encontrá respuestas a las dudas más comunes y aprendé a sacarle el máximo provecho a la aplicación.
+    </p>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════
+       GUÍA RÁPIDA
+  ═══════════════════════════════════════════════════════ -->
+  <section class="ayuda-seccion" aria-labelledby="guia-titulo">
+    <h2 id="guia-titulo" class="ayuda-seccion-titulo">
+      <i class="fas fa-rocket" aria-hidden="true"></i>
+      Guía rápida
+    </h2>
+    <p class="ayuda-seccion-descripcion">
+      Si es la primera vez que usas la app, sigue estos pasos en orden:
+    </p>
+
+    <div class="row g-3">
+      @for (paso of guia; track paso.titulo; let i = $index) {
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="paso-card h-100">
+            <div class="paso-numero">{{ i + 1 }}</div>
+            <div class="paso-icono">
+              <i [class]="paso.icono" aria-hidden="true"></i>
+            </div>
+            <h3 class="paso-titulo">{{ paso.titulo }}</h3>
+            <p class="paso-descripcion">{{ paso.descripcion }}</p>
+            @if (paso.ruta) {
+              <a [routerLink]="paso.ruta" class="paso-enlace">
+                Ir ahora
+                <i class="fas fa-arrow-right fa-xs ms-1" aria-hidden="true"></i>
+              </a>
+            }
+          </article>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       PREGUNTAS FRECUENTES (FAQ)
+  ═══════════════════════════════════════════════════════ -->
+  <section class="ayuda-seccion" aria-labelledby="faq-titulo">
+    <h2 id="faq-titulo" class="ayuda-seccion-titulo">
+      <i class="fas fa-comments" aria-hidden="true"></i>
+      Preguntas frecuentes
+    </h2>
+
+    <div class="faq-lista">
+      @for (item of faqs; track item.pregunta; let i = $index) {
+        <article class="faq-item" [class.faq-item--abierto]="faqAbierto() === i">
+          <button
+            type="button"
+            class="faq-pregunta"
+            (click)="toggleFaq(i)"
+            [attr.aria-expanded]="faqAbierto() === i"
+            [attr.aria-controls]="'faq-respuesta-' + i">
+            <span>{{ item.pregunta }}</span>
+            <i class="fas fa-chevron-down faq-chevron" aria-hidden="true"></i>
+          </button>
+          @if (faqAbierto() === i) {
+            <div class="faq-respuesta" [id]="'faq-respuesta-' + i" role="region">
+              <p>{{ item.respuesta }}</p>
+            </div>
+          }
+        </article>
+      }
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       GLOSARIO
+  ═══════════════════════════════════════════════════════ -->
+  <section class="ayuda-seccion" aria-labelledby="glosario-titulo">
+    <h2 id="glosario-titulo" class="ayuda-seccion-titulo">
+      <i class="fas fa-book" aria-hidden="true"></i>
+      Glosario
+    </h2>
+    <p class="ayuda-seccion-descripcion">
+      Términos académicos y siglas usadas en la aplicación.
+    </p>
+
+    <div class="row g-3">
+      @for (termino of glosario; track termino.sigla) {
+        <div class="col-12 col-md-6">
+          <div class="glosario-item">
+            <span class="glosario-sigla">{{ termino.sigla }}</span>
+            <span class="glosario-significado">{{ termino.significado }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       CONTACTO
+  ═══════════════════════════════════════════════════════ -->
+  <section class="ayuda-seccion" aria-labelledby="contacto-titulo">
+    <h2 id="contacto-titulo" class="ayuda-seccion-titulo">
+      <i class="fas fa-life-ring" aria-hidden="true"></i>
+      ¿Seguís con dudas?
+    </h2>
+
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <a href="mailto:soporte.pensum@gmail.com" class="contacto-card">
+          <i class="fas fa-envelope contacto-icono" aria-hidden="true"></i>
+          <div>
+            <strong>Escribinos</strong>
+            <span>soporte.pensum&#64;gmail.com</span>
+          </div>
+        </a>
+      </div>
+      <div class="col-12 col-md-6">
+        <a href="https://www.ues.edu.sv" target="_blank" rel="noopener" class="contacto-card">
+          <i class="fas fa-globe contacto-icono" aria-hidden="true"></i>
+          <div>
+            <strong>Sitio oficial UES</strong>
+            <span>www.ues.edu.sv</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</section>

@@ -20,7 +20,7 @@
 
   <div class="sidebar-logo text-white">
 
-    <i class="fas fa-university fa-2x"></i>
+    <img src="assets/icons/logo-ues-blanco.png" alt="Universidad de El Salvador" class="sidebar-logo-img">
 
   </div>
 
@@ -29,29 +29,18 @@
   <!-- Items de navegación: cada item usa routerLink (no href="#") -->
 
   @for (item of navItems; track item.ruta) {
+  <a [routerLink]="item.ruta" routerLinkActive="active" class="nav-item-custom">
 
-    <a
+    <i [class]="item.icono"></i>
 
-      [routerLink]="item.ruta"
+    {{ item.etiqueta }}
 
-      routerLinkActive="active"
-
-      class="nav-item-custom"
-
-    >
-
-      <i [class]="item.icono"></i>
-
-      {{ item.etiqueta }}
-
-    </a>
-
+  </a>
   }
 
 
 
 </nav>
-
 
 
 <!-- CONTENIDO PRINCIPAL -->
@@ -66,7 +55,7 @@
 
 
 
-    <div class="d-flex align-items-center top-navbar-text text-muted fw-semibold">
+    <div class="d-flex align-items-center top-navbar-text fw-semibold">
 
       I50515 Ingeniería de Sistemas Informáticos (PR) - 1998
 
@@ -77,42 +66,47 @@
       </span>
 
     </div>
+    <div class="d-flex align-items-center gap-3 position-relative">
 
+      @if (perfil()) {
+        <div class="d-flex align-items-center gap-2 border-start ps-3">
+          <img [src]="'https://ui-avatars.com/api/?name=' + perfil()!.nombre + '&background=2c313c&color=fff'"
+            alt="Usuario" class="rounded-circle" width="32" height="32">
+          <span class="navbar-text-secondary fw-semibold" style="font-size: 0.9rem;">
+            {{ perfil()!.carnet }}
+          </span>
+        </div>
+      } @else {
+        <a routerLink="/perfil" class="btn-crear-perfil">
+          <i class="fas fa-user-plus" aria-hidden="true"></i>
+          Crear perfil
+        </a>
+      }
 
+      <i class="fas fa-bars menu-toggle ms-2 fs-4" [class.active]="menuAbierto()"
+        (click)="toggleMenu($event)" role="button" tabindex="0" aria-label="Abrir menú"></i>
 
-    <div class="d-flex align-items-center gap-3">
-
-      <i class="fas fa-moon text-muted" style="cursor: pointer;"></i>
-
-      <div class="d-flex align-items-center gap-2 border-start ps-3">
-
-        <img
-
-          src="https://ui-avatars.com/api/?name=V+G&background=2c313c&color=fff"
-
-          alt="Usuario"
-
-          class="rounded-circle"
-
-          width="32"
-
-          height="32"
-
-        >
-
-        <span class="text-muted fw-semibold" style="font-size: 0.9rem;">
-
-          VG24028
-
-        </span>
-
+      @if (menuAbierto()) {
+      <div class="menu-dropdown" (click)="$event.stopPropagation()">
+        <a routerLink="/perfil" class="menu-dropdown__item" (click)="cerrarMenu()">
+          <i class="fas fa-user-circle"></i> Mi cuenta
+        </a>
+        <a href="#" class="menu-dropdown__item" (click)="cerrarMenu()">
+          <i class="fas fa-cog"></i> Configuración
+        </a>
+        <a routerLink="/ayuda" class="menu-dropdown__item" (click)="cerrarMenu()">
+          <i class="fas fa-question-circle"></i> Ayuda
+        </a>
+        @if (perfil()) {
+          <hr class="menu-dropdown__sep">
+          <button type="button" class="menu-dropdown__item menu-dropdown__item--danger" (click)="cerrarSesion()">
+            <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+          </button>
+        }
       </div>
-
-      <i class="fas fa-bars text-muted ms-2 fs-4" style="cursor: pointer;"></i>
+      }
 
     </div>
-
-
 
   </header>
 
@@ -130,13 +124,13 @@
 
     <div class="d-flex align-items-center gap-2">
 
-      <i class="fas fa-university text-dark"></i>
+      <i class="fas fa-university navbar-text-primary"></i>
 
-      <span class="fw-semibold text-dark">Universidad de El Salvador</span>
+      <span class="fw-semibold navbar-text-primary">Universidad de El Salvador</span>
 
     </div>
 
-    <div>© DTI UES - 2025</div>
+    <div class="navbar-text-secondary">© DTI UES - 2025</div>
 
   </footer>
 

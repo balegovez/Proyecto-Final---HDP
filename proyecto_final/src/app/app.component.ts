@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, HostListener, inject, signal } from '@angular/core';
+import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { PensumService } from './core/services/pensum.service';
 
 /**
  * AppComponent
@@ -20,6 +21,9 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class AppComponent {
 
+  private readonly pensumService = inject(PensumService);
+  private readonly router = inject(Router);
+
   /**
    * Items de navegación. Se usan tanto en el sidebar (escritorio) como en
    * la barra inferior (móvil), iterando con @for.
@@ -32,4 +36,40 @@ export class AppComponent {
     { icono: 'fas fa-project-diagram', etiqueta: 'Grafo',    ruta: '/grafo'    },
     { icono: 'fas fa-calendar-check',  etiqueta: 'Horarios', ruta: '/horarios' },
   ];
+
+  readonly menuAbierto = signal(false);
+
+  /** Perfil del estudiante. null = todavía no se ha creado uno. */
+  readonly perfil = this.pensumService.perfil;
+
+  toggleMenu(evento: MouseEvent): void {
+    evento.stopPropagation();
+    this.menuAbierto.update(v => !v);
+  }
+
+  cerrarMenu(): void {
+    this.menuAbierto.set(false);
+  }
+
+  async cerrarSesion(): Promise<void> {
+    this.cerrarMenu();
+
+    const confirmar = confirm(
+      'Esto borrará tu perfil, historial y horarios guardados en este navegador. ¿Continuar?'
+    );
+    if (!confirmar) return;
+
+    await this.pensumService.borrarPerfil();
+    await this.router.navigate(['/perfil']);
+  }
+
+  @HostListener('document:click')
+  onClickFuera(): void {
+    if (this.menuAbierto()) this.cerrarMenu();
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.cerrarMenu();
+  }
 }

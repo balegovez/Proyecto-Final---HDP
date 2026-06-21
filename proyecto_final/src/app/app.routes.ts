@@ -51,6 +51,11 @@ export const routes: Routes = [
       import('./features/horarios/horarios.component').then(m => m.HorariosComponent),
   },
   {
+    path: 'ayuda',
+    loadComponent: () =>
+      import('./features/ayuda/ayuda.component').then(m => m.AyudaComponent),
+  },
+  {
     path: '**',
     redirectTo: 'inicio',
   },

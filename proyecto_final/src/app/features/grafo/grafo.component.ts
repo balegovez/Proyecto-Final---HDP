@@ -136,13 +136,32 @@ export class GrafoComponent implements OnDestroy {
     //   source = la materia que es prerrequisito (debe aprobarse primero)
     //   target = la materia que requiere ese prerrequisito
     // Así la flecha apunta en el sentido del progreso académico.
-    const aristas: ElementDefinition[] = prerequisitos.map((p) => ({
-      data: {
-        id: `${p.codigoPrerequisito}->${p.codigoMateria}`,
-        source: p.codigoPrerequisito,
-        target: p.codigoMateria,
-      },
-    }));
+    // Crear un conjunto con todos los códigos de materias existentes
+const idsMaterias = new Set(
+  materias.map((m) => m.codigo)
+);
+
+// Crear aristas solamente si source y target existen
+const aristas: ElementDefinition[] = prerequisitos
+  .filter((p) => {
+    const sourceExiste = idsMaterias.has(p.codigoPrerequisito);
+    const targetExiste = idsMaterias.has(p.codigoMateria);
+
+    if (!sourceExiste || !targetExiste) {
+      console.warn(
+        `Arista ignorada: ${p.codigoPrerequisito} -> ${p.codigoMateria}`
+      );
+    }
+
+    return sourceExiste && targetExiste;
+  })
+  .map((p) => ({
+    data: {
+      id: `${p.codigoPrerequisito}->${p.codigoMateria}`,
+      source: p.codigoPrerequisito,
+      target: p.codigoMateria,
+    },
+  }));
 
     // Inicializamos Cytoscape con todos los nodos, aristas y estilos.
     this.cy = cytoscape({

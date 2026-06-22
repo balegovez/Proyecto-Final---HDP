@@ -32,8 +32,8 @@ export class AppComponent {
     { icono: 'fas fa-user',            etiqueta: 'Perfil',   ruta: '/perfil'   },
     { icono: 'fas fa-home',            etiqueta: 'Inicio',   ruta: '/inicio'   },
     { icono: 'fas fa-th',              etiqueta: 'Pensum',   ruta: '/pensum'   },
-    { icono: 'fas fa-table',           etiqueta: 'Matriz',   ruta: '/matriz'   },
-    { icono: 'fas fa-project-diagram', etiqueta: 'Grafo',    ruta: '/grafo'    },
+    { icono: 'fas fa-table',           etiqueta: 'Planificar Horario',   ruta: '/matriz'   },
+    { icono: 'fas fa-project-diagram', etiqueta: 'Pensum Grafo',    ruta: '/grafo'    },
     { icono: 'fas fa-calendar-check',  etiqueta: 'Horarios', ruta: '/horarios' },
   ];
 

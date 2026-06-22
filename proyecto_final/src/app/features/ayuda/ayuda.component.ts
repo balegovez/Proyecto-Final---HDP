@@ -44,19 +44,19 @@ export class AyudaComponent {
       ruta: '/pensum',
     },
     {
-      titulo: 'Mira qué puedes llevar',
-      descripcion: 'La matriz te muestra qué materias tienes habilitadas según las que ya aprobaste.',
+      titulo: 'Planifica tu horario',
+      descripcion: 'Ahora puedes organizar tu horario de manera sencilla con nuestra nueva función de arrastrar y soltar, junto con otras herramientas innovadoras que hemos incorporado para mejorar tu experiencia académica.',
       icono: 'fas fa-table',
       ruta: '/matriz',
     },
     {
       titulo: 'Explora el grafo',
-      descripcion: 'Visualiza las dependencias entre materias como un diagrama interactivo.',
+      descripcion: 'Visualiza los prerequisitos entre materias como un diagrama interactivo.',
       icono: 'fas fa-project-diagram',
       ruta: '/grafo',
     },
     {
-      titulo: 'Inscribe grupos',
+      titulo: 'Observa tus Horarios',
       descripcion: 'Arma tu horario del ciclo seleccionando grupos y horarios disponibles.',
       icono: 'fas fa-calendar-check',
       ruta: '/horarios',

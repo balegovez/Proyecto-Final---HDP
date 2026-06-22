@@ -25,13 +25,10 @@ export class InicioComponent {
    * a ese módulo; si no, es un acceso decorativo (parte de la experiencia UES).
    */
   readonly accesos: { titulo: string; ruta?: string }[] = [
-    { titulo: 'Record de notas' },
-    { titulo: 'Notas parciales' },
+    { titulo: 'Perfil', ruta: '/perfil' },
     { titulo: 'Pensum', ruta: '/pensum' },
-    { titulo: 'Evaluaciones' },
-    { titulo: 'Materias del próximo ciclo', ruta: '/matriz' },
-    { titulo: 'Inscripción de grupos', ruta: '/horarios' },
-    { titulo: 'Biblioteca' },
-    { titulo: 'Servicio Social' },
+    { titulo: 'Horarios', ruta: '/horarios' },
+    { titulo: 'Planificar horario', ruta: '/matriz' },
+    { titulo: 'Pensum Grafo', ruta: '/grafo' },
   ];
 }

@@ -7,11 +7,7 @@ import {
   HistorialEstudiante,
   Inscripcion,
 } from '../db/dexie-db';
-import {
-  ESCENARIO_NUEVO_INGRESO,
-  ESCENARIO_SEGUNDO_ANIO,
-  ESCENARIO_FLUJO_CRITICO,
-} from '../data/escenarios-demo';
+import { ESCENARIOS_DEMO } from '../data/escenarios-demo';
 
 /** Forma del archivo assets/data/pensum-seed.json. */
 interface PensumSeed {
@@ -82,7 +78,7 @@ export class PensumService {
 
   private async inicializar(): Promise<void> {
     try {
-      await this.sembrarPensumSiEstaVacio();
+      await this.sincronizarPensumDesdeSeed();
       await this.cargarHorarios();
       await this.recargarTodoDesdeDB();
     } catch (err) {
@@ -93,16 +89,21 @@ export class PensumService {
     }
   }
 
-  private async sembrarPensumSiEstaVacio(): Promise<void> {
-    const totalMaterias = await db.materias.count();
-    if (totalMaterias > 0) return;
-
+  /**
+   * Sincroniza las tablas de SOLO LECTURA (materias y prerequisitos) con el
+   * archivo pensum-seed.json en CADA arranque.
+   
+   */
+  private async sincronizarPensumDesdeSeed(): Promise<void> {
     const respuesta = await fetch('/assets/data/pensum-seed.json');
     if (!respuesta.ok) {
       throw new Error(`No se pudo leer pensum-seed.json (HTTP ${respuesta.status})`);
     }
 
     const seed: PensumSeed = await respuesta.json();
+    // Reemplazo total: borrar e insertar de nuevo desde el JSON.
+    await db.materias.clear();
+    await db.prerequisitos.clear();
     await db.materias.bulkAdd(seed.materias);
     await db.prerequisitos.bulkAdd(seed.prerequisitos);
   }
@@ -188,15 +189,6 @@ export class PensumService {
    * Calcula qué materias quedan aprobadas y cuáles pendientes según el ciclo
    * actual y la lista de reprobadas.
    *
-   * Algoritmo:
-   *   1. "Bloqueadas" = todas las reprobadas + todo lo que depende de ellas
-   *      (se calcula con un recorrido hacia adelante por el grafo de prereqs).
-   *   2. Para cada materia:
-   *        - ciclo < cicloActual Y no está bloqueada → 'aprobada'
-   *        - en cualquier otro caso → se omite (queda 'pendiente' por defecto)
-   *
-   * Solo devolvemos las 'aprobada' (las pendientes son el estado por defecto
-   * de estadoDe(), así no llenamos la base con filas innecesarias).
    */
   private calcularHistorialPorCiclo(
     cicloActual: number,
@@ -279,18 +271,29 @@ export class PensumService {
     return registro?.estado ?? 'pendiente';
   }
 
+
+  prerequisitosAprobados(codigoMateria: string): boolean {
+    return this.prerequisitos()
+      .filter((p) => p.codigoMateria === codigoMateria)
+      .every((p) => this.estadoDe(p.codigoPrerequisito) === 'aprobada');
+  }
+
+  /**
+   * Códigos de los prerrequisitos que aún NO están aprobados, para mostrarle
+   * al estudiante exactamente qué le falta. Lista vacía si ya cumple todos.
+   */
+  prerequisitosFaltantes(codigoMateria: string): string[] {
+    return this.prerequisitos()
+      .filter((p) => p.codigoMateria === codigoMateria)
+      .filter((p) => this.estadoDe(p.codigoPrerequisito) !== 'aprobada')
+      .map((p) => p.codigoPrerequisito);
+  }
+
   // ════════════════════════════════════════════════════════════
   // CRUD: INSCRIPCIONES A GRUPOS  (módulo de Horarios)
   // ════════════════════════════════════════════════════════════
 
-  /**
-   * CREATE / UPDATE — Inscribe al estudiante a un grupo.
-   *
-   * Como la PK de la tabla es codigoMateria, si ya existía una inscripción
-   * para esa materia, este put() la sobreescribe. Es decir:
-   *   - Si no estaba inscrito → CREATE (se inscribe al grupo)
-   *   - Si ya estaba en otro grupo → UPDATE (se cambia de grupo)
-   */
+
   async inscribirAGrupo(codigoMateria: string, numeroGrupo: string): Promise<void> {
     const inscripcion: Inscripcion = {
       codigoMateria,
@@ -321,18 +324,7 @@ export class PensumService {
   // COMPUTED: MATERIAS INSCRIBIBLES (filtrado por ciclo + prereqs)
   // ════════════════════════════════════════════════════════════
 
-  /**
-   * Materias que el estudiante PUEDE inscribir ahora mismo.
-   *
-   * Una materia es inscribible si:
-   *   1. NO está aprobada (ni cursando).
-   *   2. TODOS sus prerrequisitos están aprobados.
-   *
-   * Esto cubre automáticamente el requisito pedido: si va en ciclo 4 pero dejó
-   * Matemática II (MAT255), entonces MAT255 aparece (prereq MAT155 aprobado)
-   * pero MAT455 NO aparece (su cadena de prereqs incluye MAT255, que no está
-   * aprobada). Y las materias del ciclo 4 cuyos prereqs sí cumple, aparecen.
-   */
+
   materiasInscribibles = computed(() => {
     return this.materias().filter(m => this.esInscribible(m.codigo));
   });
@@ -353,18 +345,24 @@ export class PensumService {
   }
 
   // ════════════════════════════════════════════════════════════
-  // ESCENARIOS DE DEMOSTRACIÓN
+  // ESCENARIOS DE DEMOSTRACIÓN (por año cursado)
   // ════════════════════════════════════════════════════════════
-  readonly escenariosDemo = {
-    nuevoIngreso: ESCENARIO_NUEVO_INGRESO,
-    segundoAnio: ESCENARIO_SEGUNDO_ANIO,
-    flujoCritico: ESCENARIO_FLUJO_CRITICO,
-  };
+  readonly escenariosDemo = ESCENARIOS_DEMO;
 
-  async cargarEscenario(escenario: HistorialEstudiante[]): Promise<void> {
+  /**
+   * Carga un escenario "por año": marca como aprobadas TODAS las materias
+   * hasta el ciclo indicado (incluido) y deja el resto pendientes.
+
+   * @param cicloMaximo  Último ciclo aprobado. 0 = nuevo ingreso (nada aprobado).
+   */
+  async cargarEscenarioHastaCiclo(cicloMaximo: number): Promise<void> {
+    const aprobadas: HistorialEstudiante[] = this.materias()
+      .filter((m) => m.ciclo <= cicloMaximo)
+      .map((m) => ({ codigoMateria: m.codigo, estado: 'aprobada' as const }));
+
     await db.historial.clear();
-    if (escenario.length > 0) {
-      await db.historial.bulkPut(escenario);
+    if (aprobadas.length > 0) {
+      await db.historial.bulkPut(aprobadas);
     }
     await this.recargarTodoDesdeDB();
   }

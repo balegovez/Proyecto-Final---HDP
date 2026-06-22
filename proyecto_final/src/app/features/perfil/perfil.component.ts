@@ -8,17 +8,6 @@ import { Materia, HistorialEstudiante } from '../../core/db/dexie-db';
  * ----------------
  * Pantalla inicial del estudiante. Tiene dos modos:
  *
- *   1. Sin perfil  → FORMULARIO en 2 pasos:
- *        Paso 1: nombre + carné + ciclo que va a cursar.
- *        Paso 2: marcar qué materias de ciclos anteriores REPROBÓ (dejó).
- *        Al guardar, el servicio calcula el historial automáticamente:
- *        aprueba todo lo de ciclos anteriores EXCEPTO las reprobadas y lo
- *        que dependa de ellas.
- *
- *   2. Con perfil  → RESUMEN: progreso + materias por ciclo + acciones.
- *
- * Toda la persistencia vive en PensumService. Este componente solo LEE
- * signals y LLAMA métodos del servicio.
  */
 @Component({
   selector: 'app-perfil',
@@ -41,8 +30,15 @@ export class PerfilComponent {
   // Códigos de materias que el estudiante marcó como reprobadas (Set reactivo)
   reprobadas = signal<Set<string>>(new Set());
 
+  // Bug 2: modo edición. Cuando es true mostramos el formulario (precargado)
+  // aunque YA exista un perfil, para poder cambiar nombre/carné/ciclo.
+  modoEdicion = signal<boolean>(false);
+
   // ── ¿Mostrar formulario o resumen? ────────────────────────────
-  mostrarFormulario = computed(() => this.pensumService.perfil() === null);
+  // Sin perfil → formulario de creación. Con perfil + modoEdicion → edición.
+  mostrarFormulario = computed(
+    () => this.pensumService.perfil() === null || this.modoEdicion()
+  );
 
   // Ciclos disponibles para elegir (1 al máximo del pensum)
   ciclosDisponibles = computed(() => {
@@ -174,11 +170,31 @@ export class PerfilComponent {
       this.cicloSeleccionado(),
       Array.from(this.reprobadas())
     );
+    // Tras guardar (creación o edición) volvemos al resumen.
+    this.modoEdicion.set(false);
+    this.paso.set(1);
   }
 
   // ════════════════════════════════════════════════════════════
   // ACCIONES DEL RESUMEN
   // ════════════════════════════════════════════════════════════
+  editarPerfil(): void {
+    const perfil = this.pensumService.perfil();
+    if (!perfil) return;
+    this.nombre = perfil.nombre;
+    this.carnet = perfil.carnet;
+    this.cicloSeleccionado.set(perfil.cicloActual);
+    this.reprobadas.set(new Set());
+    this.paso.set(1);
+    this.modoEdicion.set(true);
+  }
+
+  /** Cancela la edición y vuelve al resumen sin cambiar nada. */
+  cancelarEdicion(): void {
+    this.modoEdicion.set(false);
+    this.paso.set(1);
+    this.reprobadas.set(new Set());
+  }
 
   async borrarPerfil(): Promise<void> {
     const confirmar = confirm(
@@ -196,17 +212,43 @@ export class PerfilComponent {
 
   async marcarMateria(codigoMateria: string, evento: Event): Promise<void> {
     const input = evento.target as HTMLInputElement;
-    const estado: HistorialEstudiante['estado'] = input.checked ? 'aprobada' : 'pendiente';
+    const quiereAprobar = input.checked;
+
+
+    if (quiereAprobar && !this.pensumService.prerequisitosAprobados(codigoMateria)) {
+      const faltan = this.pensumService.prerequisitosFaltantes(codigoMateria);
+      input.checked = false; // revertir el check visual de inmediato
+      alert(
+        `No puedes aprobar ${codigoMateria} todavía: ` +
+        `te faltan prerrequisitos (${faltan.join(', ')}).`
+      );
+      return;
+    }
+
+    const estado: HistorialEstudiante['estado'] = quiereAprobar ? 'aprobada' : 'pendiente';
     await this.pensumService.actualizarEstadoMateria(codigoMateria, estado);
   }
 
-  async cargarEscenarioDemo(escenario: HistorialEstudiante[]): Promise<void> {
+  async cargarEscenarioDemo(cicloMaximo: number): Promise<void> {
     const confirmar = confirm('Esto reemplazará tu historial actual de materias. ¿Continuar?');
     if (!confirmar) return;
-    await this.pensumService.cargarEscenario(escenario);
+    await this.pensumService.cargarEscenarioHastaCiclo(cicloMaximo);
   }
 
   estaAprobada(codigoMateria: string): boolean {
     return this.pensumService.estadoDe(codigoMateria) === 'aprobada';
+  }
+
+
+  puedeAprobar(codigoMateria: string): boolean {
+    return (
+      this.estaAprobada(codigoMateria) ||
+      this.pensumService.prerequisitosAprobados(codigoMateria)
+    );
+  }
+
+  /** Prerrequisitos que faltan, para el aviso "🔒 Falta aprobar: ..." */
+  prereqsFaltantes(codigoMateria: string): string[] {
+    return this.pensumService.prerequisitosFaltantes(codigoMateria);
   }
 }

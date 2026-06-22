@@ -270,20 +270,28 @@
   background-color: #059669;
 }
 
+.btn-primero {
+  background-color: #3b82f6;
+}
+
+.btn-primero:hover {
+  background-color: #2563eb;
+}
+
 .btn-segundo {
-  background-color: var(--ues-red, #b71c1c);
+  background-color: #8b5cf6;
 }
 
 .btn-segundo:hover {
+  background-color: #7c3aed;
+}
+
+.btn-tercero {
+  background-color: var(--ues-red, #b71c1c);
+}
+
+.btn-tercero:hover {
   background-color: var(--ues-red-hover, #901616);
-}
-
-.btn-critico {
-  background-color: #f59e0b;
-}
-
-.btn-critico:hover {
-  background-color: #d97706;
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -582,6 +590,8 @@
   border-top: 1px solid #e5e7eb;
   display: flex;
   justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -652,4 +662,59 @@
   .materia-label .nombre {
     font-size: 0.8rem;
   }
+}
+
+/* ════════════════════════════════════════════════════════════
+   BUG 1 — MATERIA BLOQUEADA (prerrequisitos sin aprobar)
+   ════════════════════════════════════════════════════════════ */
+.materia-item.bloqueada {
+  opacity: 0.6;
+}
+
+.materia-item.bloqueada:hover {
+  background-color: transparent;
+}
+
+.materia-item.bloqueada .materia-checkbox,
+.materia-item.bloqueada .materia-label {
+  cursor: not-allowed;
+}
+
+.bloqueo-hint {
+  margin-top: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #b45309; /* ámbar oscuro: atención, aún no disponible */
+}
+
+/* ════════════════════════════════════════════════════════════
+   BUG 2 — EDICIÓN DE PERFIL
+   ════════════════════════════════════════════════════════════ */
+
+/* Aviso de que al guardar se recalcula el historial */
+.edit-aviso {
+  background-color: #fffbeb;
+  border: 1px solid #fde68a;
+  border-left: 4px solid #f59e0b;
+  border-radius: 6px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.edit-aviso p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #92400e;
+  line-height: 1.45;
+}
+
+/* Fila de acciones del paso 1 (Cancelar + Guardar/Siguiente) */
+.form-acciones {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.form-acciones .btn-primary {
+  width: auto;
+  flex: 1;
 }

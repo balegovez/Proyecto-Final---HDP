@@ -18,11 +18,23 @@
     ════════════════════════════════════════════════ -->
     @if (mostrarFormulario()) {
 
+      <!-- Bug 2: aviso cuando se está editando un perfil ya existente -->
+      @if (modoEdicion()) {
+        <div class="edit-aviso" role="note">
+          <p>
+            <strong>Estás editando tu perfil.</strong> Al guardar, tu historial
+            se vuelve a calcular desde el ciclo que elijas: las materias de
+            ciclos anteriores se marcarán como aprobadas (salvo las que indiques
+            como reprobadas). Las marcas manuales que hayas hecho se reemplazarán.
+          </p>
+        </div>
+      }
+
       <!-- ── PASO 1: datos básicos + ciclo ── -->
       @if (paso() === 1) {
         <section class="formulario-perfil" aria-labelledby="titulo-form">
           <header>
-            <h2 id="titulo-form">Crea tu perfil</h2>
+            <h2 id="titulo-form">{{ modoEdicion() ? 'Editar perfil' : 'Crea tu perfil' }}</h2>
             <p class="subtitulo">Registra tus datos y el ciclo que vas a cursar.</p>
           </header>
 
@@ -54,9 +66,16 @@
               </small>
             </div>
 
-            <button type="submit" class="btn-primary">
-              {{ cicloSeleccionado() === 1 ? 'Guardar perfil' : 'Siguiente' }}
-            </button>
+            <div class="form-acciones">
+              @if (modoEdicion()) {
+                <button type="button" class="btn-secondary" (click)="cancelarEdicion()">
+                  Cancelar
+                </button>
+              }
+              <button type="submit" class="btn-primary">
+                {{ cicloSeleccionado() === 1 ? 'Guardar' : 'Siguiente' }}
+              </button>
+            </div>
           </form>
         </section>
       }
@@ -148,13 +167,17 @@
                     (click)="cargarEscenarioDemo(pensumService.escenariosDemo.nuevoIngreso)">
               Nuevo ingreso
             </button>
+            <button class="btn-demo btn-primero"
+                    (click)="cargarEscenarioDemo(pensumService.escenariosDemo.primerAnio)">
+              Primer año
+            </button>
             <button class="btn-demo btn-segundo"
                     (click)="cargarEscenarioDemo(pensumService.escenariosDemo.segundoAnio)">
               Segundo año
             </button>
-            <button class="btn-demo btn-critico"
-                    (click)="cargarEscenarioDemo(pensumService.escenariosDemo.flujoCritico)">
-              Flujo crítico
+            <button class="btn-demo btn-tercero"
+                    (click)="cargarEscenarioDemo(pensumService.escenariosDemo.tercerAnio)">
+              Tercer año
             </button>
           </div>
         </section>
@@ -173,11 +196,12 @@
 
               <ul class="materias-lista">
                 @for (materia of grupo.materias; track materia.codigo) {
-                  <li class="materia-item">
+                  <li class="materia-item" [class.bloqueada]="!puedeAprobar(materia.codigo)">
                     <input type="checkbox"
                            class="materia-checkbox"
                            [id]="materia.codigo"
                            [checked]="estaAprobada(materia.codigo)"
+                           [disabled]="!puedeAprobar(materia.codigo)"
                            (change)="marcarMateria(materia.codigo, $event)" />
                     <label class="materia-label" [for]="materia.codigo">
                       <span class="codigo">{{ materia.codigo }}</span>
@@ -186,6 +210,11 @@
                       <span class="tipo" [class.obligatoria]="materia.tipo === 'Obligatoria'">
                         {{ materia.tipo }}
                       </span>
+                      @if (!puedeAprobar(materia.codigo)) {
+                        <span class="bloqueo-hint">
+                          Falta aprobar: {{ prereqsFaltantes(materia.codigo).join(', ') }}
+                        </span>
+                      }
                     </label>
                   </li>
                 }
@@ -195,7 +224,8 @@
         </section>
 
         <footer class="footer-actions">
-          <button class="btn-secondary" (click)="borrarPerfil()">Borrar perfil</button>
+          <button class="btn-secondary" (click)="editarPerfil()">Editar perfil</button>
+          <button class="btn-danger" (click)="borrarPerfil()">Borrar perfil</button>
         </footer>
 
       </section>

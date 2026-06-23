@@ -1,0 +1,92 @@
+/* ───────────────────────────── LISTA DE GRUPOS ──────────────────── */
+/* Tira horizontal con scroll: las tarjetas fluyen en fila. */
+.mz-lista-grupos {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  max-height: none;
+  min-height: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 6px;     /* deja espacio al thumb del scroll */
+  scroll-snap-type: x proximity;
+}
+.mz-lista-grupos > * {
+  scroll-snap-align: start;
+}
+
+.mz-card-grupo {
+  --mz-acc: #4f46e5; /* fallback */
+  flex: 0 0 240px;            /* ancho fijo de cada tarjeta */
+  min-width: 240px;
+  max-width: 240px;
+  cursor: grab;
+  border-left: 4px solid var(--mz-acc) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  user-select: none;
+}
+.mz-card-grupo:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
+  background-color: #fafafa !important;
+}
+.mz-card-grupo:active {
+  cursor: grabbing;
+}
+.mz-card-grupo--tomada {
+  outline: 3px solid var(--bs-primary);
+  outline-offset: 1px;
+  box-shadow: 0 4px 12px rgba(var(--bs-primary-rgb), 0.35) !important;
+}
+
+/* Scrollbar más discreto en la tira */
+.mz-lista-grupos::-webkit-scrollbar { height: 8px; }
+.mz-lista-grupos::-webkit-scrollbar-track { background: transparent; }
+.mz-lista-grupos::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+
+.mz-badge-codigo {
+  background-color: var(--mz-acc, var(--bs-primary)) !important;
+  color: #fff;
+}
+
+.mz-horarios-mini li {
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.mz-pista-drag {
+  border-top: 1px dashed var(--bs-border-color);
+  padding-top: 4px;
+  margin-top: 4px;
+}
+
+/* ───────────────────────────── CDK DRAG ─────────────────────────── */
+/* Estos estilos son globales por naturaleza (CDK los aplica a un overlay
+   fuera del árbol del componente), pero los dejamos aquí porque solo
+   se activan al arrastrar una tarjeta de ESTA lista. */
+::ng-deep .cdk-drag-preview {
+  background: #ffffff;
+  border: 1.5px solid var(--bs-primary);
+  border-left-width: 4px;
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--bs-primary);
+  max-width: 280px;
+  z-index: 1050;
+}
+::ng-deep .cdk-drag-placeholder {
+  opacity: 0.4;
+  background: var(--bs-primary-bg-subtle);
+  border-radius: 8px;
+}
+::ng-deep .cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}

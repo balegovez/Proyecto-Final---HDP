@@ -1,0 +1,35 @@
+<aside class="panel-seleccion">
+  <button
+    class="btn-cerrar"
+    (click)="onCerrar()"
+    aria-label="Cerrar"
+  >
+    ×
+  </button>
+
+  <h3>{{ seleccion.materia.nombre }}</h3>
+
+  <p class="tipo-materia">Tipo: {{ seleccion.materia.tipo }}</p>
+
+  <p class="codigo">
+    {{ seleccion.materia.codigo }} · Ciclo
+    {{ seleccion.materia.ciclo }} · {{ seleccion.materia.uv }} UV
+  </p>
+
+  @if (seleccion.cadenaDesbloqueada.length > 0) {
+    <p class="resumen">
+      Al aprobar esta materia se desbloquean
+      <strong>{{ seleccion.cadenaDesbloqueada.length }}</strong> materias:
+    </p>
+    <ul class="lista-desbloqueadas">
+      @for (codigo of seleccion.cadenaDesbloqueada; track codigo) {
+        <li>{{ describirMateria(codigo) }}</li>
+      }
+    </ul>
+  } @else {
+    <p class="resumen sin-desbloqueo">
+      Esta materia no es prerrequisito de ninguna otra (es una materia
+      "terminal").
+    </p>
+  }
+</aside>

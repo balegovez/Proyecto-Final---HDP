@@ -1,0 +1,71 @@
+<div class="mz-modal-backdrop" (click)="cerrar.emit()"></div>
+
+<div class="mz-modal" role="dialog" aria-modal="true" aria-labelledby="modal-confirm-titulo">
+  <article class="card border-0 shadow-lg mz-modal-card">
+    <header class="card-header bg-white d-flex justify-content-between align-items-center">
+      <h2 id="modal-confirm-titulo" class="h5 mb-0">
+        <i class="fa-solid fa-clipboard-check me-2 text-primary"></i>
+        Confirmar materias del horario
+      </h2>
+      <button type="button" class="btn-close" aria-label="Cerrar" (click)="cerrar.emit()"></button>
+    </header>
+
+    <div class="card-body mz-modal-body">
+      <p class="text-muted small mb-3">
+        Revisa los datos de cada clase antes de exportar.
+      </p>
+
+      <div class="table-responsive">
+        <table class="table table-sm align-middle">
+          <thead class="table-light">
+            <tr>
+              <th scope="col">Código / Nombre</th>
+              <th scope="col" class="text-center">Grupo</th>
+              <th scope="col">Horario y aula</th>
+              <th scope="col" class="text-center">UV</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (g of grupos; track g.key) {
+              <tr>
+                <td>
+                  <span class="font-monospace fw-bold text-primary d-block">{{ g.codigoMateria }}</span>
+                  <span class="small text-dark">{{ g.nombreMateria }}</span>
+                </td>
+                <td class="text-center">
+                  <span class="badge bg-secondary bg-opacity-25 text-secondary font-monospace">
+                    {{ g.tipo }} {{ +g.numeroGrupo }}
+                  </span>
+                </td>
+                <td>
+                  <ul class="list-unstyled mb-0 small">
+                    @for (f of g.franjas; track f.dia + f.horaInicio) {
+                      <li>
+                        <strong>{{ f.dia }}</strong> {{ f.horaInicio }}–{{ f.horaFin }}
+                        <span class="text-muted">· {{ f.aula }}</span>
+                      </li>
+                    }
+                  </ul>
+                </td>
+                <td class="text-center fw-semibold">{{ g.uv }}</td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr class="table-light">
+              <td colspan="3" class="text-end fw-semibold">Total UV:</td>
+              <td class="text-center fw-bold">{{ uvTotales }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <footer class="card-footer bg-white d-flex justify-content-end gap-2">
+      <button type="button" class="btn btn-light" (click)="cerrar.emit()">Cancelar</button>
+      <button type="button" class="btn btn-primary" (click)="confirmarTodo.emit()">
+        <i class="fa-solid fa-check me-1"></i>Confirmar todo
+      </button>
+    </footer>
+  </article>
+</div>

@@ -1,0 +1,36 @@
+/* ============ CONTENEDOR HOST ============
+   El host ocupa todo el espacio que el padre le asigne (flex: 1).
+   Usamos :host para no depender de una clase wrapper extra. */
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  position: relative;
+  min-height: 0; /* necesario para que flex shrink funcione dentro de un column */
+}
+
+/* ============ CONTENEDOR DEL GRAFO CYTOSCAPE ============ */
+.cy-container {
+  flex: 1;
+
+  width: 100%;
+
+  min-height: 400px;
+
+  background: #f8fafc;
+
+  border-top: 1px solid #e5e7eb;
+}
+
+/* ============ ESTADO DE CARGA ============ */
+.estado-carga {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1rem 1.5rem;
+  border-radius: 6px;
+  z-index: 4;
+  background: #fff;
+  color: #6b7280;
+}

@@ -1,0 +1,40 @@
+/* Implementación propia para no depender del JS de Bootstrap a la fuerza.
+   El backdrop usa z-index 1040 y el contenedor 1050 (alineado con Bootstrap). */
+
+.mz-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+  animation: mzFade 0.15s ease;
+}
+.mz-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem 1rem;
+  overflow-y: auto;
+  pointer-events: none;
+}
+.mz-modal-card {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 760px;
+  animation: mzPopIn 0.18s ease;
+}
+.mz-modal-body {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+@keyframes mzFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes mzPopIn {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

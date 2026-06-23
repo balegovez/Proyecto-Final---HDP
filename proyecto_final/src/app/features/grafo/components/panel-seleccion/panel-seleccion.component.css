@@ -1,0 +1,148 @@
+/* ============ PANEL LATERAL ============ */
+.panel-seleccion {
+  position: absolute;
+
+  top: 100px;
+  right: 20px;
+
+  width: 340px;
+
+  background: #fff;
+
+  border-radius: 16px;
+
+  padding: 1.2rem;
+
+  border: 1px solid #e5e7eb;
+
+  box-shadow: 0 15px 40px rgba(0, 0, 0, .12);
+
+  z-index: 3;
+
+  animation: aparecer .25s ease;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.panel-seleccion h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  color: #1f2937;
+  padding-right: 1.5rem; /* espacio para el botón cerrar */
+}
+
+.panel-seleccion .codigo {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.panel-seleccion .resumen {
+  font-size: 0.85rem;
+  color: #374151;
+  margin: 0 0 0.5rem 0;
+}
+
+.panel-seleccion .sin-desbloqueo {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.tipo-materia {
+  display: inline-block;
+
+  margin-bottom: .8rem;
+
+  padding: .35rem .75rem;
+
+  background: #eff6ff;
+
+  color: #1d4ed8;
+
+  border-radius: 999px;
+
+  font-size: .8rem;
+
+  font-weight: 600;
+}
+
+/* ============ LISTA DE MATERIAS DESBLOQUEADAS ============ */
+.lista-desbloqueadas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.lista-desbloqueadas li {
+  background: #fff7ed;
+
+  color: #9a3412;
+
+  border: 1px solid #fdba74;
+
+  padding: .45rem .7rem;
+
+  border-radius: 8px;
+
+  font-size: .75rem;
+
+  font-weight: 600;
+
+  transition: .2s;
+}
+
+.lista-desbloqueadas li:hover {
+  transform: translateY(-2px);
+
+  background: #fed7aa;
+}
+
+/* ============ BOTÓN CERRAR ============ */
+.btn-cerrar {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.6rem;
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0 0.3rem;
+  border-radius: 4px;
+}
+
+.btn-cerrar:hover {
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+  .panel-seleccion {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: auto;
+    border-radius: 8px 8px 0 0;
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+}

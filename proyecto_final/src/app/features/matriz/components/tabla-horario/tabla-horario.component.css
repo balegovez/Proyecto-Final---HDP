@@ -1,0 +1,103 @@
+/* ───────────────────────────── TABLA MATRIZ ─────────────────────── */
+.mz-tabla {
+  --bs-table-bg: transparent;
+  font-size: 0.82rem;
+  table-layout: fixed;     /* reparte el ancho de forma equitativa */
+  width: 100%;
+}
+.mz-tabla thead.mz-tabla-head th,
+.mz-tabla tr.mz-tabla-head th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background-color: #fafafa;
+  border-bottom: 2px solid var(--bs-border-color);
+}
+.mz-col-hora {
+  width: 130px;
+  white-space: nowrap;
+  background-color: #fafafa;
+}
+.mz-celda {
+  height: 48px;
+  vertical-align: middle;
+  padding: 4px 6px;
+  overflow: hidden;
+}
+
+/* Feedback cuando la matriz es un drop activo */
+::ng-deep .cdk-drop-list-dragging .mz-celda {
+  background-color: rgba(var(--bs-primary-rgb), 0.04);
+}
+
+/* ───────────────────────────── BLOQUE OCUPADO ───────────────────── */
+.mz-bloque {
+  --mz-acc: var(--bs-primary);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: transparent;
+  color: #1f2937;
+  padding: 0;
+  font-size: 0.82rem;
+  line-height: 1.25;
+}
+/* Indicador de color izquierdo, sutil, tipo "tag" */
+.mz-bloque::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 1.05em;
+  background-color: var(--mz-acc);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.mz-bloque__texto {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mz-bloque__cerrar {
+  flex-shrink: 0;
+  background: transparent;
+  border: 0;
+  color: var(--bs-secondary);
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.15s, background-color 0.15s;
+  cursor: pointer;
+}
+.mz-celda:hover .mz-bloque__cerrar {
+  opacity: 1;
+}
+.mz-bloque__cerrar:hover {
+  background-color: var(--bs-danger-bg-subtle);
+  color: var(--bs-danger);
+}
+
+/* ───────────────────────────── VISTA MÓVIL ──────────────────────── */
+.mz-mov-item {
+  background-color: #fff;
+}
+.mz-mov-bar {
+  width: 4px;
+  height: 38px;
+  border-radius: 4px;
+  background-color: var(--mz-acc);
+  flex-shrink: 0;
+}
+
+/* ───────────────────────────── IMPRESIÓN NATIVA (Ctrl+P) ────────── */
+@media print {
+  body * { visibility: hidden; }
+  .mz-vista-pc, .mz-vista-pc * { visibility: visible; }
+  .mz-vista-pc { position: absolute; left: 0; top: 0; width: 100%; }
+  .mz-bloque__cerrar { display: none; }
+}

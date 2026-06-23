@@ -1,150 +1,52 @@
-import {
-  Component,
-  computed,
-  inject,
-  signal,
-  ElementRef,
-  ViewChild,
-  HostListener,
-} from '@angular/core';
+import { Component, computed, inject, signal, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DragDropModule, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
+
+import { PensumService } from '../../core/services/pensum.service';
 
 import {
-  PensumService,
-  FranjaHoraria,
-} from '../../core/services/pensum.service';
+  BloqueDiaMovil,
+  CeldaOcupada,
+  DIAS_SEMANA,
+  DiaSemana,
+  FilaHorario,
+  GrupoConfirmable,
+  GrupoSeleccionable,
+} from './matriz.types';
+
+import { aHoraLarga, aMinutos, validarInscripcion } from './utils/horario-validador';
+import { descargarIcs as descargarIcsArchivo, descargarPdf as descargarPdfArchivo } from './utils/horario-exportador';
+
+import { GrupoSidebarComponent } from './components/grupo-sidebar/grupo-sidebar.component';
+import { TablaHorarioComponent } from './components/tabla-horario/tabla-horario.component';
+import { ConfirmacionModalComponent } from './components/confirmacion-modal/confirmacion-modal.component';
 
 // ════════════════════════════════════════════════════════════════════
-// TIPOS LOCALES — Vista de la matriz
-// ════════════════════════════════════════════════════════════════════
-
-/**
- * Un grupo teórico "aplanado" para mostrarlo como tarjeta independiente
- * en la barra lateral. Une la materia con uno de sus grupos.
- */
-interface GrupoSeleccionable {
-  /** Clave única "CODIGO-NUMGRUPO" — sirve de identificador en CDK. */
-  key: string;
-  codigoMateria: string;
-  nombreMateria: string;
-  cicloAcademico: number;
-  uv: number;
-  numeroGrupo: string;
-  tipo: string;
-  docente: string;
-  horario: readonly FranjaHoraria[];
-}
-
-/** Fila de la matriz: un rango horario único (ej. "07:00 - 08:40"). */
-interface FilaHorario {
-  /** Etiqueta para mostrar (ej. "07:00:00 - 08:40:00"). */
-  etiqueta: string;
-  horaInicio: string;
-  horaFin: string;
-}
-
-/** Lo que se renderiza dentro de una celda ocupada. */
-interface CeldaOcupada {
-  codigoMateria: string;
-  nombreMateria: string;
-  numeroGrupo: string;
-  tipo: string;
-  aula: string;
-  /** Texto plano concatenado pedido: "SYP155 Teorico 1 Cómputo B". */
-  contenido: string;
-}
-
-/** Detalle por grupo inscrito que se muestra en la modal de confirmación. */
-interface GrupoConfirmable {
-  key: string;
-  codigoMateria: string;
-  nombreMateria: string;
-  numeroGrupo: string;
-  tipo: string;
-  uv: number;
-  franjas: readonly FranjaHoraria[];
-}
-
-// ════════════════════════════════════════════════════════════════════
-// UTILIDADES PURAS
-// ════════════════════════════════════════════════════════════════════
-
-const DIAS_SEMANA = [
-  'Lunes',
-  'Martes',
-  'Miércoles',
-  'Jueves',
-  'Viernes',
-  'Sábado',
-  'Domingo',
-] as const;
-type DiaSemana = (typeof DIAS_SEMANA)[number];
-
-/** Convierte "HH:MM" o "HH:MM:SS" en minutos desde medianoche. */
-function aMinutos(hhmm: string): number {
-  const partes = hhmm.split(':').map(Number);
-  return (partes[0] ?? 0) * 60 + (partes[1] ?? 0);
-}
-
-/** Formatea "HH:MM" a "HH:MM:SS" (estilo de la imagen de referencia). */
-function aHoraLarga(hhmm: string): string {
-  if (hhmm.length === 5) return `${hhmm}:00`;
-  return hhmm;
-}
-
-/** ¿Se solapan dos franjas? (mismo día, intervalos abiertos). */
-function franjasChocan(a: FranjaHoraria, b: FranjaHoraria): boolean {
-  if (a.dia !== b.dia) return false;
-  const ai = aMinutos(a.horaInicio);
-  const af = aMinutos(a.horaFin);
-  const bi = aMinutos(b.horaInicio);
-  const bf = aMinutos(b.horaFin);
-  return ai < bf && bi < af;
-}
-
-/** Mapa día → índice ISO (Lunes=1, ..., Domingo=7). */
-const DIA_A_ISO: Record<DiaSemana, number> = {
-  Lunes: 1,
-  Martes: 2,
-  Miércoles: 3,
-  Jueves: 4,
-  Viernes: 5,
-  Sábado: 6,
-  Domingo: 7,
-};
-
-/** Próxima ocurrencia (>= hoy) del día semanal indicado. Devuelve YYYYMMDD. */
-function proximaFecha(diaIso: number, hoy: Date = new Date()): string {
-  const fecha = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
-  const isoHoy = ((fecha.getDay() + 6) % 7) + 1; // JS Sunday=0 → ISO Mon=1
-  const diff = (diaIso - isoHoy + 7) % 7;
-  fecha.setDate(fecha.getDate() + diff);
-  const yyyy = fecha.getFullYear();
-  const mm = String(fecha.getMonth() + 1).padStart(2, '0');
-  const dd = String(fecha.getDate()).padStart(2, '0');
-  return `${yyyy}${mm}${dd}`;
-}
-
-/** Formatea "HH:MM" a "HHMMSS" para .ics. */
-function aHoraIcs(hhmm: string): string {
-  const [h, m] = hhmm.split(':');
-  return `${h.padStart(2, '0')}${(m ?? '00').padStart(2, '0')}00`;
-}
-
-/** Escapa texto para campo de iCalendar (RFC 5545). */
-function escIcs(texto: string): string {
-  return texto.replace(/\\/g, '\\\\').replace(/,/g, '\\,').replace(/;/g, '\\;').replace(/\n/g, '\\n');
-}
-
-// ════════════════════════════════════════════════════════════════════
-// COMPONENTE
+// COMPONENTE PADRE — Orquesta estado y delega presentación a los hijos.
+//
+// Responsabilidades que SÍ se quedan aquí:
+//   - Inyectar PensumService y derivar datos (computed signals).
+//   - Mantener estado de interacción de UI (móvil, modal, mensajes).
+//   - Coordinar acciones (inscribir, eliminar, exportar) llamando a
+//     las utilidades puras de ./utils.
+//
+// Lo que se fue a otro lado:
+//   - Validación de choques de horario       → utils/horario-validador.ts
+//   - Generación de .ics y PDF                → utils/horario-exportador.ts
+//   - Tarjetas de grupos disponibles          → components/grupo-sidebar
+//   - Tabla semanal + vista móvil             → components/tabla-horario
+//   - Modal de confirmación                   → components/confirmacion-modal
 // ════════════════════════════════════════════════════════════════════
 
 @Component({
   selector: 'app-matriz',
   standalone: true,
-  imports: [CommonModule, DragDropModule],
+  imports: [
+    CommonModule,
+    GrupoSidebarComponent,
+    TablaHorarioComponent,
+    ConfirmacionModalComponent,
+  ],
   templateUrl: './matriz.component.html',
   styleUrl: './matriz.component.css',
 })
@@ -153,20 +55,12 @@ export class MatrizComponent {
   // ── Servicios ──────────────────────────────────────────────────
   pensumService = inject(PensumService);
 
-  // ── Referencia al elemento de la tabla (para exportar a PDF) ──
-  @ViewChild('areaImpresion', { static: false })
-  areaImpresion?: ElementRef<HTMLElement>;
-
   // ── Constantes ─────────────────────────────────────────────────
-  
   readonly DIAS = DIAS_SEMANA;
   readonly DROP_LIST_ID_SIDEBAR = 'lista-grupos-disponibles';
   readonly DROP_LIST_ID_MATRIZ = 'matriz-horario';
 
   // ── Estado local (signals) ─────────────────────────────────────
-
-  /** Filtro: 'todos' | 'impar' | 'par'. */
-  readonly paridadCiclo = signal<'todos' | 'impar' | 'par'>('todos');
 
   /** Conjunto de keys (codigo-grupo) confirmadas tras revisión. */
   readonly confirmadas = signal<Set<string>>(new Set());
@@ -254,7 +148,6 @@ export class MatrizComponent {
   /**
    * Grupos disponibles en la barra lateral:
    *   - La materia debe ser inscribible (prereqs cumplidos)
-   *   - La paridad del cicloAcademico debe coincidir con el filtro
    *   - El grupo aún no debe estar inscrito (ni otro grupo de la misma materia)
    */
   readonly gruposDisponibles = computed<GrupoSeleccionable[]>(() => {
@@ -264,13 +157,10 @@ export class MatrizComponent {
     const codigosInscritos = new Set(
       this.gruposInscritos().map(g => g.codigoMateria)
     );
-    const paridad = this.paridadCiclo();
 
     return this.catalogoGrupos().filter(g => {
       if (!inscribibles.has(g.codigoMateria)) return false;
       if (codigosInscritos.has(g.codigoMateria)) return false;
-      if (paridad === 'impar' && g.cicloAcademico % 2 !== 1) return false;
-      if (paridad === 'par' && g.cicloAcademico % 2 !== 0) return false;
       return true;
     });
   });
@@ -303,7 +193,6 @@ export class MatrizComponent {
   private readonly indiceCeldas = computed<Map<string, CeldaOcupada>>(() => {
     const mapa = new Map<string, CeldaOcupada>();
     for (const g of this.gruposInscritos()) {
-      // Número del grupo "01" → 1 para la presentación
       const numLimpio = String(parseInt(g.numeroGrupo, 10) || g.numeroGrupo);
       for (const f of g.horario) {
         const k = this.claveCelda(f.dia, f.horaInicio, f.horaFin);
@@ -353,18 +242,9 @@ export class MatrizComponent {
   // VISTA AGRUPADA POR DÍA (móvil)
   // ────────────────────────────────────────────────────────────────
 
-  readonly vistaPorDia = computed(() => {
+  readonly vistaPorDia = computed<BloqueDiaMovil[]>(() => {
     return this.DIAS.map(dia => {
-      const items: Array<{
-        codigoMateria: string;
-        nombreMateria: string;
-        numeroGrupo: string;
-        tipo: string;
-        aula: string;
-        horaInicio: string;
-        horaFin: string;
-        rangoEtq: string;
-      }> = [];
+      const items: BloqueDiaMovil['items'] = [];
       for (const g of this.gruposInscritos()) {
         for (const f of g.horario) {
           if (f.dia === dia) {
@@ -394,75 +274,44 @@ export class MatrizComponent {
     return `${dia}|${horaInicio}|${horaFin}`;
   }
 
-  celdaEn(fila: FilaHorario, dia: string): CeldaOcupada | undefined {
+  celdaEn = (fila: FilaHorario, dia: string): CeldaOcupada | undefined => {
     return this.indiceCeldas().get(
       this.claveCelda(dia, fila.horaInicio, fila.horaFin)
     );
-  }
+  };
 
   /** Para iconografía / clases CSS según tipo. */
-  obtenerColorPorMateria(codigo: string): string {
-    // Hash determinístico → tonos HSL bonitos.
+  obtenerColorPorMateria = (codigo: string): string => {
     let h = 0;
     for (let i = 0; i < codigo.length; i++) {
       h = (h * 31 + codigo.charCodeAt(i)) >>> 0;
     }
     const tono = h % 360;
     return `hsl(${tono} 55% 42%)`;
-  }
+  };
 
   // ────────────────────────────────────────────────────────────────
   // ACCIONES — CREATE / UPDATE
   // ────────────────────────────────────────────────────────────────
 
   /**
-   * Validación pura (sin efectos): ¿se puede inscribir este grupo?
-   * Devuelve `null` si todo OK o un mensaje de error.
-   */
-  private validarInscripcion(grupo: GrupoSeleccionable): string | null {
-    if (!this.pensumService.esInscribible(grupo.codigoMateria)) {
-      return `${grupo.codigoMateria} no es inscribible (revisa prerrequisitos).`;
-    }
-    // Misma materia ya inscrita → cambio de grupo (UPDATE).
-    // No bloquea, pero limpiamos abajo. Aquí solo validamos UV y choques
-    // calculando el delta.
-    const yaInscrito = this.gruposInscritos().find(
-      g => g.codigoMateria === grupo.codigoMateria
-    );
-
-    
-
-    // Choque de horarios: revisamos contra todas las franjas inscritas
-    // EXCEPTO las del grupo viejo de la misma materia (que va a salir).
-    const codigoExcluir = yaInscrito?.codigoMateria;
-    for (const f of grupo.horario) {
-      for (const otro of this.gruposInscritos()) {
-        if (otro.codigoMateria === codigoExcluir) continue;
-        for (const f2 of otro.horario) {
-          if (franjasChocan(f, f2)) {
-            return `Choque de horarios: ${grupo.codigoMateria} G${grupo.numeroGrupo} colisiona con ${otro.codigoMateria} G${otro.numeroGrupo} (${f.dia} ${f.horaInicio}-${f.horaFin}).`;
-          }
-        }
-      }
-    }
-    return null;
-  }
-
-  /**
    * Acción central de inscripción. Es llamada tanto por drag&drop
-   * como por click/touch. Aplica la regla y persiste.
+   * como por click/touch. Valida con la utilidad pura y persiste.
    */
   async inscribirGrupo(grupo: GrupoSeleccionable): Promise<void> {
-    const error = this.validarInscripcion(grupo);
+    const error = validarInscripcion(
+      grupo,
+      this.gruposInscritos(),
+      (codigo) => this.pensumService.esInscribible(codigo)
+    );
     if (error) {
       this.mostrarError(error);
       return;
     }
     await this.pensumService.inscribirAGrupo(grupo.codigoMateria, grupo.numeroGrupo);
-    // Si se cambió de grupo, la confirmación previa queda invalidada para esa key
+    // Si se cambió de grupo, la confirmación previa queda invalidada para esa key.
     this.confirmadas.update(s => {
       const copia = new Set(s);
-      // todas las keys de esa materia (puede ser sólo la actual ahora)
       for (const k of Array.from(copia)) {
         if (k.startsWith(`${grupo.codigoMateria}-`)) copia.delete(k);
       }
@@ -472,7 +321,7 @@ export class MatrizComponent {
     this.mostrarExito(`${grupo.codigoMateria} G${grupo.numeroGrupo} asignado correctamente.`);
   }
 
-  // ── Drag & drop: punto de entrada ──
+  // ── Drag & drop: punto de entrada (emitido por TablaHorarioComponent) ──
   async alSoltarEnMatriz(event: CdkDragDrop<any>): Promise<void> {
     const grupo = event.item.data as GrupoSeleccionable | undefined;
     if (!grupo) return;
@@ -545,67 +394,8 @@ export class MatrizComponent {
   }
 
   // ────────────────────────────────────────────────────────────────
-  // EXPORTACIÓN .ics  (Google Calendar)
+  // EXPORTACIÓN — delega a utils/horario-exportador.ts
   // ────────────────────────────────────────────────────────────────
-
-  private generarIcs(): string {
-    const lineas: string[] = [];
-    const ahora = new Date();
-    // YYYYMMDDTHHMMSSZ
-    const dtstamp =
-      ahora.toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z';
-
-    const byDayMap: Record<number, string> = {
-      1: 'MO', 2: 'TU', 3: 'WE', 4: 'TH', 5: 'FR', 6: 'SA', 7: 'SU',
-    };
-
-    lineas.push('BEGIN:VCALENDAR');
-    lineas.push('VERSION:2.0');
-    lineas.push('PRODID:-//PensumNavigator//UES-FMO//ES');
-    lineas.push('CALSCALE:GREGORIAN');
-    lineas.push('METHOD:PUBLISH');
-
-    let eventosEmitidos = 0;
-
-    for (const g of this.gruposInscritos()) {
-      const franjas = g.horario ?? [];
-      for (let idx = 0; idx < franjas.length; idx++) {
-        const f = franjas[idx];
-        const diaIso = DIA_A_ISO[f.dia as DiaSemana];
-        if (!diaIso) continue;
-
-        const fechaInicio = proximaFecha(diaIso, ahora);
-        const horaIni = aHoraIcs(f.horaInicio);
-        const horaFin = aHoraIcs(f.horaFin);
-        const uid = `${g.codigoMateria}-${g.numeroGrupo}-${idx}-${fechaInicio}@pensumnavigator`;
-
-        // Texto plano sin guiones largos, sin saltos de línea reales —
-        // evitamos cualquier carácter que algunos parsers traten raro.
-        const titulo = `${g.codigoMateria} - ${g.nombreMateria} (G${g.numeroGrupo})`;
-        const descripcion = `Docente: ${g.docente}. Tipo: ${g.tipo}. Grupo: ${g.numeroGrupo}.`;
-
-        lineas.push('BEGIN:VEVENT');
-        lineas.push(`UID:${uid}`);
-        lineas.push(`DTSTAMP:${dtstamp}`);
-        lineas.push(`DTSTART:${fechaInicio}T${horaIni}`);
-        lineas.push(`DTEND:${fechaInicio}T${horaFin}`);
-        lineas.push(`RRULE:FREQ=WEEKLY;BYDAY=${byDayMap[diaIso]};COUNT=16`);
-        lineas.push(`SUMMARY:${escIcs(titulo)}`);
-        lineas.push(`LOCATION:${escIcs(f.aula)}`);
-        lineas.push(`DESCRIPTION:${escIcs(descripcion)}`);
-        lineas.push('END:VEVENT');
-        eventosEmitidos++;
-      }
-    }
-
-    lineas.push('END:VCALENDAR');
-
-    if (eventosEmitidos === 0) {
-      throw new Error('No se generó ningún evento (revisa los días de tus grupos).');
-    }
-    // RFC 5545: CRLF entre líneas y al final.
-    return lineas.join('\r\n') + '\r\n';
-  }
 
   descargarIcs(): void {
     if (this.gruposInscritos().length === 0) {
@@ -613,16 +403,7 @@ export class MatrizComponent {
       return;
     }
     try {
-      const contenido = this.generarIcs();
-      const blob = new Blob([contenido], { type: 'text/calendar;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'horario-ues.ics';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 500);
+      descargarIcsArchivo(this.gruposInscritos());
       this.mostrarExito('Archivo .ics descargado. Impórtalo en Google Calendar.');
     } catch (err) {
       console.error('Error generando .ics:', err);
@@ -633,150 +414,19 @@ export class MatrizComponent {
     }
   }
 
-  // ────────────────────────────────────────────────────────────────
-  // EXPORTACIÓN PDF (html2pdf.js cargado on-demand)
-  //
-  // En vez de clonar el DOM (que sufre con la encapsulación de Angular
-  // y el `.d-none !important` de Bootstrap), generamos un fragmento HTML
-  // auto-contenido con estilos en línea. Es 100% portable y siempre rinde.
-  // ────────────────────────────────────────────────────────────────
-
-  private cargarLibreriaPdf(): Promise<any> {
-    const w = window as any;
-    if (w.html2pdf) return Promise.resolve(w.html2pdf);
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src =
-        'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-      script.async = true;
-      script.onload = () => resolve((window as any).html2pdf);
-      script.onerror = () =>
-        reject(new Error('No se pudo cargar la librería html2pdf.js'));
-      document.head.appendChild(script);
-    });
-  }
-
-  /** Escapa texto para insertar como contenido HTML. */
-  private escHtml(s: string): string {
-    return s
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
- private construirHtmlPdf(): string {
-    const filas = this.filasHorario();
-    const dias = this.DIAS;
-
-    // Estilos ajustados: más padding, texto centrado, anchos definidos y mejor interlineado
-    const sThHora = 'width:12%;border:1px solid #94a3b8;padding:12px 8px;font-size:12px;text-transform:uppercase;color:#475569;font-weight:bold;background:#e2e8f0;text-align:center;';
-    const sThDias = 'width:12.5%;border:1px solid #94a3b8;padding:12px 8px;font-size:12px;text-transform:uppercase;color:#475569;font-weight:bold;background:#f1f5f9;text-align:center;';
-    const sHoraTh = 'border:1px solid #94a3b8;padding:12px 8px;font-size:12px;font-family:Consolas,Menlo,monospace;color:#475569;font-weight:600;background:#f8fafc;text-align:center;white-space:nowrap;';
-    const sTdVacia = 'border:1px solid #cbd5e1;padding:12px 8px;background:#ffffff;height:50px;';
-    const sTdLlena = 'border:1px solid #cbd5e1;padding:12px 8px;font-size:12px;color:#1f2937;background:#ffffff;vertical-align:middle;text-align:center;white-space:normal;line-height:1.5;';
-
-    const cabeceras = dias
-      .map(d => `<th style="${sThDias}">${this.escHtml(d)}</th>`)
-      .join('');
-
-    let cuerpo = '';
-    if (filas.length === 0) {
-      cuerpo = `<tr><td colspan="${dias.length + 1}" style="border:1px solid #cbd5e1;padding:24px;text-align:center;color:#94a3b8;font-size:12px;">Sin materias inscritas.</td></tr>`;
-    } else {
-      cuerpo = filas
-        .map(fila => {
-          const celdas = dias
-            .map(dia => {
-              const ocupada = this.celdaEn(fila, dia);
-              if (ocupada) {
-                return `<td style="${sTdLlena}"><strong>${this.escHtml(ocupada.codigoMateria)}</strong><br>${this.escHtml(ocupada.tipo)} ${this.escHtml(ocupada.numeroGrupo)}<br>${this.escHtml(ocupada.aula)}</td>`;
-              }
-              return `<td style="${sTdVacia}"></td>`;
-            })
-            .join('');
-          return `<tr>
-            <th style="${sHoraTh}">${this.escHtml(fila.etiqueta)}</th>
-            ${celdas}
-          </tr>`;
-        })
-        .join('');
-    }
-
-    return `
-      <div style="font-family:Arial,Helvetica,sans-serif;padding:24px;background:#ffffff;color:#1f2937;">
-        <h1 style="font-size:22px;margin:0 0 6px 0;color:#0f172a;text-align:center;">Horario Semanal — UES-FMO</h1>
-        <p style="font-size:12px;color:#64748b;margin:0 0 20px 0;text-align:center;">
-          
-          &nbsp;·&nbsp; Materias: <strong>${this.materiasUbicadas()}</strong>
-          &nbsp;·&nbsp; Generado: ${this.escHtml(new Date().toLocaleString())}
-        </p>
-        <table style="width:100%;border-collapse:collapse;table-layout:fixed;font-family:Arial,Helvetica,sans-serif;">
-          <thead>
-            <tr>
-              <th style="${sThHora}">Hora</th>
-              ${cabeceras}
-            </tr>
-          </thead>
-          <tbody>
-            ${cuerpo}
-          </tbody>
-        </table>
-      </div>
-    `;
-  }
-
   async descargarPdf(): Promise<void> {
     if (this.gruposInscritos().length === 0) {
       this.mostrarError('No hay materias inscritas para exportar.');
       return;
     }
-    
     try {
-      this.mostrarExito('Generando PDF, por favor espera...'); // Pequeño aviso para móviles
-      const html2pdf = await this.cargarLibreriaPdf();
-
-      const contenedor = document.createElement('div');
-      contenedor.innerHTML = this.construirHtmlPdf();
-      
-      // ─────────────────────────────────────────────────────────────
-      // TRUCO PARA MÓVILES: No lo mandes fuera de la pantalla. 
-      // Ponlo arriba a la izquierda, pero DETRÁS de toda la app.
-      // ─────────────────────────────────────────────────────────────
-      contenedor.style.position = 'absolute'; 
-      contenedor.style.top = '0';
-      contenedor.style.left = '0';
-      contenedor.style.width = '1440px'; 
-      contenedor.style.background = '#ffffff';
-      contenedor.style.zIndex = '-9999'; // Escondido detrás
-      contenedor.style.pointerEvents = 'none'; // Que no interfiera con los toques
-      
-      document.body.appendChild(contenedor);
-
-      await html2pdf()
-        .from(contenedor.firstElementChild as HTMLElement)
-        .set({
-          margin: 10,
-          filename: 'horario-ues.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { 
-            scale: 2, 
-            backgroundColor: '#ffffff', 
-            useCORS: true,
-            windowWidth: 1440,
-            scrollY: 0, // ¡CRUCIAL PARA MÓVIL! Ignora si el usuario bajó la pantalla
-            scrollX: 0,
-            logging: false,
-            ignoreElements: (node: Element) => node.tagName === 'LINK'
-          },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
-        })
-        .save();
-
-      // Limpiamos la basura después de que termine
-      document.body.removeChild(contenedor);
+      this.mostrarExito('Generando PDF, por favor espera...');
+      await descargarPdfArchivo(
+        this.filasHorario(),
+        this.celdaEn,
+        this.materiasUbicadas()
+      );
       this.mostrarExito('PDF generado correctamente.');
-      
     } catch (err) {
       console.error('Error generando PDF:', err);
       this.mostrarError(

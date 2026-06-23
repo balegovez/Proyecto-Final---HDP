@@ -1,0 +1,10 @@
+<!-- Estado de carga -->
+@if (materias.length === 0) {
+  <div class="estado-carga">
+    <p>Cargando grafo del pensum…</p>
+  </div>
+}
+
+<!-- Contenedor donde Cytoscape renderiza el grafo.
+     La referencia #cyContainer es la que usa @ViewChild. -->
+<div #cyContainer class="cy-container"></div>

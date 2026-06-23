@@ -1,84 +1,37 @@
 <main class="grafo-wrapper">
-  <!-- Header con título y leyenda -->
-  <header class="grafo-header">
-    <div class="titulo">
-      <h2>Grafo de Prerrequisitos</h2>
-      <p class="subtitulo">
-        Haz clic en una materia para ver qué se desbloquea al aprobarla.
-      </p>
-    </div>
 
-    <!-- Leyenda de colores y tamaños -->
-    <div class="leyenda">
-      <div class="leyenda-item">
-        <span class="dot dot-aprobada"></span>
-        <span>Aprobada</span>
-      </div>
-      
-      <div class="leyenda-item">
-        <span class="dot dot-pendiente"></span>
-        <span>Pendiente</span>
-      </div>
-      <div class="leyenda-item">
-        <span class="dot dot-grande"></span>
-        <span>Mayor Prioridad (desbloquea muchas)</span>
-      </div>
-    </div>
-  </header>
+  <!-- Header con título y leyenda (presentación pura, sin inputs) -->
+  <app-grafo-header />
 
-  <!-- Panel lateral: muestra la materia seleccionada y la cadena que desbloquea -->
-  @if (materiaSeleccionada) {
-    <aside class="panel-seleccion">
-      <button
-        class="btn-cerrar"
-        (click)="limpiarSeleccion()"
-        aria-label="Cerrar"
-      >
-        ×
-      </button>
-      <h3>{{ materiaSeleccionada.nombre }}</h3>
-      <p class="tipo-materia">Tipo: {{ materiaSeleccionada.tipo }}</p>
-      <p class="codigo">
-        {{ materiaSeleccionada.codigo }} · Ciclo
-        {{ materiaSeleccionada.ciclo }} · {{ materiaSeleccionada.uv }} UV
-      </p>
-
-      @if (cadenaDesbloqueada.length > 0) {
-        <p class="resumen">
-          Al aprobar esta materia se desbloquean
-          <strong>{{ cadenaDesbloqueada.length }}</strong> materias:
-        </p>
-        <ul class="lista-desbloqueadas">
-          @for (codigo of cadenaDesbloqueada; track codigo) {
-            <!-- Mostramos información más descriptiva que solo el código -->
-            <li>
-              {{ obtenerDescripcionMateria(codigo) }}
-            </li>
-          }
-        </ul>
-      } @else {
-        <p class="resumen sin-desbloqueo">
-          Esta materia no es prerrequisito de ninguna otra (es una materia
-          "terminal").
-        </p>
-      }
-    </aside>
+  <!-- Panel lateral: se muestra solo cuando hay una materia seleccionada -->
+  @if (seleccion) {
+    <app-panel-seleccion
+      [seleccion]="seleccion"
+      [todasMaterias]="pensumService.materias()"
+      (cerrar)="limpiarSeleccion()"
+    />
   }
 
-  <!-- Estado de carga -->
-  @if (pensumService.cargando()) {
-    <div class="estado-carga">
-      <p>Cargando grafo del pensum…</p>
-    </div>
-  }
-
+  <!-- Estado de error del servicio -->
   @if (pensumService.error()) {
     <div class="estado-error">
       <p>{{ pensumService.error() }}</p>
     </div>
   }
 
-  <!-- Contenedor donde Cytoscape renderiza el grafo.
-       La referencia #cyContainer es la que el TypeScript usa via @ViewChild. -->
-  <div #cyContainer class="cy-container"></div>
+  <!-- Canvas de Cytoscape con datos resueltos del servicio -->
+  @if (!pensumService.cargando()) {
+    <app-grafo-canvas
+      [materias]="pensumService.materias()"
+      [prerequisitos]="pensumService.prerequisitos()"
+      [historial]="pensumService.historial()"
+      (materiaSeleccionada)="alSeleccionarMateria($event)"
+      (seleccionLimpiada)="limpiarSeleccion()"
+    />
+  } @else {
+    <div class="estado-carga">
+      <p>Cargando grafo del pensum…</p>
+    </div>
+  }
+
 </main>

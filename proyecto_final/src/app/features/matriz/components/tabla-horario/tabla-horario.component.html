@@ -1,0 +1,134 @@
+<!-- VISTA ESCRITORIO: tabla matriz -->
+<section class="card shadow-sm border-0 overflow-hidden d-none d-md-block mz-vista-pc"
+         aria-labelledby="title-matriz" #areaImpresion>
+  <header class="card-header bg-white border-bottom d-flex flex-wrap justify-content-between align-items-center py-2 px-3">
+    <h2 id="title-matriz" class="h6 mb-0 text-uppercase fw-bold text-secondary" style="font-size: 0.75rem;">
+      Matriz semanal
+    </h2>
+    <span class="text-muted small d-none d-lg-inline">
+      <i class="fa-solid fa-arrow-pointer me-1"></i>Arrastra cualquier grupo aquí
+    </span>
+  </header>
+
+  <div class="table-responsive p-2 p-md-3"
+       cdkDropList
+       [id]="dropListId"
+       [cdkDropListConnectedTo]="[dropListIdSidebar]"
+       [cdkDropListData]="[]"
+       (cdkDropListDropped)="alSoltar($event)">
+
+    <table class="table table-bordered align-middle mb-0 mz-tabla">
+      <thead>
+        <tr class="mz-tabla-head">
+          <th scope="col" class="mz-col-hora">Hora</th>
+          @for (dia of DIAS; track dia) {
+            <th scope="col" class="text-secondary fw-semibold">{{ dia }}</th>
+          }
+        </tr>
+      </thead>
+
+      <tbody>
+        @if (filasHorario.length === 0) {
+          <tr>
+            <td [attr.colspan]="DIAS.length + 1" class="text-center text-muted py-5">
+              <i class="fa-regular fa-calendar-plus fa-2x opacity-50 d-block mb-2"></i>
+              Arrastra (o pulsa, en móvil) un grupo teórico de la izquierda para comenzar.
+            </td>
+          </tr>
+        }
+
+        @for (fila of filasHorario; track fila.etiqueta) {
+          <tr>
+            <th scope="row" class="mz-col-hora text-secondary fw-semibold font-monospace small">
+              {{ fila.etiqueta }}
+            </th>
+
+            @for (dia of DIAS; track dia) {
+              <td class="mz-celda">
+                @if (celdaEn(fila, dia); as ocupada) {
+                  <article class="mz-bloque" [style.--mz-acc]="colorPorMateria(ocupada.codigoMateria)">
+                    <span class="mz-bloque__texto">{{ ocupada.contenido }}</span>
+                    <button type="button"
+                            class="mz-bloque__cerrar"
+                            aria-label="Eliminar materia del horario"
+                            title="Eliminar"
+                            (click)="eliminar.emit(ocupada.codigoMateria)">
+                      <i class="fa-solid fa-xmark"></i>
+                    </button>
+                  </article>
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- VISTA MÓVIL: acordeón por día -->
+<section class="card shadow-sm border-0 d-md-none mz-vista-movil" aria-labelledby="title-matriz-movil">
+  <header class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-2 px-3">
+    <h2 id="title-matriz-movil" class="h6 mb-0 text-uppercase fw-bold text-secondary" style="font-size: 0.75rem;">
+      Mi horario
+    </h2>
+    @if (grupoTomado) {
+      <button type="button" class="btn btn-sm btn-primary" (click)="confirmarTomado.emit()">
+        <i class="fa-solid fa-plus me-1"></i>Inscribir aquí
+      </button>
+    }
+  </header>
+
+  <div class="card-body p-2">
+    @if (vistaPorDia.length === 0) {
+      <div class="text-center text-muted py-4">
+        <i class="fa-regular fa-calendar-plus fa-2x opacity-50 d-block mb-2"></i>
+        <p class="small mb-0">Toma un grupo arriba y pulsa "Inscribir aquí".</p>
+      </div>
+    }
+
+    <div class="accordion accordion-flush" id="acordeonHorarioMovil">
+      @for (bloque of vistaPorDia; track bloque.dia; let i = $index) {
+        <div class="accordion-item">
+          <h3 class="accordion-header">
+            <button class="accordion-button" type="button"
+                    data-bs-toggle="collapse"
+                    [attr.data-bs-target]="'#dia-' + bloque.dia"
+                    [attr.aria-controls]="'dia-' + bloque.dia">
+              <i class="fa-regular fa-calendar me-2"></i>
+              <strong>{{ bloque.dia }}</strong>
+              <span class="badge text-bg-primary ms-2">{{ bloque.items.length }}</span>
+            </button>
+          </h3>
+          <div [id]="'dia-' + bloque.dia" class="accordion-collapse collapse show">
+            <div class="accordion-body p-2">
+              @for (it of bloque.items; track it.codigoMateria + it.horaInicio) {
+                <article class="mz-mov-item d-flex align-items-center gap-2 p-2 mb-2 rounded-2 border"
+                         [style.--mz-acc]="colorPorMateria(it.codigoMateria)">
+                  <div class="mz-mov-bar"></div>
+                  <div class="flex-grow-1 overflow-hidden">
+                    <div class="font-monospace fw-bold small">
+                      {{ it.codigoMateria }} {{ it.tipo }} {{ +it.numeroGrupo }}
+                    </div>
+                    <div class="text-truncate text-dark" style="font-size: 0.8rem;">
+                      {{ it.nombreMateria }}
+                    </div>
+                    <div class="text-muted small">
+                      {{ it.rangoEtq }} · {{ it.aula }}
+                    </div>
+                  </div>
+                  <button type="button"
+                          class="btn btn-sm btn-light text-danger"
+                          aria-label="Eliminar"
+                          (click)="eliminar.emit(it.codigoMateria)">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </article>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

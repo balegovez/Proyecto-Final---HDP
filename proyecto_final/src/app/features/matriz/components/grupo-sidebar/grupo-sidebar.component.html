@@ -1,0 +1,78 @@
+<section class="card shadow-sm border-0 overflow-hidden" aria-labelledby="title-catalogo">
+  <header class="card-header bg-primary bg-opacity-10 border-bottom border-primary border-opacity-25 d-flex justify-content-between align-items-center py-2">
+    <h2 id="title-catalogo" class="h6 mb-0 text-uppercase fw-bold text-secondary text-center" style="font-size: 0.75rem;">
+      Grupos teóricos disponibles
+    </h2>
+    @if (grupos.length > 0) {
+      <span class="badge rounded-pill text-bg-primary">{{ grupos.length }}</span>
+    }
+  </header>
+
+  <div class="card-body p-2 d-flex flex-column gap-2 overflow-y-auto mz-lista-grupos justify-content-center"
+       cdkDropList
+       [id]="dropListId"
+       [cdkDropListConnectedTo]="[dropListIdMatriz]"
+       [cdkDropListData]="grupos"
+       [cdkDropListSortingDisabled]="true">
+
+    @if (grupos.length === 0) {
+      <div class="text-center text-muted p-4 d-flex align-content-center flex-column">
+        <i class="fa-solid fa-circle-check fa-2x opacity-50 mb-2"></i>
+        <p class="small mb-0 text-center">
+          No hay grupos que coincidan con tus filtros y prerrequisitos.
+        </p>
+      </div>
+    }
+
+    @for (grupo of grupos; track grupo.key) {
+      <article class="card border bg-white shadow-sm p-2 mz-card-grupo"
+               [class.mz-card-grupo--tomada]="grupoTomado === grupo.key"
+               [style.--mz-acc]="obtenerColorPorMateria(grupo.codigoMateria)"
+               [attr.aria-label]="grupo.codigoMateria + ' grupo ' + grupo.numeroGrupo"
+               cdkDrag
+               [cdkDragData]="grupo"
+               [cdkDragDisabled]="esMovil">
+
+        <div class="d-flex justify-content-between align-items-start mb-1">
+          <div class="d-flex align-items-center gap-1 flex-grow-1 overflow-hidden">
+            <span class="badge font-monospace mz-badge-codigo">{{ grupo.codigoMateria }}</span>
+            <span class="badge bg-secondary bg-opacity-25 text-secondary font-monospace">G{{ grupo.numeroGrupo }}</span>
+          </div>
+        </div>
+
+        <p class="mb-1 fw-semibold text-dark lh-sm" style="font-size: 0.82rem;">
+          {{ grupo.nombreMateria }}
+        </p>
+
+        <ul class="list-unstyled mb-1 small text-secondary mz-horarios-mini">
+          @for (f of grupo.horario; track f.dia + f.horaInicio) {
+            <li>
+              <i class="fa-regular fa-clock me-1 opacity-75"></i>
+              <strong>{{ f.dia }}</strong> {{ f.horaInicio }}–{{ f.horaFin }} · {{ f.aula }}
+            </li>
+          }
+        </ul>
+
+        <!-- Acciones según viewport -->
+        @if (!esMovil) {
+          <p class="text-muted mb-0 mz-pista-drag" style="font-size: 0.7rem;">
+            <i class="fa-solid fa-up-down-left-right me-1"></i>Arrastra a la matriz →
+          </p>
+        } @else {
+          <div class="d-flex gap-1 mt-1">
+            <button type="button" class="btn btn-sm btn-outline-primary flex-grow-1" (click)="tomar.emit(grupo)">
+              @if (grupoTomado === grupo.key) {
+                <i class="fa-solid fa-xmark me-1"></i>Cancelar
+              } @else {
+                <i class="fa-solid fa-hand-pointer me-1"></i>Tomar
+              }
+            </button>
+            <button type="button" class="btn btn-sm btn-primary" (click)="inscribir.emit(grupo)">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
+        }
+      </article>
+    }
+  </div>
+</section>

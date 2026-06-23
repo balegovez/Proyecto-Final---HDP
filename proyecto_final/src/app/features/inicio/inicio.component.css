@@ -1,7 +1,3 @@
-/* ════════════════════════════════════════════════════════════
-   InicioComponent — Página de expediente (accesos directos)
-   ════════════════════════════════════════════════════════════ */
-
 /* ── BREADCRUMB ── */
 .breadcrumb-container {
   background-color: #ffffff;
@@ -69,7 +65,7 @@
   color: var(--ues-text-muted, #6c757d);
 }
 
-/* ── BOTÓN ROJO (refuerza el global por si Bootstrap lo pisa) ── */
+
 .btn-red-custom {
   width: 44px;
   height: 44px;

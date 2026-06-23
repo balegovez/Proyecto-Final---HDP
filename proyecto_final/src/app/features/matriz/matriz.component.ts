@@ -21,22 +21,13 @@ import { GrupoSidebarComponent } from './components/grupo-sidebar/grupo-sidebar.
 import { TablaHorarioComponent } from './components/tabla-horario/tabla-horario.component';
 import { ConfirmacionModalComponent } from './components/confirmacion-modal/confirmacion-modal.component';
 
-// ════════════════════════════════════════════════════════════════════
 // COMPONENTE PADRE — Orquesta estado y delega presentación a los hijos.
 //
-// Responsabilidades que SÍ se quedan aquí:
+// Responsabilidades:
 //   - Inyectar PensumService y derivar datos (computed signals).
 //   - Mantener estado de interacción de UI (móvil, modal, mensajes).
 //   - Coordinar acciones (inscribir, eliminar, exportar) llamando a
 //     las utilidades puras de ./utils.
-//
-// Lo que se fue a otro lado:
-//   - Validación de choques de horario       → utils/horario-validador.ts
-//   - Generación de .ics y PDF                → utils/horario-exportador.ts
-//   - Tarjetas de grupos disponibles          → components/grupo-sidebar
-//   - Tabla semanal + vista móvil             → components/tabla-horario
-//   - Modal de confirmación                   → components/confirmacion-modal
-// ════════════════════════════════════════════════════════════════════
 
 @Component({
   selector: 'app-matriz',
@@ -52,15 +43,15 @@ import { ConfirmacionModalComponent } from './components/confirmacion-modal/conf
 })
 export class MatrizComponent {
 
-  // ── Servicios ──────────────────────────────────────────────────
+  // Servicios
   pensumService = inject(PensumService);
 
-  // ── Constantes ─────────────────────────────────────────────────
+  // Constantes 
   readonly DIAS = DIAS_SEMANA;
   readonly DROP_LIST_ID_SIDEBAR = 'lista-grupos-disponibles';
   readonly DROP_LIST_ID_MATRIZ = 'matriz-horario';
 
-  // ── Estado local (signals) ─────────────────────────────────────
+  // Estado local (signals) 
 
   /** Conjunto de keys (codigo-grupo) confirmadas tras revisión. */
   readonly confirmadas = signal<Set<string>>(new Set());
@@ -103,9 +94,7 @@ export class MatrizComponent {
     }, 3000);
   }
 
-  // ────────────────────────────────────────────────────────────────
   // FUENTES DERIVADAS (computed)
-  // ────────────────────────────────────────────────────────────────
 
   /** Lista plana de TODOS los grupos teóricos del catálogo. */
   private readonly catalogoGrupos = computed<GrupoSeleccionable[]>(() => {
@@ -238,9 +227,7 @@ export class MatrizComponent {
     return inscritos.every(g => confirm.has(g.key));
   });
 
-  // ────────────────────────────────────────────────────────────────
   // VISTA AGRUPADA POR DÍA (móvil)
-  // ────────────────────────────────────────────────────────────────
 
   readonly vistaPorDia = computed<BloqueDiaMovil[]>(() => {
     return this.DIAS.map(dia => {
@@ -266,9 +253,7 @@ export class MatrizComponent {
     }).filter(b => b.items.length > 0);
   });
 
-  // ────────────────────────────────────────────────────────────────
   // HELPERS DE PLANTILLA
-  // ────────────────────────────────────────────────────────────────
 
   private claveCelda(dia: string, horaInicio: string, horaFin: string): string {
     return `${dia}|${horaInicio}|${horaFin}`;
@@ -290,9 +275,7 @@ export class MatrizComponent {
     return `hsl(${tono} 55% 42%)`;
   };
 
-  // ────────────────────────────────────────────────────────────────
   // ACCIONES — CREATE / UPDATE
-  // ────────────────────────────────────────────────────────────────
 
   /**
    * Acción central de inscripción. Es llamada tanto por drag&drop
@@ -346,10 +329,8 @@ export class MatrizComponent {
     await this.inscribirGrupo(grupo);
   }
 
-  // ────────────────────────────────────────────────────────────────
   // ACCIONES — DELETE
-  // ────────────────────────────────────────────────────────────────
-
+  
   async eliminarMateria(codigoMateria: string): Promise<void> {
     await this.pensumService.desinscribirDeGrupo(codigoMateria);
     this.confirmadas.update(s => {
@@ -370,10 +351,8 @@ export class MatrizComponent {
     this.confirmadas.set(new Set());
   }
 
-  // ────────────────────────────────────────────────────────────────
   // ACCIONES — Confirmación
-  // ────────────────────────────────────────────────────────────────
-
+  
   abrirConfirmacion(): void {
     if (this.gruposInscritos().length === 0) {
       this.mostrarError('No hay materias para confirmar.');
@@ -393,10 +372,8 @@ export class MatrizComponent {
     this.mostrarExito('Materias confirmadas. Ya puedes exportar tu horario.');
   }
 
-  // ────────────────────────────────────────────────────────────────
   // EXPORTACIÓN — delega a utils/horario-exportador.ts
-  // ────────────────────────────────────────────────────────────────
-
+  
   descargarIcs(): void {
     if (this.gruposInscritos().length === 0) {
       this.mostrarError('No hay materias inscritas para exportar.');

@@ -1,4 +1,4 @@
-/* ───────────────────────────── LISTA DE GRUPOS ──────────────────── */
+/*  LISTA DE GRUPOS */
 /* Tira horizontal con scroll: las tarjetas fluyen en fila. */
 .mz-lista-grupos {
   display: flex !important;

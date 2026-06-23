@@ -19,7 +19,7 @@ import { estilosCytoscape } from '../../utils/cytoscape-estilos';
 /**
  * GrafoCanvasComponent
  * --------------------
- * Responsabilidad única: montar y gestionar la instancia de Cytoscape.
+ * Responsabilidad: montar y gestionar la instancia de Cytoscape.
  *
  * Recibe los datos ya resueltos del padre (materias, prerequisitos, historial)
  * y emite el código de la materia que el usuario selecciona/deselecciona.
@@ -78,10 +78,8 @@ export class GrafoCanvasComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  // ===========================================================
   //  INICIALIZACIÓN
-  // ===========================================================
-
+  
   private inicializarGrafo(): void {
     const outDegree = calcularOutDegree(this.prerequisitos);
 
@@ -135,10 +133,8 @@ export class GrafoCanvasComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  // ===========================================================
   //  API PÚBLICA PARA EL PADRE
-  // ===========================================================
-
+  
   /**
    * Resalta visualmente la cadena de desbloqueo en el grafo.
    * Llamado por el padre cuando el usuario selecciona una materia.
@@ -171,9 +167,7 @@ export class GrafoCanvasComponent implements OnInit, OnChanges, OnDestroy {
     this.cy.elements().removeClass('resaltada origen');
   }
 
-  // ===========================================================
   //  PRIVADOS
-  // ===========================================================
 
   private estadoDe(codigo: string): HistorialEstudiante['estado'] {
     return this.historial.find((h) => h.codigoMateria === codigo)?.estado ?? 'pendiente';

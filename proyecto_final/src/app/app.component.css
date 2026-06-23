@@ -1,9 +1,3 @@
-/* ════════════════════════════════════════════════════════════
-   AppComponent — Layout principal
-   Estilos globales (body, fuente) están en src/styles.css
-   ════════════════════════════════════════════════════════════ */
-
-/* ── SIDEBAR (escritorio) ── */
 .sidebar {
   width: 100px;
   background-color: var(--ues-sidebar, #3262c8);
@@ -25,9 +19,6 @@
   height: auto;
   display: block;
   margin: 0 auto;
-  /* Si tu logo tiene fondo blanco/transparente y querés que se vea bien
-     sobre el sidebar azul, podés usar un filtro para forzar blanco: */
-  /* filter: brightness(0) invert(1); */
 }
 
 .nav-item-custom {
@@ -67,7 +58,6 @@
   display: block;
 }
 
-/* ── NAVBAR SUPERIOR ── */
 .top-navbar {
   background-color: var(--ues-card-bg, #ffffff);
   border-bottom: 1px solid var(--ues-border, #e0e0e0);
@@ -85,8 +75,6 @@
   font-weight: 600;
 }
 
-/* Texto que antes usaba text-muted/text-dark de Bootstrap (colores fijos
-   que no reaccionaban al tema). Estas sí siguen las variables del tema. */
 .navbar-text-primary {
   color: var(--ues-text, #212529);
 }
@@ -140,7 +128,6 @@
   font-size: 0.9rem;
 }
 
-/* ── FOOTER ── */
 .footer {
   background-color: var(--ues-card-bg, #ffffff);
   border-top: 1px solid var(--ues-border, #e0e0e0);
@@ -158,29 +145,22 @@
   gap: 8px;
 }
 
-/* ── BOTTOM NAV (móvil) — oculto en escritorio ── */
 .bottom-nav {
   display: none;
 }
 
-/* ════════════════════════════════════════════════════════════
-   RESPONSIVE
-   ════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* Ocultar sidebar lateral */
   .sidebar {
     display: none;
   }
 
-  /* El contenido ocupa todo el ancho */
+  
   .main-content {
     margin-left: 0;
-    /* Espacio inferior para que el bottom-nav no tape contenido */
     padding-bottom: 68px;
   }
 
-  /* Navbar superior más compacto */
   .top-navbar {
     padding: 8px 12px;
   }
@@ -190,7 +170,6 @@
     line-height: 1.2;
   }
 
-  /* Mostrar barra de navegación inferior */
   .bottom-nav {
     display: flex;
     position: fixed;

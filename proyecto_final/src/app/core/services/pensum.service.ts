@@ -15,7 +15,7 @@ interface PensumSeed {
   prerequisitos: Prerequisito[];
 }
 
-// ── Tipos del archivo horarios.json ──────────────────────────────
+// Tipos del archivo horarios.json 
 export interface FranjaHoraria {
   dia: string;
   horaInicio: string;
@@ -52,15 +52,13 @@ const PERFIL_ID = 1;
 @Injectable({ providedIn: 'root' })
 export class PensumService {
 
-  // ════════════════════════════════════════════════════════════
   // ESTADO REACTIVO (Signals)
-  // ════════════════════════════════════════════════════════════
   materias = signal<Materia[]>([]);
   prerequisitos = signal<Prerequisito[]>([]);
   perfil = signal<Perfil | null>(null);
   historial = signal<HistorialEstudiante[]>([]);
-  inscripciones = signal<Inscripcion[]>([]);          // ← NUEVO
-  horarios = signal<MateriaConHorarios[]>([]);        // ← NUEVO (del JSON)
+  inscripciones = signal<Inscripcion[]>([]);  
+  horarios = signal<MateriaConHorarios[]>([]);
 
   cargando = signal<boolean>(true);
   error = signal<string | null>(null);
@@ -72,10 +70,8 @@ export class PensumService {
     this.listo = this.inicializar();
   }
 
-  // ════════════════════════════════════════════════════════════
   // INICIALIZACIÓN
-  // ════════════════════════════════════════════════════════════
-
+  
   private async inicializar(): Promise<void> {
     try {
       await this.sincronizarPensumDesdeSeed();
@@ -145,10 +141,8 @@ export class PensumService {
     this.inscripciones.set(inscripciones);
   }
 
-  // ════════════════════════════════════════════════════════════
-  // CRUD: PERFIL  (ahora con cicloActual y validación)
-  // ════════════════════════════════════════════════════════════
-
+  // CRUD: PERFIL  
+  
   /**
    * Crea el perfil + arma el historial automáticamente según el ciclo elegido.
    *
@@ -253,10 +247,8 @@ export class PensumService {
     await this.recargarTodoDesdeDB();
   }
 
-  // ════════════════════════════════════════════════════════════
   // CRUD: HISTORIAL ACADÉMICO
-  // ════════════════════════════════════════════════════════════
-
+  
   async actualizarEstadoMateria(
     codigoMateria: string,
     estado: HistorialEstudiante['estado']
@@ -289,10 +281,8 @@ export class PensumService {
       .map((p) => p.codigoPrerequisito);
   }
 
-  // ════════════════════════════════════════════════════════════
   // CRUD: INSCRIPCIONES A GRUPOS  (módulo de Horarios)
-  // ════════════════════════════════════════════════════════════
-
+  
 
   async inscribirAGrupo(codigoMateria: string, numeroGrupo: string): Promise<void> {
     const inscripcion: Inscripcion = {
@@ -320,10 +310,8 @@ export class PensumService {
     return this.inscripciones().find(i => i.codigoMateria === codigoMateria) ?? null;
   }
 
-  // ════════════════════════════════════════════════════════════
   // COMPUTED: MATERIAS INSCRIBIBLES (filtrado por ciclo + prereqs)
-  // ════════════════════════════════════════════════════════════
-
+  
 
   materiasInscribibles = computed(() => {
     return this.materias().filter(m => this.esInscribible(m.codigo));
@@ -344,9 +332,7 @@ export class PensumService {
     return prereqs.every(p => this.estadoDe(p.codigoPrerequisito) === 'aprobada');
   }
 
-  // ════════════════════════════════════════════════════════════
   // ESCENARIOS DE DEMOSTRACIÓN (por año cursado)
-  // ════════════════════════════════════════════════════════════
   readonly escenariosDemo = ESCENARIOS_DEMO;
 
   /**

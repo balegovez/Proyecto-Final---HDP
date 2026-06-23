@@ -1,12 +1,10 @@
 import { FranjaHoraria } from '../../../core/services/pensum.service';
 import { GrupoSeleccionable } from '../matriz.types';
 
-// ════════════════════════════════════════════════════════════════════
 // VALIDADOR DE HORARIOS — funciones puras, sin estado.
 // Exclusivo de la feature matriz: recibe los datos que necesita como
 // parámetros, nunca lee servicios ni signals directamente. Esto las
 // hace testeables de forma aislada (sin TestBed, sin mocks de Angular).
-// ════════════════════════════════════════════════════════════════════
 
 /** Convierte "HH:MM" o "HH:MM:SS" en minutos desde medianoche. */
 export function aMinutos(hhmm: string): number {

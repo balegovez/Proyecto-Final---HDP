@@ -1,13 +1,11 @@
 import { DIAS_SEMANA, DiaSemana, FilaHorario, GrupoSeleccionable } from '../matriz.types';
 import { aHoraLarga } from './horario-validador';
 
-// ════════════════════════════════════════════════════════════════════
 // EXPORTADOR DE HORARIO — .ics (Google Calendar) y PDF.
 // Exclusivo de la feature matriz. Cada función recibe los datos ya
 // resueltos (gruposInscritos, filasHorario, etc.) como parámetros, en
 // vez de leer signals o servicios — así no se acopla al componente y
 // se puede invocar igual desde un test como desde la UI.
-// ════════════════════════════════════════════════════════════════════
 
 /** Necesario para pintar una celda al construir el HTML del PDF. */
 export interface BuscadorCelda {
@@ -66,9 +64,7 @@ function escHtml(s: string): string {
     .replace(/"/g, '&quot;');
 }
 
-// ────────────────────────────────────────────────────────────────────
 // .ICS
-// ────────────────────────────────────────────────────────────────────
 
 /**
  * Genera el contenido de un archivo .ics a partir de los grupos inscritos.

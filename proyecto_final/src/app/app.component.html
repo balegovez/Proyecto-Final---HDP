@@ -1,22 +1,4 @@
-<!--
-
-  Layout principal de la app: sidebar a la izquierda, contenido al centro.
-
-  Mantiene la identidad visual de la UES (sidebar azul, navbar blanco,
-
-  badge verde "Estudiante"). Bootstrap se carga UNA vez en index.html.
-
--->
-
-
-
-<!-- SIDEBAR (oculto en pantallas pequeñas con d-md-block) -->
-
 <nav class="sidebar d-none d-md-block">
-
-
-
-  <!-- Logo institucional -->
 
   <div class="sidebar-logo text-white">
 
@@ -26,7 +8,6 @@
 
 
 
-  <!-- Items de navegación: cada item usa routerLink (no href="#") -->
 
   @for (item of navItems; track item.ruta) {
   <a [routerLink]="item.ruta" routerLinkActive="active" class="nav-item-custom">
@@ -43,13 +24,10 @@
 </nav>
 
 
-<!-- CONTENIDO PRINCIPAL -->
-
 <div class="main-content">
 
 
 
-  <!-- Barra superior -->
 
   <header class="top-navbar d-flex justify-content-between align-items-center">
 
@@ -92,7 +70,7 @@
           <i class="fas fa-user-circle"></i> Mi cuenta
         </a>
         <a href="#" class="menu-dropdown__item" (click)="cerrarMenu()">
-          <i class="fas fa-cog"></i> Configuración
+          <i class="fas fa-cog"></i> Inicio
         </a>
         <a routerLink="/ayuda" class="menu-dropdown__item" (click)="cerrarMenu()">
           <i class="fas fa-question-circle"></i> Ayuda
@@ -110,15 +88,8 @@
 
   </header>
 
-
-
-  <!-- Aquí Angular inyecta el componente de la ruta actual -->
-
   <router-outlet></router-outlet>
 
-
-
-  <!-- Footer -->
 
   <footer class="footer d-flex justify-content-between">
 

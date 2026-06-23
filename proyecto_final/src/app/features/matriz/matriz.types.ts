@@ -1,9 +1,7 @@
 import { FranjaHoraria } from '../../core/services/pensum.service';
 
-// ════════════════════════════════════════════════════════════════════
 // TIPOS COMPARTIDOS — Feature matriz
 // Usados por el componente padre y todos sus hijos de presentación.
-// ════════════════════════════════════════════════════════════════════
 
 export const DIAS_SEMANA = [
   'Lunes',

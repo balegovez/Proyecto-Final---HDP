@@ -3,13 +3,8 @@ import { RouterModule } from '@angular/router';
 
 /**
  * InicioComponent
- * ----------------
- * Página de entrada (réplica del expediente UES). Muestra accesos directos
- * a las secciones del sistema en forma de tarjetas.
- *
  * Las tarjetas se generan con @for a partir de un arreglo, en vez de repetir
- * el mismo bloque HTML manualmente. Esto evita duplicación (criterio de la
- * rúbrica: "lógica JS no repetitiva").
+ * el mismo bloque HTML manualmente. Esto evita duplicación 
  */
 @Component({
   selector: 'app-inicio',
@@ -20,10 +15,6 @@ import { RouterModule } from '@angular/router';
 })
 export class InicioComponent {
 
-  /**
-   * Accesos del expediente. 'ruta' es opcional: si existe, la tarjeta navega
-   * a ese módulo; si no, es un acceso decorativo (parte de la experiencia UES).
-   */
   readonly accesos: { titulo: string; ruta?: string }[] = [
     { titulo: 'Perfil', ruta: '/perfil' },
     { titulo: 'Pensum', ruta: '/pensum' },

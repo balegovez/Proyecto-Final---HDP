@@ -1,4 +1,4 @@
-/* ============ CONTENEDOR PRINCIPAL ============
+/* CONTENEDOR PRINCIPAL 
    Solo propiedades de layout del wrapper raíz.
    Los estilos internos viven en cada componente hijo. */
 .grafo-wrapper {
@@ -13,7 +13,7 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* ============ ESTADOS DE CARGA / ERROR ============
+/*  ESTADOS DE CARGA / ERROR 
    Visibles en el padre antes de que el canvas esté listo. */
 .estado-carga,
 .estado-error {

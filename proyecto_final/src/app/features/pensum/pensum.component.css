@@ -2,13 +2,9 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  /* Fondo general gris muy claro para que las tarjetas blancas resalten */
   background-color: #f9fafb; 
 }
 
-/* ═══════════════════════════════════════════════════════
-   LEYENDA SUPERIOR
-═══════════════════════════════════════════════════════ */
 .pensum-leyenda {
   display: flex;
   flex-wrap: wrap;
@@ -47,14 +43,10 @@
   flex-shrink: 0;
 }
 
-/* En tema claro, el punto blanco no se ve, lo cambiamos al azul principal */
 .leyenda-seleccionada .leyenda-dot { background: #3b82f6; } 
 .leyenda-req          .leyenda-dot { background: #ef4444; }
 .leyenda-desbloquea   .leyenda-dot { background: #22c55e; }
 
-/* ═══════════════════════════════════════════════════════
-   CUADRÍCULA PRINCIPAL
-═══════════════════════════════════════════════════════ */
 .matriz-scroll-container {
   display: flex;
   gap: 16px;
@@ -76,18 +68,14 @@
   text-align: center;
   font-weight: 700;
   font-size: 0.8rem;
-  color: #374151; /* Texto oscuro */
+  color: #374151; 
   padding: 8px 10px;
-  background-color: #f3f4f6; /* Fondo gris suave */
+  background-color: #f3f4f6; 
   border-radius: 6px;
   border-bottom: 3px solid #3b82f6;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
-
-/* ═══════════════════════════════════════════════════════
-   TARJETA DE MATERIA
-═══════════════════════════════════════════════════════ */
 .materia-card {
   display: flex;
   flex-direction: column;
@@ -95,10 +83,8 @@
   padding: 12px;
   min-height: 110px;
   cursor: pointer;
-  background-color: #ffffff; /* Base blanca por defecto */
-  border: 1px solid #e5e7eb; /* Borde sutil para delimitar la tarjeta */
-
-  /* Transición suave para el hover */
+  background-color: #ffffff; 
+  border: 1px solid #e5e7eb; 
   transition:
     background-color 0.18s ease,
     border-color 0.18s ease,
@@ -106,26 +92,23 @@
     transform 0.15s ease,
     box-shadow 0.18s ease;
 }
-
-/* ── ESTADO ACADÉMICO (color base sin hover) ─── */
 .materia-card.aprobada {
-  background-color: #ecfdf5; /* Verde muy clarito */
+  background-color: #ecfdf5; 
   border-left: 4px solid #10b981;
   border-color: #d1fae5;
 }
 
 .materia-card.cursando {
-  background-color: #fffbeb; /* Amarillo/naranja clarito */
+  background-color: #fffbeb; 
   border-left: 4px solid #f59e0b;
   border-color: #fef3c7;
 }
 
 .materia-card.pendiente {
   background-color: #ffffff;
-  border-left: 4px solid #9ca3af; /* Gris neutro */
+  border-left: 4px solid #9ca3af; 
 }
 
-/* ── BADGE ELECTIVA ──────────────────────────── */
 .es-electiva {
   border-style: dashed;
   border-color: #9ca3af;
@@ -134,8 +117,8 @@
 .badge-electiva {
   display: inline-block;
   margin-top: 4px;
-  background: #fef08a; /* Amarillo suave */
-  color: #854d0e; /* Texto café/dorado oscuro */
+  background: #fef08a; 
+  color: #854d0e; 
   font-size: 0.62rem;
   font-weight: 700;
   padding: 2px 6px;
@@ -145,21 +128,16 @@
   align-self: flex-start;
 }
 
-/* ═══════════════════════════════════════════════════════
-   ESTADOS DE HOVER
-═══════════════════════════════════════════════════════ */
 
-/* La tarjeta sobre la que está el mouse (destaca en azul clarito) */
 .materia-card.hover-seleccionada {
   background-color: #eff6ff !important;
   border-color: #3b82f6 !important;
   transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); /* Sombra oscura pero transparente */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   z-index: 10;
   position: relative;
 }
 
-/* Prerrequisitos de la materia hovered (fondo rojizo claro) */
 .materia-card.hover-requisito {
   background-color: #fef2f2 !important;
   border-color: #ef4444 !important;
@@ -167,7 +145,6 @@
   box-shadow: 0 4px 16px rgba(239, 68, 68, 0.15);
 }
 
-/* Materias que se desbloquean con la hovered (fondo verdoso claro) */
 .materia-card.hover-desbloquea {
   background-color: #f0fdf4 !important;
   border-color: #22c55e !important;
@@ -175,22 +152,18 @@
   box-shadow: 0 4px 16px rgba(34, 197, 94, 0.15);
 }
 
-/* Materias sin relación: se atenúan */
 .materia-card.hover-opaco {
   opacity: 0.4; /* Un poco menos opaco que en tema oscuro para que no desaparezca visualmente */
   transform: scale(0.97);
 }
 
-/* ═══════════════════════════════════════════════════════
-   CONTENIDO DE LA TARJETA
-═══════════════════════════════════════════════════════ */
 .materia-codigo {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: 900;
   font-size: 0.95rem;
-  color: #2563eb; /* Azul brillante, excelente contraste en blanco */
+  color: #2563eb; 
   margin-bottom: 4px;
 }
 
@@ -203,7 +176,7 @@
 .materia-nombre {
   font-size: 0.82rem;
   line-height: 1.3;
-  color: #374151; /* Gris oscuro casi negro */
+  color: #374151; 
   font-weight: 500;
   flex-grow: 1;
   margin-bottom: 6px;
@@ -215,7 +188,7 @@
   gap: 4px;
   margin-top: 6px;
   padding-top: 6px;
-  border-top: 1px solid #f3f4f6; /* Línea separadora tenue */
+  border-top: 1px solid #f3f4f6; 
 }
 
 .badge-req {
@@ -236,14 +209,11 @@
   border: 1px dashed #d1d5db;
 }
 
-/* ═══════════════════════════════════════════════════════
-   MODAL DE FLUJO DE PRERREQUISITOS (clic)
-═══════════════════════════════════════════════════════ */
 .grafo-overlay {
   position: fixed;
   top: 0; left: 0;
   width: 100vw; height: 100vh;
-  background: rgba(0, 0, 0, 0.4); /* Mantenemos un fondo oscuro semitransparente para dar foco al modal */
+  background: rgba(0, 0, 0, 0.4); 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -254,7 +224,7 @@
 .grafo-modal {
   width: 90%;
   max-width: 850px;
-  background-color: #ffffff; /* Añadido fondo blanco al modal si es que lo necesita su HTML */
+  background-color: #ffffff; 
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);

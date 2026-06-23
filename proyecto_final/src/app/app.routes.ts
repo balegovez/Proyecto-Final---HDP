@@ -44,7 +44,6 @@ export const routes: Routes = [
       import('./features/grafo/grafo.component').then(m => m.GrafoComponent),
   },
   {
-    // NUEVO: módulo de inscripción a grupos (CRUD sobre IndexedDB).
     path: 'horarios',
     canActivate: [perfilGuard],
     loadComponent: () =>

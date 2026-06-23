@@ -74,7 +74,6 @@
 /* Nota: .dot-cursando estaba en el CSS original pero no se usaba en la
    leyenda del HTML original. Se añade aquí porque la leyenda ahora sí
    incluye el estado "Cursando", completando la información visual. */
-.dot-cursando { background: #3b82f6; border-color: #1e40af; }
 .dot-pendiente { background: #9ca3af; border-color: #374151; }
 
 .dot-grande {
@@ -84,7 +83,7 @@
   border-color: #374151;
 }
 
-/* ============ RESPONSIVE ============ */
+/*  RESPONSIVE  */
 @media (max-width: 768px) {
   .grafo-header {
     padding: 0.75rem 1rem;

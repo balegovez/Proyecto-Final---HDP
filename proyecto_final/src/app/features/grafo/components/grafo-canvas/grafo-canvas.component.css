@@ -9,7 +9,7 @@
   min-height: 0; /* necesario para que flex shrink funcione dentro de un column */
 }
 
-/* ============ CONTENEDOR DEL GRAFO CYTOSCAPE ============ */
+/* CONTENEDOR DEL GRAFO CYTOSCAPE  */
 .cy-container {
   flex: 1;
 
@@ -22,7 +22,7 @@
   border-top: 1px solid #e5e7eb;
 }
 
-/* ============ ESTADO DE CARGA ============ */
+/*  ESTADO DE CARGA */
 .estado-carga {
   position: absolute;
   top: 50%;
